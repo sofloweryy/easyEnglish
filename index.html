@@ -31,6 +31,7 @@
             margin: 0;
             padding: 12px 10px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -336,7 +337,31 @@
             background: #FFE5EC;
         }
 
-        #login-modal {
+        /* 底部价格惊喜按钮 */
+        .surprise-btn {
+            width: 100%;
+            max-width: 420px;
+            margin-top: 10px;
+            background: #FFF5F7;
+            color: var(--accent-terracotta);
+            border: 2px solid var(--border-dark);
+            border-radius: 14px;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 4px 0px var(--border-dark);
+            transition: all 0.08s ease;
+            text-align: center;
+        }
+        .surprise-btn:active {
+            transform: translate(1.5px, 1.5px);
+            box-shadow: 1px 1.5px 0px var(--border-dark);
+        }
+
+        /* 通用弹窗背景 */
+        .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -428,7 +453,7 @@
                 <div class="user-info-row">
                     <span class="user-tag">👤 <span id="user-display">本地游客</span></span>
                 </div>
-                <button class="login-mini-btn" onclick="openModal()" id="login-btn-text">点击云端绑定</button>
+                <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">点击云端绑定</button>
             </div>
             <div class="stats-group">
                 <div class="stat-item">🔥 打卡: <span id="streak">0</span> 天</div>
@@ -459,8 +484,11 @@
         <div id="result-box"></div>
     </div>
 
+    <!-- 底部价格惊喜按钮 -->
+    <button class="surprise-btn" onclick="openSurpriseModal()">✨ 点击有惊喜</button>
+
     <!-- 登录/绑定弹窗 -->
-    <div id="login-modal">
+    <div id="login-modal" class="modal-overlay">
         <div class="modal-card">
             <h3>云端账号同步</h3>
             <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0;">直接设置昵称本地畅玩，或使用邮箱验证码同步</p>
@@ -478,7 +506,19 @@
             </div>
 
             <button class="sketch-btn primary" style="width: 100%; margin: 12px 0 4px 0;" onclick="saveProfileAndLogin()">保存昵称 / 绑定登录</button>
-            <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="closeModal()">取消</button>
+            <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="closeLoginModal()">取消</button>
+        </div>
+    </div>
+
+    <!-- 惊喜提示弹窗 -->
+    <div id="surprise-modal" class="modal-overlay">
+        <div class="modal-card" style="text-align: center;">
+            <h3 style="color: var(--accent-terracotta); margin-bottom: 8px;">🎉 惊喜彩蛋</h3>
+            <p style="font-size: 1rem; line-height: 1.5; color: var(--text-main); font-family: 'Quicksand', sans-serif; font-weight: 600; margin: 12px 0;">
+                联系美丽且智慧的开发者<br>
+                <span style="color: #2E7D32; font-size: 0.95rem; word-break: break-all;">zhaihuahua1701@gmail.com</span>
+            </p>
+            <button class="sketch-btn primary" style="width: 100%; margin-top: 8px;" onclick="closeSurpriseModal()">收下啦 ❤️</button>
         </div>
     </div>
 
@@ -547,14 +587,17 @@
             loadQuestion();
         }
 
-        function openModal() { 
+        function openLoginModal() { 
             const currentName = document.getElementById('user-display').innerText;
             if (currentName !== '本地游客') {
                 document.getElementById('reg-nickname').value = currentName;
             }
             document.getElementById('login-modal').style.display = 'flex'; 
         }
-        function closeModal() { document.getElementById('login-modal').style.display = 'none'; }
+        function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
+
+        function openSurpriseModal() { document.getElementById('surprise-modal').style.display = 'flex'; }
+        function closeSurpriseModal() { document.getElementById('surprise-modal').style.display = 'none'; }
 
         async function sendOtpCode() {
             const email = document.getElementById('reg-account').value.trim();
@@ -612,7 +655,7 @@
             }
 
             alert('✨ 昵称保存成功！开始打卡吧~');
-            closeModal();
+            closeLoginModal();
         }
 
         async function fetchUserData() {
@@ -703,8 +746,8 @@
             const decodedText = decodeURIComponent(text);
             const utterance = new SpeechSynthesisUtterance(decodedText);
             utterance.lang = 'en-US';
-            utterance.rate = 0.92;
-            utterance.pitch = 1.0;
+            utterance.rate = 1.0;  // 恢复标准正常语速
+            utterance.pitch = 1.0; // 恢复标准正常音调
             window.speechSynthesis.speak(utterance);
         }
 
