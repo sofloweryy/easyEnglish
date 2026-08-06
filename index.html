@@ -49,10 +49,9 @@
 
         .header {
             text-align: center;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
-        /* 修改为干净的英文主标题样式 */
         .brand-title {
             font-family: 'Architects Daughter', cursive, serif;
             font-size: 2.2rem;
@@ -63,41 +62,44 @@
             text-shadow: 2px 2px 0px #FFE5EC;
         }
 
-        /* 顶部信息栏：单行紧凑展示 */
-        .top-info-bar {
+        /* 顶部信息面板：改为更饱满的双行立体小卡片 */
+        .top-info-panel {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 14px;
             background: #FFF1F2;
-            padding: 6px 12px;
-            border-radius: 14px;
-            border: 2px solid var(--border-dark);
-            box-shadow: 2px 2px 0px var(--border-dark);
-            font-size: 0.78rem;
+            padding: 10px 14px;
+            border-radius: 16px;
+            border: 2.5px solid var(--border-dark);
+            box-shadow: 3px 3px 0px var(--border-dark);
         }
 
         .user-section {
             display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .user-info-row {
+            display: flex;
             align-items: center;
             gap: 6px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            font-size: 0.82rem;
+            font-weight: bold;
         }
 
         .user-tag span {
             color: var(--accent-terracotta);
-            font-weight: bold;
         }
 
         .login-mini-btn {
             background: #FFE5EC;
             color: var(--border-dark);
             border: 1.5px solid var(--border-dark);
-            padding: 2px 8px;
+            padding: 1px 8px;
             border-radius: 8px;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 1px 1px 0px var(--border-dark);
@@ -109,8 +111,17 @@
 
         .stats-group {
             display: flex;
-            gap: 8px;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
             font-weight: 700;
+            font-size: 0.82rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         /* 核心手帐卡片 */
@@ -364,19 +375,20 @@
 
     <div class="container">
         <div class="header">
-            <!-- 仅保留 Easy English 主标题 -->
             <div class="brand-title">Easy English</div>
         </div>
 
-        <!-- 顶部信息栏 -->
-        <div class="top-info-bar">
+        <!-- 顶部信息面板：改为上下双行卡片结构，内容更饱满 -->
+        <div class="top-info-panel">
             <div class="user-section">
-                <span class="user-tag">👤 <span id="user-display">本地游客</span></span>
-                <button class="login-mini-btn" onclick="openModal()" id="login-btn-text">绑定</button>
+                <div class="user-info-row">
+                    <span class="user-tag">👤 <span id="user-display">本地游客</span></span>
+                </div>
+                <button class="login-mini-btn" onclick="openModal()" id="login-btn-text">点击云端绑定</button>
             </div>
             <div class="stats-group">
-                <div>🔥 <span id="streak">0</span></div>
-                <div>⭐ <span id="score">0</span></div>
+                <div class="stat-item">🔥 连续打卡: <span id="streak">0</span> 天</div>
+                <div class="stat-item">⭐ 学习积分: <span id="score">0</span> 分</div>
             </div>
         </div>
 
@@ -526,7 +538,7 @@
                 score = data.score || 0;
                 streak = data.streak || 0;
                 document.getElementById('user-display').innerText = data.nickname || "已绑定用户";
-                document.getElementById('login-btn-text').innerText = '已同步';
+                document.getElementById('login-btn-text').innerText = '已同步云端';
                 updateStatsUI();
             }
         }
