@@ -6,6 +6,8 @@
     <title>✦ 岛屿口语手帐 · Global Survival</title>
     <!-- 引入高级的手绘与衬线字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+    <!-- 引入 Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-color: #F7F5F0;        /* 高级燕麦纸张色 */
@@ -39,7 +41,6 @@
             width: 100%;
             max-width: 440px;
             background: var(--card-bg);
-            /* 模拟手绘不规则圆角 */
             border-radius: 28px 24px 30px 22px;
             border: 2px solid var(--border-dark);
             padding: 24px 20px;
@@ -47,7 +48,6 @@
             position: relative;
         }
 
-        /* 顶部标题栏 */
         .header {
             text-align: center;
             margin-bottom: 20px;
@@ -70,7 +70,7 @@
             margin-top: 2px;
         }
 
-        /* 状态与控制栏 */
+        /* 顶部信息栏与登录按钮 */
         .top-info-bar {
             display: flex;
             justify-content: space-between;
@@ -88,6 +88,22 @@
             font-weight: 500;
         }
 
+        .user-tag span {
+            color: var(--accent-terracotta);
+            font-weight: bold;
+        }
+
+        .login-mini-btn {
+            background: var(--border-dark);
+            color: #FFF;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
         .stats-group {
             display: flex;
             gap: 12px;
@@ -95,7 +111,7 @@
             font-weight: 700;
         }
 
-        /* 题目卡片：模拟精致手帐内页 */
+        /* 核心手帐卡片 */
         .sketch-card {
             background: #FFFEFC;
             border: 2px dashed #D6D1C7;
@@ -132,7 +148,6 @@
             font-family: monospace;
         }
 
-        /* 优雅的输入框 */
         .input-wrapper {
             margin-bottom: 16px;
         }
@@ -157,7 +172,6 @@
             box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
         }
 
-        /* 语音与工具按钮 */
         .tools-row {
             display: flex;
             justify-content: center;
@@ -184,7 +198,6 @@
             box-shadow: 1px 1px 0px var(--border-dark);
         }
 
-        /* 底部主操作按钮 */
         .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -211,7 +224,7 @@
         }
 
         .sketch-btn.primary {
-            background: #111827; /* 高级深碳黑 */
+            background: #111827;
             color: #FFFFFF;
         }
 
@@ -219,7 +232,6 @@
             grid-column: span 2;
         }
 
-        /* 反馈区域 */
         #result-box {
             margin-top: 15px;
             font-size: 0.85rem;
@@ -233,38 +245,67 @@
             text-align: center;
         }
 
-        .feedback-success {
-            background: #F0FDF4;
-            color: #166534;
-            border: 1.5px solid var(--border-dark);
+        .feedback-success { background: #F0FDF4; color: #166534; border: 1.5px solid var(--border-dark); }
+        .feedback-error { background: #FEF2F2; color: #991B1B; border: 1.5px solid var(--border-dark); }
+
+        /* 弹窗样式：高级手帐风 */
+        #login-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(44, 42, 41, 0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
         }
 
-        .feedback-error {
-            background: #FEF2F2;
-            color: #991B1B;
-            border: 1.5px solid var(--border-dark);
+        .modal-card {
+            background: #FFFEFC;
+            border: 2px solid var(--border-dark);
+            border-radius: 20px;
+            padding: 24px;
+            width: 85%;
+            max-width: 340px;
+            box-shadow: 6px 6px 0px var(--border-dark);
+            text-align: center;
+        }
+
+        .modal-card h3 {
+            margin-top: 0;
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+        }
+
+        .modal-card input {
+            width: 100%;
+            padding: 10px 12px;
+            margin: 10px 0 16px 0;
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- 品牌页头 -->
         <div class="header">
             <div class="brand-title">Global Survival Sketchbook</div>
             <div class="brand-sub">✦ 职场与出海口语手帐 ✦</div>
         </div>
 
-        <!-- 顶部信息：游客状态 + 积分连击 -->
         <div class="top-info-bar">
-            <div class="user-tag">👤 <span>本地练习生</span></div>
+            <div class="user-tag">👤 <span id="user-display">本地游客</span></div>
+            <button class="login-mini-btn" onclick="openModal()" id="login-btn-text">绑定账号</button>
             <div class="stats-group">
                 <div>🔥 <span id="streak">0</span></div>
                 <div>⭐ <span id="score">0</span></div>
             </div>
         </div>
 
-        <!-- 核心手帐卡片 -->
         <div class="sketch-card">
             <div id="category-pill" class="category-pill">✈️ 载入中...</div>
             <div class="chinese-prompt" id="chinese-text">正在翻阅手帐页面...</div>
@@ -289,8 +330,85 @@
         <div id="result-box"></div>
     </div>
 
+    <!-- 登录弹窗 -->
+    <div id="login-modal">
+        <div class="modal-card">
+            <h3>Cloud Sync</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">输入邮箱，开启云端积分与连击持久化同步：</p>
+            <input type="email" id="email-input" placeholder="请输入你的邮箱 (支持 QQ/163/Gmail等)">
+            <button class="sketch-btn primary" style="width: 100%; margin-bottom: 8px;" onclick="sendMagicLink()">发送一键登录验证链接</button>
+            <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="closeModal()">取消</button>
+        </div>
+    </div>
+
     <script>
-        // 题库数据：真实海外出海与职场情境
+        // === Supabase 初始化 ===
+        const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        let currentUser = null;
+        let score = 0;
+        let streak = 0;
+
+        // 页面加载时检查登录态
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                document.getElementById('user-display').innerText = currentUser.email.split('@')[0];
+                document.getElementById('login-btn-text').innerText = '已同步';
+                await fetchUserData();
+            }
+        });
+
+        function openModal() { document.getElementById('login-modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('login-modal').style.display = 'none'; }
+
+        async function sendMagicLink() {
+            const email = document.getElementById('email-input').value.trim();
+            if (!email) {
+                alert('请输入有效的邮箱地址！');
+                return;
+            }
+            const { error } = await _supabase.auth.signInWithOtp({ 
+                email: email,
+                options: { emailRedirectTo: window.location.href }
+            });
+            if (error) {
+                alert('发送失败: ' + error.message);
+            } else {
+                alert('✨ 登录验证邮件已发送！请前往你的邮箱点击链接完成绑定。');
+                closeModal();
+            }
+        }
+
+        // 从云端读取用户积分
+        async function fetchUserData() {
+            if (!currentUser) return;
+            const { data, error } = await _supabase
+                .from('user_profiles')
+                .select('score, streak')
+                .eq('id', currentUser.id)
+                .single();
+            
+            if (data) {
+                score = data.score || 0;
+                streak = data.streak || 0;
+                updateStatsUI();
+            }
+        }
+
+        // 将积分同步到云端
+        async function syncUserDataToCloud() {
+            if (!currentUser) return;
+            await _supabase
+                .from('user_profiles')
+                .update({ score: score, streak: streak, updated_at: new Date() })
+                .eq('id', currentUser.id);
+        }
+
+        // === 题库与交互逻辑 ===
         const questions = [
             { category: "✈️ 机场海关", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
             { category: "🧳 酒店入住", chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
@@ -304,8 +422,6 @@
         ];
 
         let currentIndex = 0;
-        let score = 0;
-        let streak = 0;
 
         function loadQuestion() {
             currentIndex = Math.floor(Math.random() * questions.length);
@@ -343,7 +459,8 @@
                 resultBox.className = "feedback-error";
                 resultBox.innerHTML = `💡 差一点，参考标准表达：<br><b>${questions[currentIndex].english}</b>`;
             }
-            updateStats();
+            updateStatsUI();
+            syncUserDataToCloud();
         }
 
         function showAnswer() {
@@ -351,7 +468,8 @@
             resultBox.className = "feedback-error";
             resultBox.innerHTML = `💡 手帐参考答案：<br><b>${questions[currentIndex].english}</b>`;
             streak = 0;
-            updateStats();
+            updateStatsUI();
+            syncUserDataToCloud();
         }
 
         function nextQuestion() {
@@ -370,12 +488,11 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        function updateStats() {
+        function updateStatsUI() {
             document.getElementById("score").innerText = score;
             document.getElementById("streak").innerText = streak;
         }
 
-        // 初始化
         loadQuestion();
     </script>
 </body>
