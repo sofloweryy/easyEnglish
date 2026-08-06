@@ -449,7 +449,7 @@
                 <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">点击云端绑定</button>
             </div>
             <div class="stats-group">
-                <div class="stat-item">🔥 连击: <span id="streak">0</span> 次</div>
+                <div class="stat-item">🔥 打卡: <span id="streak">0</span> 天</div>
                 <div class="stat-item">⭐ 积分: <span id="score">0</span> 分</div>
             </div>
         </div>
@@ -521,7 +521,7 @@
 
         let currentUser = null;
         let score = 0;
-        let streak = 0;
+        let streak = 0; // 代表打卡天数
         let currentMode = 'phrase'; // 默认短语模式
 
         // 题库分类：短语 & 单词（单词包含音标字段）
@@ -544,7 +544,7 @@
                 { category: "🔥 高频单词", chinese: "灵活的、可变通的", english: "flexible", phonetic: "[ˈfleksəbl]", hint: "Hint: f _ _ _ _ _ _ e (8 letters)" },
                 { category: "🔥 高频单词", chinese: "策略、战略", english: "strategy", phonetic: "[ˈstrætədʒi]", hint: "Hint: s _ _ _ _ _ _ y (8 letters)" },
                 { category: "🔥 高频单词", chinese: "合作、协作", english: "collaboration", phonetic: "[kəˌlæbəˈreɪʃn]", hint: "Hint: c _ _ _ _ _ _ _ _ _ _ _ n (13 letters)" },
-                { category: "🔥 高频单词", chinese: "成就、成绩", english: "achievement", phonetic: "[əˈtʃiːvmənt]", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
+                { category: "🔥 高频单词", chinese: "achievement", chinese: "成就、成绩", english: "achievement", phonetic: "[əˈtʃiːvmənt]", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
                 { category: "🔥 高频单词", chinese: "挑战、质疑", english: "challenge", phonetic: "[ˈtʃælɪndʒ]", hint: "Hint: c _ _ _ _ _ _ _ e (9 letters)" }
             ]
         };
@@ -566,11 +566,27 @@
                 }
                 if (localScore) score = parseInt(localScore);
                 if (localStreak) streak = parseInt(localStreak);
+                
+                // 检查并执行每日打卡逻辑
+                checkDailyCheckIn();
                 updateStatsUI();
             }
             initSpeechRecognition();
             loadQuestion();
         });
+
+        // 真实打卡天数校验：每天第一次打开/答题时算作今日已打卡
+        function checkDailyCheckIn() {
+            const todayStr = new Date().toDateString(); // 例如 "Sun Aug 06 2026"
+            const lastCheckInDate = localStorage.getItem('ee_last_checkin_date');
+
+            if (lastCheckInDate !== todayStr) {
+                // 如果今天还没打过卡，天数加1，并更新最后打卡日期
+                streak += 1;
+                localStorage.setItem('ee_last_checkin_date', todayStr);
+                localStorage.setItem('ee_streak', streak);
+            }
+        }
 
         function switchMode(mode) {
             currentMode = mode;
@@ -661,9 +677,19 @@
             if (data) {
                 score = data.score || 0;
                 streak = data.streak || 0;
+                
+                // 云端用户也同样校验每日打卡
+                const todayStr = new Date().toDateString();
+                const lastCheckInDate = localStorage.getItem('ee_last_checkin_date');
+                if (lastCheckInDate !== todayStr) {
+                    streak += 1;
+                    localStorage.setItem('ee_last_checkin_date', todayStr);
+                }
+
                 document.getElementById('user-display').innerText = data.nickname || "已绑定用户";
                 document.getElementById('login-btn-text').innerText = '已同步云端';
                 updateStatsUI();
+                syncUserDataToCloud();
             }
         }
 
@@ -707,12 +733,10 @@
 
             if (cleanUser === cleanTarget || (cleanUser.length >= 3 && cleanTarget.includes(cleanUser))) {
                 score += 10;
-                streak += 1;
                 resultBox.className = "feedback-success";
-                resultBox.innerHTML = `<span>✨ 回答完美！连击 +1</span>`;
+                resultBox.innerHTML = `✨ 回答完美！积分 +10`;
                 setTimeout(nextQuestion, 1500);
             } else {
-                streak = 0;
                 resultBox.className = "feedback-error";
                 let displayContent = list[currentIndex].english;
                 if (currentMode === 'word' && list[currentIndex].phonetic) {
@@ -735,7 +759,6 @@
             }
             resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${displayContent}</span>
                                   <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
-            streak = 0;
             updateStatsUI();
             syncUserDataToCloud();
         }
