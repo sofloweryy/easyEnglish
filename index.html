@@ -373,9 +373,9 @@
             box-shadow: none;
         }
 
-        /* 底部常驻下载引导条（当天第二次进入时显示） */
+        /* 底部常驻下载引导条 */
         .bottom-install-banner {
-            display: none;
+            display: flex;
             width: 100%;
             max-width: 420px;
             background: #FFFCF7;
@@ -405,10 +405,12 @@
             border-radius: 20px;
             padding: 16px;
             width: 90%;
-            max-width: 320px;
+            max-width: 340px;
             box-shadow: 5px 7px 0px var(--border-dark);
             text-align: left;
             font-family: var(--font-handwriting);
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         .modal-card h3 {
@@ -435,6 +437,16 @@
             font-size: 1.05rem;
             outline: none;
             background: #FFF;
+        }
+
+        .guide-box {
+            background: #FFF9F0;
+            border: 1.5px solid var(--border-dark);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -490,34 +502,19 @@
         </div>
     </div>
 
-    <!-- 底部常驻下载提醒条（当天第二次进入时显示） -->
+    <!-- 底部常驻下载引导条 -->
     <div id="bottom-install-banner" class="bottom-install-banner">
         <div style="display: flex; align-items: center; gap: 8px;">
             <span style="font-size: 1.4rem;">📱</span>
             <div style="font-size: 0.95rem; line-height: 1.3;">
-                <div style="font-weight: 700;">添加到手机桌面</div>
-                <div style="color: var(--text-muted); font-size: 0.85rem;">随时随地打卡，体验更丝滑</div>
+                <div style="font-weight: 700;">保存到手机桌面</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">点此查看一键安装App教程</div>
             </div>
         </div>
-        <div style="display: flex; gap: 4px;">
-            <button class="sketch-btn primary" id="banner-install-btn" style="padding: 4px 10px; font-size: 0.95rem;">添加</button>
-            <button class="sketch-btn" style="padding: 4px 8px; font-size: 0.95rem; background: #E5E7EB;" onclick="dismissBanner()">✕</button>
-        </div>
+        <button class="sketch-btn primary" onclick="openSurpriseModal()" style="padding: 4px 10px; font-size: 0.9rem;">查看教程</button>
     </div>
 
-    <!-- 当天第一次进入：弹窗提示下载 -->
-    <div id="install-modal" class="modal-overlay">
-        <div class="modal-card" style="text-align: center;">
-            <h3>✨ 添加到手机桌面</h3>
-            <p style="font-size: 1.05rem; line-height: 1.5; color: var(--text-main); margin: 8px 0 16px 0;">
-                随时随地打开打卡，<br>体验像原生 App 一样更丝滑！
-            </p>
-            <button class="sketch-btn primary" id="install-action-btn" style="width: 100%; margin-bottom: 8px;">立即添加</button>
-            <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="dismissInstallModal()">下次再说</button>
-        </div>
-    </div>
-
-    <!-- 修改昵称弹窗（已彻底移除邮箱输入） -->
+    <!-- 修改昵称弹窗 -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-card">
             <h3>修改个性昵称</h3>
@@ -531,13 +528,32 @@
         </div>
     </div>
 
+    <!-- 点击有惊喜弹窗（内含下载App完整傻瓜教程 + 开发者邮箱） -->
     <div id="surprise-modal" class="modal-overlay">
-        <div class="modal-card" style="text-align: center;">
-            <p style="font-size: 1.2rem; line-height: 1.6; color: var(--text-main); margin: 8px 0 16px 0; font-family: var(--font-handwriting);">
-                联系美丽且智慧的开发者<br>
-                <span style="color: #2E7D32; font-size: 1.05rem; word-break: break-all; font-family: 'Quicksand', sans-serif;">zhaihuahua1701@gmail.com</span>
-            </p>
-            <button class="sketch-btn primary" style="width: 100%; margin-top: 8px;" onclick="closeSurpriseModal()">收下啦 ❤️</button>
+        <div class="modal-card">
+            <h3>✨ 惊喜与安装指南</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 2px 0 8px 0;">把网页存为手机App，打卡更丝滑！</p>
+            
+            <div class="guide-box">
+                <div style="font-weight: 700; color: var(--accent-terracotta); margin-bottom: 2px;">🍎 苹果手机 (iPhone / Safari)</div>
+                1. 点击 Safari 底部中间的 <b>“分享”</b> 按钮（带箭头的方框）<br>
+                2. 向下滚动找到并点击 **“添加到主屏幕”**<br>
+                3. 点击右上角 **“添加”** 即可！
+            </div>
+
+            <div class="guide-box">
+                <div style="font-weight: 700; color: #2E7D32; margin-bottom: 2px;">🤖 安卓手机 (Chrome / 夸克 / Edge)</div>
+                1. 点击浏览器右上角的 **“三点菜单”**<br>
+                2. 选择 **“添加到主屏幕”** 或 **“安装应用”**<br>
+                3. 确认后桌面上就会出现 App 图标啦！
+            </div>
+
+            <div style="margin-top: 12px; text-align: center; font-size: 0.95rem; color: var(--text-muted);">
+                💌 开发者邮箱：<br>
+                <span style="color: #2E7D32; font-size: 0.95rem; word-break: break-all; font-family: 'Quicksand', sans-serif;">zhaihuahua1701@gmail.com</span>
+            </div>
+
+            <button class="sketch-btn primary" style="width: 100%; margin-top: 12px;" onclick="closeSurpriseModal()">知道啦 ❤️</button>
         </div>
     </div>
 
@@ -571,38 +587,8 @@
         };
 
         let currentIndex = 0;
-        let deferredPrompt;
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            handleInstallPromptLogic();
-        });
-
-        function handleInstallPromptLogic() {
-            const todayStr = new Date().toDateString();
-            const lastPromptDate = localStorage.getItem('ee_last_prompt_date');
-            const dismissedBanner = localStorage.getItem('ee_banner_dismissed_date');
-
-            if (lastPromptDate !== todayStr) {
-                document.getElementById('install-modal').style.display = 'flex';
-                localStorage.setItem('ee_last_prompt_date', todayStr);
-            } else {
-                if (dismissedBanner !== todayStr) {
-                    document.getElementById('bottom-install-banner').style.display = 'flex';
-                }
-            }
-        }
 
         window.addEventListener('DOMContentLoaded', () => {
-            const todayStr = new Date().toDateString();
-            const lastPromptDate = localStorage.getItem('ee_last_prompt_date');
-            if (lastPromptDate === todayStr) {
-                if (localStorage.getItem('ee_banner_dismissed_date') !== todayStr) {
-                    document.getElementById('bottom-install-banner').style.display = 'flex';
-                }
-            }
-
             const localName = localStorage.getItem('ee_nickname');
             const localScore = localStorage.getItem('ee_score');
             const localStreak = localStorage.getItem('ee_streak');
@@ -618,37 +604,6 @@
             initSpeechRecognition();
             loadQuestion();
         });
-
-        async function triggerInstallAction() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                document.getElementById('install-modal').style.display = 'none';
-                document.getElementById('bottom-install-banner').style.display = 'none';
-            } else {
-                alert('提示：你可以点击手机浏览器菜单（如Safari的“分享”或Chrome的“...”），然后选择“添加到主屏幕”即可！');
-                document.getElementById('install-modal').style.display = 'none';
-                document.getElementById('bottom-install-banner').style.display = 'none';
-            }
-        }
-
-        document.getElementById('install-action-btn').addEventListener('click', triggerInstallAction);
-        document.getElementById('banner-install-btn').addEventListener('click', triggerInstallAction);
-
-        function dismissInstallModal() {
-            document.getElementById('install-modal').style.display = 'none';
-            const todayStr = new Date().toDateString();
-            if (localStorage.getItem('ee_banner_dismissed_date') !== todayStr) {
-                document.getElementById('bottom-install-banner').style.display = 'flex';
-            }
-        }
-
-        function dismissBanner() {
-            document.getElementById('bottom-install-banner').style.display = 'none';
-            const todayStr = new Date().toDateString();
-            localStorage.setItem('ee_banner_dismissed_date', todayStr);
-        }
 
         function checkDailyCheckIn() {
             const todayStr = new Date().toDateString();
