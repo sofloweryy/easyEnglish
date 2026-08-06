@@ -130,7 +130,7 @@ body{
     color:#668FEA;
 }
 
-/* 单词区域 */
+/* 题目区域（调整中文题名字号，避免过大） */
 .word-area{
     text-align:center;
     padding: 10px 0;
@@ -138,11 +138,11 @@ body{
 
 .word{
     margin:5px 0 5px 0;
-    font-size:24px;
+    font-size:18px;
     color:var(--blue);
     font-weight:bold;
     word-break: break-all;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .meaning{
@@ -487,6 +487,7 @@ textarea::placeholder{
 
     function loadQuestion() {
         const list = questionBanks[currentMode];
+        if (!list || list.length === 0) return;
         currentIndex = Math.floor(Math.random() * list.length);
         const q = list[currentIndex];
         
