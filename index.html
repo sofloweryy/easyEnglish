@@ -2,9 +2,8 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Easy English</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 
 <style>
@@ -19,6 +18,8 @@
 
 *{
     box-sizing:border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 body{
@@ -28,7 +29,6 @@ body{
     color:var(--ink);
 }
 
-
 /* 页面 */
 .app{
     max-width:430px;
@@ -37,14 +37,12 @@ body{
     padding:25px 22px;
 }
 
-
 /* 顶部 */
 .header{
     display:flex;
     justify-content:space-between;
     align-items:center;
 }
-
 
 .logo{
     font-size:42px;
@@ -56,13 +54,11 @@ body{
     color:var(--blue);
 }
 
-
 .logo:after{
     content:"✦";
     color:var(--pink);
     font-size:28px;
 }
-
 
 .status{
     background:#fff;
@@ -74,462 +70,559 @@ body{
     box-shadow:3px 4px 0 var(--ink);
 }
 
-
 /* 主卡片 */
-
 .study-card{
-
     margin-top:35px;
-
     background:#fff;
-
     border:2px solid var(--ink);
-
     border-radius:32px;
-
     padding:25px;
-
     position:relative;
-
     box-shadow:5px 6px 0 var(--ink);
-
 }
-
 
 /* 胶带 */
-
 .study-card:before{
-
     content:"";
-
     position:absolute;
-
     top:-15px;
-
     left:45px;
-
     width:90px;
-
     height:25px;
-
     background:var(--yellow);
-
     transform:rotate(-5deg);
-
     opacity:.8;
-
 }
-
 
 /* 欢迎语 */
-
 .subtitle{
-
     text-align:center;
-
     color:#999;
-
     font-size:16px;
-
     margin-bottom:22px;
-
 }
-
-
 
 /* tabs */
-
 .tabs{
-
     display:flex;
-
     border:2px solid var(--ink);
-
     border-radius:18px;
-
     overflow:hidden;
-
     margin-bottom:35px;
-
 }
-
 
 .tab{
-
     flex:1;
-
     border:0;
-
     background:#FFF;
-
     padding:13px;
-
     font-size:16px;
-
     font-weight:bold;
-
     color:#999;
-
+    cursor: pointer;
+    transition: all 0.1s;
 }
-
 
 .tab.active{
-
     background:#EEF4FF;
-
     color:#668FEA;
-
 }
-
-
 
 /* 单词区域 */
-
 .word-area{
-
     text-align:center;
-
 }
-
 
 .tag{
-
     color:var(--pink);
-
     font-size:15px;
-
+    font-weight: 700;
 }
-
 
 .word{
-
-    margin:15px 0;
-
-    font-size:52px;
-
+    margin:10px 0 5px 0;
+    font-size:38px;
     color:var(--blue);
-
     font-weight:bold;
-
+    word-break: break-all;
 }
-
 
 .meaning{
-
     font-family:"ZCOOL KuaiLe";
-
-    font-size:30px;
-
+    font-size:26px;
+    margin-bottom:8px;
 }
-
 
 .hint{
-
-    margin-top:12px;
-
+    margin-top:8px;
     color:#999;
-
-    font-size:18px;
-
+    font-size:16px;
 }
-
 
 /* 输入 */
-
 .input-wrap{
-
-    margin-top:30px;
-
+    margin-top:25px;
     position:relative;
-
 }
-
 
 textarea{
-
     width:100%;
-
-    height:100px;
-
+    height:90px;
     border:2px solid var(--ink);
-
     border-radius:22px;
-
-    padding:18px;
-
-    font-size:18px;
-
+    padding:14px 50px 14px 14px;
+    font-size:16px;
+    font-family:"Quicksand", sans-serif;
     resize:none;
-
     outline:none;
-
+    user-select: text;
 }
-
 
 textarea::placeholder{
-
     color:#AAA;
-
 }
-
-
 
 .voice{
-
     position:absolute;
-
-    right:15px;
-
-    bottom:15px;
-
+    right:12px;
+    bottom:12px;
     width:42px;
-
     height:42px;
-
     border-radius:50%;
-
     background:#FFEAF1;
-
     border:2px solid var(--ink);
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    box-shadow: 1.5px 1.5px 0 var(--ink);
+    transition: all 0.08s;
 }
 
+.voice:active, .voice.recording {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+    background: #F7B0C6;
+}
 
+.voice-tip {
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+    margin-top: 6px;
+}
 
 /* 按钮 */
-
 .actions{
-
     display:flex;
-
     gap:12px;
-
-    margin-top:22px;
-
+    margin-top:18px;
 }
-
 
 .btn{
-
     border:2px solid var(--ink);
-
     border-radius:20px;
-
     padding:14px;
-
     font-size:16px;
-
     font-weight:bold;
-
     box-shadow:3px 4px 0 var(--ink);
-
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.08s;
 }
 
+.btn:active {
+    transform: translate(1.5px, 1.5px);
+    box-shadow: 1px 2px 0 var(--ink);
+}
 
 .submit{
-
     flex:1;
-
     background:#F7B0C6;
-
 }
-
 
 .next{
-
     background:#FFF1C9;
-
 }
-
 
 .answer{
-
     background:#EEF4FF;
-
 }
-
 
 /* 底部 */
-
 .bottom{
-
     margin-top:25px;
-
     background:white;
-
     border:2px solid var(--ink);
-
     border-radius:25px;
-
-    padding:18px;
-
+    padding:16px 20px;
     display:flex;
-
     justify-content:space-between;
-
+    align-items: center;
     box-shadow:3px 4px 0 var(--ink);
-
+    cursor: pointer;
 }
 
-
+.bottom span {
+    cursor: pointer;
+}
 
 .result{
-
-    margin-top:15px;
-
-    min-height:30px;
-
+    margin-top:12px;
+    min-height:35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align:center;
-
+    font-size: 15px;
+    border-radius: 12px;
+    padding: 0 10px;
 }
 
+.feedback-success { background: #E8F5E9; color: #2E7D32; border: 1.5px solid var(--ink); }
+.feedback-error { background: #FFEBEE; color: #C62828; border: 1.5px solid var(--ink); }
 
+.answer-audio-btn {
+    background: #FFF;
+    border: 1.5px solid var(--ink);
+    border-radius: 8px;
+    padding: 2px 8px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 8px;
+    font-family: inherit;
+    box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(64, 60, 58, 0.6);
+    backdrop-filter: blur(3px);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal-card {
+    background: #FFF9F0;
+    border: 2.5px solid var(--ink);
+    border-radius: 24px;
+    padding: 20px;
+    width: 88%;
+    max-width: 330px;
+    box-shadow: 5px 6px 0 var(--ink);
+    font-family: inherit;
+}
+
+.modal-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+.modal-card label {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--gray);
+    margin-top: 10px;
+}
+
+.modal-card input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+    background: #FFF;
+}
 </style>
-
 </head>
-
 
 <body>
 
 <div class="app">
 
+    <div class="header">
+        <div class="logo">
+            Easy <span class="blue">English</span>
+        </div>
+        <div class="status" id="status-box">
+            🔥 连续<span id="streak">1</span>天<br>
+            ⭐ <span id="score">10</span>分
+        </div>
+    </div>
 
-<div class="header">
+    <div class="study-card">
+        <div class="subtitle">
+            今天也学习一点点英语吧 ♡
+        </div>
 
+        <div class="tabs">
+            <button class="tab active" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
+            <button class="tab" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
+        </div>
 
-<div class="logo">
-Easy <span class="blue">English</span>
-</div>
+        <div class="word-area">
+            <div class="tag" id="card-tag">Today's Word</div>
+            <div class="word" id="chinese-text">加载中...</div>
+            <div class="meaning" id="meaning-text" style="display:none;"></div>
+            <div class="hint" id="hint-text">Hint: --</div>
+        </div>
 
+        <div class="input-wrap">
+            <textarea id="user-input" placeholder="请在此输入英文..." autocomplete="off"></textarea>
+            <button class="voice" id="voice-btn" title="长按说话">🎤</button>
+        </div>
+        <div class="voice-tip" id="voice-tip">长按麦克风可语音输入英文</div>
 
-<div class="status">
-🔥 连续1天<br>
-⭐ 10分
-</div>
+        <div class="actions">
+            <button class="btn submit" onclick="checkAnswer()">✍️ 提交答案</button>
+            <button class="btn next" onclick="nextQuestion()">🍃 换题</button>
+            <button class="btn answer" onclick="showAnswer()">👀 答案</button>
+        </div>
 
+        <div class="result" id="result-box"></div>
+    </div>
 
-</div>
-
-
-
-
-<div class="study-card">
-
-
-<div class="subtitle">
-今天也学习一点点英语吧 ♡
-</div>
-
-
-<div class="tabs">
-
-<button class="tab active">
-🔤 高频单词
-</button>
-
-
-<button class="tab">
-💬 常用短语
-</button>
-
-
-</div>
-
-
-
-
-<div class="word-area">
-
-
-<div class="tag">
-Today's Word
-</div>
-
-
-<div class="word">
-strategy
-</div>
-
-
-<div class="meaning">
-策略、战略
-</div>
-
-
-<div class="hint">
-Hint: s _ _ _ _ _ y
-</div>
-
-
+    <div class="bottom">
+        <span onclick="openSurpriseModal()">✨ 点击有惊喜</span>
+        <span onclick="openLoginModal()" id="user-display-tag">👤 flower</span>
+    </div>
 
 </div>
 
+<!-- 修改昵称与邮箱弹窗 -->
+<div id="login-modal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>修改账号与昵称</h3>
+        <label>专属昵称</label>
+        <input type="text" id="reg-nickname" placeholder="例如：flower">
 
+        <label>绑定邮箱</label>
+        <input type="email" id="reg-email" placeholder="例如：your_email@domain.com">
 
-
-<div class="input-wrap">
-
-
-<textarea placeholder="请在此输入英文..."></textarea>
-
-
-<button class="voice">
-🎤
-</button>
-
-
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+            <button class="btn submit" style="flex:1; padding: 10px;" onclick="saveNicknameLocally()">保存</button>
+            <button class="btn next" style="flex:1; padding: 10px;" onclick="closeLoginModal()">取消</button>
+        </div>
+    </div>
 </div>
 
-
-
-
-<div class="actions">
-
-
-<button class="btn submit">
-✍️ 提交答案
-</button>
-
-
-<button class="btn next">
-🍃 换题
-</button>
-
-
-<button class="btn answer">
-👀
-</button>
-
-
+<!-- 点击有惊喜弹窗（仅保留开发者联系方式） -->
+<div id="surprise-modal" class="modal-overlay">
+    <div class="modal-card">
+        <h3>✨ 开发者寄语</h3>
+        <div style="background: #FFF; border: 2px solid var(--ink); border-radius: 16px; padding: 14px; text-align: center; margin-top: 10px; box-shadow: 2px 2px 0 var(--ink);">
+            <div style="font-weight: 700; color: #F7B0C6; margin-bottom: 6px; font-size: 1.05rem;">联系美丽且智慧的开发者</div>
+            <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 4px;">邮箱：</div>
+            <span style="color: #2E7D32; font-size: 0.95rem; word-break: break-all; font-weight: 700;">zhaihuahua1701@gmail.com</span>
+        </div>
+        <button class="btn submit" style="width: 100%; margin-top: 16px; padding: 10px;" onclick="closeSurpriseModal()">知道啦 ❤️</button>
+    </div>
 </div>
 
+<script>
+    let score = 10;
+    let streak = 1;
+    let currentMode = 'word';
 
-<div class="result"></div>
+    const questionBanks = {
+        word: [
+            { chinese: "高效的、有成效的", english: "efficient", hint: "Hint: e _ _ _ _ _ _ t" },
+            { chinese: "灵感、启发", english: "inspiration", hint: "Hint: i _ _ _ _ _ _ _ _ n" },
+            { chinese: "优先事项、首要任务", english: "priority", hint: "Hint: p _ _ _ _ _ _ y" },
+            { chinese: "策略、战略", english: "strategy", hint: "Hint: s _ _ _ _ _ y" },
+            { chinese: "挑战、质疑", english: "challenge", hint: "Hint: c _ _ _ _ _ _ _ e" }
+        ],
+        phrase: [
+            { chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
+            { chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
+            { chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "Hint: contain peanuts / allergic" }
+        ]
+    };
 
+    let currentIndex = 0;
 
+    window.addEventListener('DOMContentLoaded', () => {
+        const localName = localStorage.getItem('ee_nickname');
+        const localEmail = localStorage.getItem('ee_email');
+        const localScore = localStorage.getItem('ee_score');
+        const localStreak = localStorage.getItem('ee_streak');
+        
+        if (localName) {
+            document.getElementById('user-display-tag').innerText = `👤 ${localName}`;
+        }
+        if (localScore) score = parseInt(localScore);
+        if (localStreak) streak = parseInt(localStreak);
 
-</div>
+        updateStatsUI();
+        loadQuestion();
+        initSpeechRecognition();
+    });
 
+    function updateStatsUI() {
+        document.getElementById('score').innerText = score;
+        document.getElementById('streak').innerText = streak;
+    }
 
+    function switchMode(mode) {
+        currentMode = mode;
+        document.getElementById('tab-word').className = mode === 'word' ? 'tab active' : 'tab';
+        document.getElementById('tab-phrase').className = mode === 'phrase' ? 'tab active' : 'tab';
+        document.getElementById('card-tag').innerText = mode === 'word' ? "Today's Word" : "Today's Phrase";
+        loadQuestion();
+    }
 
-<div class="bottom">
+    function loadQuestion() {
+        const list = questionBanks[currentMode];
+        currentIndex = Math.floor(Math.random() * list.length);
+        const q = list[currentIndex];
+        
+        document.getElementById("chinese-text").innerText = q.chinese;
+        document.getElementById("hint-text").innerText = q.hint;
+        document.getElementById("user-input").value = "";
+        
+        const resultBox = document.getElementById("result-box");
+        resultBox.innerHTML = "";
+        resultBox.className = "result";
+    }
 
-<span>
-✨ 点击有惊喜
-</span>
+    function checkAnswer() {
+        const list = questionBanks[currentMode];
+        const userVal = document.getElementById("user-input").value.trim().toLowerCase();
+        const cleanUser = userVal.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
+        const target = list[currentIndex].english.toLowerCase();
+        const cleanTarget = target.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
+        const resultBox = document.getElementById("result-box");
 
+        if (!cleanUser) {
+            resultBox.className = "result feedback-error";
+            resultBox.innerHTML = `⚠️ 请先输入或说出英文回答`;
+            return;
+        }
 
-<span>
-👤 flower
-</span>
+        if (cleanUser === cleanTarget || (cleanUser.length >= 3 && cleanTarget.includes(cleanUser))) {
+            score += 10;
+            resultBox.className = "result feedback-success";
+            resultBox.innerHTML = `✨ 回答完美！积分 +10`;
+            updateStatsUI();
+            localStorage.setItem('ee_score', score);
+            setTimeout(nextQuestion, 1500);
+        } else {
+            resultBox.className = "result feedback-error";
+            resultBox.innerHTML = `💡 正确答案: ${list.english || list[currentIndex].english} <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
+        }
+    }
 
+    function showAnswer() {
+        const list = questionBanks[currentMode];
+        const resultBox = document.getElementById("result-box");
+        resultBox.className = "result feedback-error";
+        resultBox.innerHTML = `💡 正确答案: ${list[currentIndex].english} <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
+    }
 
-</div>
+    function nextQuestion() {
+        loadQuestion();
+    }
 
+    function playAudio(text) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const decodedText = decodeURIComponent(text);
+        const utterance = new SpeechSynthesisUtterance(decodedText);
+        utterance.lang = 'en-US';
+        window.speechSynthesis.speak(utterance);
+    }
 
+    function openLoginModal() {
+        const currentName = document.getElementById('user-display-tag').innerText.replace('👤 ', '');
+        if (currentName !== 'flower') {
+            document.getElementById('reg-nickname').value = currentName;
+        }
+        const currentEmail = localStorage.getItem('ee_email');
+        if (currentEmail) {
+            document.getElementById('reg-email').value = currentEmail;
+        }
+        document.getElementById('login-modal').style.display = 'flex';
+    }
+    function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
 
-</div>
+    function openSurpriseModal() { document.getElementById('surprise-modal').style.display = 'flex'; }
+    function closeSurpriseModal() { document.getElementById('surprise-modal').style.display = 'none'; }
 
+    function saveNicknameLocally() {
+        const nickname = document.getElementById('reg-nickname').value.trim() || "flower";
+        const email = document.getElementById('reg-email').value.trim();
+        document.getElementById('user-display-tag').innerText = `👤 ${nickname}`;
+        localStorage.setItem('ee_nickname', nickname);
+        if (email) localStorage.setItem('ee_email', email);
+        alert('✨ 账号信息保存成功！');
+        closeLoginModal();
+    }
+
+    function initSpeechRecognition() {
+        const btn = document.getElementById('voice-btn');
+        const tip = document.getElementById('voice-tip');
+        const inputArea = document.getElementById('user-input');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            tip.innerText = "当前浏览器暂不支持语音识别";
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+
+        let isHolding = false;
+
+        const startRec = (e) => {
+            e.preventDefault();
+            if (isHolding) return;
+            isHolding = true;
+            btn.classList.add('recording');
+            tip.innerText = "正在聆听，请说英文...";
+            try { recognition.start(); } catch(err) {}
+        };
+
+        const stopRec = (e) => {
+            e.preventDefault();
+            if (!isHolding) return;
+            isHolding = false;
+            btn.classList.remove('recording');
+            tip.innerText = "识别中...";
+            try { recognition.stop(); } catch(err) {}
+        };
+
+        btn.addEventListener('touchstart', startRec, {passive: false});
+        btn.addEventListener('touchend', stopRec, {passive: false});
+        btn.addEventListener('mousedown', startRec);
+        btn.addEventListener('mouseup', stopRec);
+
+        recognition.onresult = (event) => {
+            inputArea.value = event.results[0][0].transcript;
+            tip.innerText = "识别成功！点击提交查看";
+        };
+
+        recognition.onerror = () => {
+            tip.innerText = "未识别到语音或麦克风未授权";
+            btn.classList.remove('recording');
+            isHolding = false;
+        };
+
+        recognition.onend = () => {
+            btn.classList.remove('recording');
+            isHolding = false;
+        };
+    }
+</script>
 
 </body>
 </html>
