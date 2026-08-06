@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>✦ Easy English ✦</title>
-    <!-- 引入站酷快乐体与Quicksand字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <!-- 引入Quicksand字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <!-- 引入 Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -25,7 +25,8 @@
         }
 
         body {
-            font-family: 'ZCOOL KuaiLe', cursive, sans-serif;
+            /* 采用手写风与可爱圆体作为全局中文字体 */
+            font-family: "PingFang SC", "Comic Sans MS", "Microsoft YaHei", "Quicksand", sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
@@ -183,8 +184,8 @@
         }
 
         .chinese-prompt {
-            font-family: 'ZCOOL KuaiLe', cursive, sans-serif;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
+            font-weight: 700;
             letter-spacing: 0.5px;
             line-height: 1.4;
             margin-bottom: 6px;
@@ -271,9 +272,9 @@
         }
 
         .sketch-btn {
-            font-family: 'ZCOOL KuaiLe', cursive, sans-serif;
-            font-weight: 400;
-            font-size: 1.1rem;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1.05rem;
             padding: 8px 4px;
             border: 2px solid var(--border-dark);
             border-radius: 10px;
@@ -316,7 +317,7 @@
             gap: 6px;
         }
 
-        .feedback-success { background: #E8F5E9; color: #2E7D32; font-size: 1.15rem !important; font-family: 'ZCOOL KuaiLe', cursive; }
+        .feedback-success { background: #E8F5E9; color: #2E7D32; font-size: 1.1rem !important; font-weight: 700; }
         .feedback-error { background: #FFEBEE; color: #C62828; }
 
         .answer-audio-btn {
@@ -329,7 +330,7 @@
             box-shadow: 1.5px 1.5px 0px var(--border-dark);
             white-space: nowrap;
             flex-shrink: 0;
-            font-family: 'ZCOOL KuaiLe', cursive;
+            font-family: inherit;
         }
         .answer-audio-btn:active {
             transform: translate(1px, 1px);
@@ -347,9 +348,9 @@
             border: 2px solid var(--border-dark);
             border-radius: 14px;
             padding: 10px;
-            font-family: 'ZCOOL KuaiLe', cursive;
-            font-size: 1.2rem;
-            font-weight: 400;
+            font-family: inherit;
+            font-size: 1.15rem;
+            font-weight: 700;
             cursor: pointer;
             box-shadow: 3px 4px 0px var(--border-dark);
             transition: all 0.08s ease;
@@ -381,19 +382,19 @@
             max-width: 320px;
             box-shadow: 5px 7px 0px var(--border-dark);
             text-align: left;
-            font-family: 'ZCOOL KuaiLe', cursive;
+            font-family: inherit;
         }
 
         .modal-card h3 {
             margin: 0 0 4px 0;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             text-align: center;
         }
 
         .modal-card label {
             display: block;
-            font-size: 1rem;
-            font-weight: normal;
+            font-size: 0.95rem;
+            font-weight: bold;
             color: var(--text-muted);
             margin-top: 8px;
         }
@@ -422,11 +423,12 @@
             border: 2px solid var(--border-dark);
             border-radius: 8px;
             padding: 0 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            font-weight: bold;
             cursor: pointer;
             white-space: nowrap;
             box-shadow: 1.5px 1.5px 0px var(--border-dark);
-            font-family: 'ZCOOL KuaiLe', cursive;
+            font-family: inherit;
         }
         .verify-btn:active {
             transform: translate(1px, 1px);
@@ -746,19 +748,18 @@
             const utterance = new SpeechSynthesisUtterance(decodedText);
             utterance.lang = 'en-US';
             
-            // 智能选择最自然的英文语音引擎（优先选择带有 en-US 的标准女声/通用语音）
+            // 自动筛选标准自然的英文语音
             const voices = window.speechSynthesis.getVoices();
             const standardVoice = voices.find(v => v.lang === 'en-US' && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('US English'))) || voices.find(v => v.lang.startsWith('en'));
             if (standardVoice) {
                 utterance.voice = standardVoice;
             }
             
-            utterance.rate = 1.0;  // 绝对标准正常语速
-            utterance.pitch = 1.0; // 绝对标准正常音调
+            utterance.rate = 1.0;  // 标准正常语速
+            utterance.pitch = 1.0; // 标准正常音调
             window.speechSynthesis.speak(utterance);
         }
 
-        // 预加载并监听语音列表，确保部分浏览器异步加载出正常音色
         if ('speechSynthesis' in window) {
             window.speechSynthesis.onvoiceschanged = () => {
                 window.speechSynthesis.getVoices();
