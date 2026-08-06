@@ -62,7 +62,7 @@
             text-shadow: 2px 2px 0px #FFE5EC;
         }
 
-        /* 顶部信息面板：上下双行卡片结构 */
+        /* 顶部信息面板 */
         .top-info-panel {
             display: flex;
             justify-content: space-between;
@@ -419,17 +419,17 @@
     <div id="login-modal">
         <div class="modal-card">
             <h3>云端账号同步</h3>
-            <p style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0;">接收真实验证码，多端同步积分与进度</p>
+            <p style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0;">输入常用电子邮箱接收验证码</p>
             
             <label>昵称</label>
             <input type="text" id="reg-nickname" placeholder="例如：手帐达人 / 杰克">
 
-            <label>邮箱或手机号</label>
-            <input type="text" id="reg-account" placeholder="请输入常用邮箱或11位手机号">
+            <label>电子邮箱</label>
+            <input type="email" id="reg-account" placeholder="请输入常用邮箱（如 QQ/163/Gmail）">
 
             <label>验证码</label>
             <div class="verify-row">
-                <input type="text" id="reg-code" placeholder="输入收到的验证码">
+                <input type="text" id="reg-code" placeholder="输入邮箱收到的验证码">
                 <button class="verify-btn" onclick="sendVerifyCode()">获取验证码</button>
             </div>
 
@@ -462,32 +462,23 @@
         function openModal() { document.getElementById('login-modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('login-modal').style.display = 'none'; }
 
-        // 发送真实验证码 (Supabase OTP)
+        // 发送真实邮箱验证码
         async function sendVerifyCode() {
             const account = document.getElementById('reg-account').value.trim();
-            if (!account) {
-                alert('请先输入手机号或邮箱！');
-                return;
-            }
-
-            let targetEmail = account;
-            // 若用户输入的是11位手机号，转化为系统识别的虚拟邮箱后缀
-            if (/^1[3-9]\d{9}$/.test(account)) {
-                targetEmail = `${account}@phone.local`;
-            } else if (!account.includes('@')) {
-                alert('请输入合法的邮箱或11位手机号！');
+            if (!account || !account.includes('@')) {
+                alert('请输入合法的电子邮箱地址！');
                 return;
             }
 
             const { error } = await _supabase.auth.signInWithOtp({
-                email: targetEmail,
+                email: account,
                 options: { shouldCreateUser: true }
             });
 
             if (error) {
                 alert('验证码发送失败: ' + error.message);
             } else {
-                alert('✅ 验证码已发送，请检查您的邮箱或短信通知！');
+                alert('✅ 验证码已发送至您的邮箱，请前往查收！');
             }
         }
 
@@ -498,17 +489,12 @@
             const token = document.getElementById('reg-code').value.trim();
 
             if (!account || !token) {
-                alert('请输入账号和收到的验证码！');
+                alert('请输入邮箱和收到的验证码！');
                 return;
             }
 
-            let targetEmail = account;
-            if (/^1[3-9]\d{9}$/.test(account)) {
-                targetEmail = `${account}@phone.local`;
-            }
-
             const { data, error } = await _supabase.auth.verifyOtp({
-                email: targetEmail,
+                email: account,
                 token: token,
                 type: 'email'
             });
