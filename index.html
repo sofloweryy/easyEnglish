@@ -52,13 +52,15 @@
             margin-bottom: 12px;
         }
 
+        /* 调整字号，确保在主流手机屏幕上完美单行展示 */
         .brand-title {
             font-family: 'Long Cang', cursive, serif;
-            font-size: 2.3rem;
-            letter-spacing: 1px;
+            font-size: 1.95rem;
+            letter-spacing: 0.5px;
             margin: 0;
             color: var(--text-main);
             text-shadow: 2px 2px 0px #FFE5EC;
+            white-space: nowrap; /* 强制单行不换行 */
         }
 
         .brand-sub {
@@ -66,10 +68,10 @@
             font-size: 0.9rem;
             color: var(--text-muted);
             letter-spacing: 1px;
-            margin-top: 1px;
+            margin-top: 2px;
         }
 
-        /* 精简合并后的顶部信息栏：单行紧凑展示 */
+        /* 顶部信息栏：单行紧凑展示 */
         .top-info-bar {
             display: flex;
             justify-content: space-between;
@@ -166,7 +168,7 @@
         textarea {
             width: 100%;
             height: 72px;
-            padding: 10px 42px 10px 12px; /* 右侧留出空间给工具按键 */
+            padding: 10px 42px 10px 12px;
             font-size: 0.95rem;
             font-family: 'Architects Daughter', cursive, sans-serif;
             border: 2.5px solid var(--border-dark);
@@ -183,7 +185,6 @@
             box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.15), inset 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        /* 嵌入在输入框右侧的高效紧凑小工具栏 */
         .inline-tools {
             position: absolute;
             right: 8px;
@@ -223,7 +224,6 @@
             height: 14px;
         }
 
-        /* 按钮网格突出主次 */
         .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -258,7 +258,6 @@
             grid-column: span 2;
         }
 
-        /* 结果与答案展示区 */
         #result-box {
             margin-top: 10px;
             font-size: 0.92rem;
@@ -296,7 +295,6 @@
             background: #FFE5EC;
         }
 
-        /* 登录弹窗样式 */
         #login-modal {
             display: none;
             position: fixed;
@@ -374,11 +372,12 @@
 
     <div class="container">
         <div class="header">
+            <!-- 优化后：确保在容器宽度内完美单行显示 -->
             <div class="brand-title">轻松学习旅行/工作英语</div>
-            <div class="brand-sub">✦ 职场与出海口语手帐 ✦</div>
+            <div class="brand-sub">✦ 碎片时间学英语 ✦</div>
         </div>
 
-        <!-- 紧凑单行合并版顶部栏 -->
+        <!-- 顶部信息栏 -->
         <div class="top-info-bar">
             <div class="user-section">
                 <span class="user-tag">👤 <span id="user-display">本地游客</span></span>
@@ -395,7 +394,6 @@
             <div class="chinese-prompt" id="chinese-text">正在翻阅手帐页面...</div>
             <div class="hint-text" id="hint-text"></div>
             
-            <!-- 输入框 + 嵌入式右侧小工具 -->
             <div class="input-container-wrapper">
                 <textarea id="user-input" placeholder="请在此写下你的英文表达..." autocomplete="off"></textarea>
                 <div class="inline-tools">
