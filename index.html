@@ -119,37 +119,25 @@
             background: #FFFCF7;
             border: 2px dashed #E6DEC9;
             border-radius: 16px;
-            padding: 14px 12px 12px 12px;
+            padding: 18px 12px 12px 12px;
             text-align: center;
             margin-bottom: 8px;
             position: relative;
         }
 
-        .category-pill {
-            display: inline-block;
-            background: #E8F5E9;
-            color: #2E7D32;
-            border: 2px solid var(--border-dark);
-            padding: 2px 14px;
-            border-radius: 16px;
-            font-size: 1.05rem;
-            margin-bottom: 6px;
-            box-shadow: 2px 2px 0px var(--border-dark);
-        }
-
         .chinese-prompt {
             font-family: var(--font-title-hand);
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             letter-spacing: 1px;
             line-height: 1.4;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             color: var(--text-main);
         }
 
         .hint-text {
             font-size: 0.95rem;
             color: var(--text-muted);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-family: 'Quicksand', sans-serif;
             font-weight: 600;
         }
@@ -469,7 +457,6 @@
 
         <!-- 核心题目卡片 -->
         <div class="sketch-card">
-            <div id="category-pill" class="category-pill">🔥 载入中...</div>
             <div class="chinese-prompt" id="chinese-text">正在翻阅手帐页面...</div>
             <div class="hint-text" id="hint-text"></div>
             
@@ -564,25 +551,25 @@
 
         const questionBanks = {
             word: [
-                { category: "🔥 高频单词", chinese: "高效的、有成效的", english: "efficient", phonetic: "[ɪˈfɪʃnt]", hint: "Hint: e _ _ _ _ _ _ t (9 letters)" },
-                { category: "🔥 高频单词", chinese: "灵感、启发", english: "inspiration", phonetic: "[ˌɪnspəˈreɪʃn]", hint: "Hint: i _ _ _ _ _ _ _ _ n (11 letters)" },
-                { category: "🔥 高频单词", chinese: "优先事项、首要任务", english: "priority", phonetic: "[praɪˈɔːrəti]", hint: "Hint: p _ _ _ _ _ _ y (8 letters)" },
-                { category: "🔥 高频单词", chinese: "灵活的、可变通的", english: "flexible", phonetic: "[ˈfleksəbl]", hint: "Hint: f _ _ _ _ _ _ e (8 letters)" },
-                { category: "🔥 高频单词", chinese: "策略、战略", english: "strategy", phonetic: "[ˈstrætədʒi]", hint: "Hint: s _ _ _ _ _ _ y (8 letters)" },
-                { category: "🔥 高频单词", chinese: "合作、协作", english: "collaboration", phonetic: "[kəˌlæbəˈreɪʃn]", hint: "Hint: c _ _ _ _ _ _ _ _ _ _ _ n (13 letters)" },
-                { category: "🔥 高频单词", chinese: "成就、成绩", english: "achievement", phonetic: "[əˈtʃiːvmənt]", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
-                { category: "🔥 高频单词", chinese: "挑战、质疑", english: "challenge", phonetic: "[ˈtʃælɪndʒ]", hint: "Hint: c _ _ _ _ _ _ _ e (9 letters)" }
+                { chinese: "高效的、有成效的", english: "efficient", phonetic: "[ɪˈfɪʃnt]", hint: "Hint: e _ _ _ _ _ _ t (9 letters)" },
+                { chinese: "灵感、启发", english: "inspiration", phonetic: "[ˌɪnspəˈreɪʃn]", hint: "Hint: i _ _ _ _ _ _ _ _ n (11 letters)" },
+                { chinese: "优先事项、首要任务", english: "priority", phonetic: "[praɪˈɔːrəti]", hint: "Hint: p _ _ _ _ _ _ y (8 letters)" },
+                { chinese: "灵活的、可变通的", english: "flexible", phonetic: "[ˈfleksəbl]", hint: "Hint: f _ _ _ _ _ _ e (8 letters)" },
+                { chinese: "策略、战略", english: "strategy", phonetic: "[ˈstrætədʒi]", hint: "Hint: s _ _ _ _ _ _ y (8 letters)" },
+                { chinese: "合作、协作", english: "collaboration", phonetic: "[kəˌlæbəˈreɪʃn]", hint: "Hint: c _ _ _ _ _ _ _ _ _ _ _ n (13 letters)" },
+                { chinese: "成就、成绩", english: "achievement", phonetic: "[əˈtʃiːvmənt]", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
+                { chinese: "挑战、质疑", english: "challenge", phonetic: "[ˈtʃælɪndʒ]", hint: "Hint: c _ _ _ _ _ _ _ e (9 letters)" }
             ],
             phrase: [
-                { category: "✈️ 机场海关", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
-                { category: "🧳 酒店入住", chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
-                { category: "🍜 餐厅点餐", chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "Hint: contain peanuts / allergic" },
-                { category: "🚕 城市问路", chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "Hint: subway station / nearby" },
-                { category: "💼 远程会议", chinese: "大家能听到我说话吗？我的麦克风刚才有点问题。", english: "Can everyone hear me? My microphone was acting up a bit.", hint: "Hint: Can everyone hear me? / microphone" },
-                { category: "💼 表达观点", chinese: "关于这个项目，我想听听大家的看法。", english: "Regarding this project, I'd love to hear everyone's thoughts.", hint: "Hint: Regarding this project / thoughts" },
-                { category: "💼 礼貌打断", chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "Hint: Sorry to interrupt / quick question" },
-                { category: "💼 进度汇报", chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "Hint: ahead of schedule / expect to" },
-                { category: "💼 职场拒绝", chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "Hint: plate is full / might not have time" }
+                { chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
+                { chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
+                { chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "Hint: contain peanuts / allergic" },
+                { chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "Hint: subway station / nearby" },
+                { chinese: "大家能听到我说话吗？我的麦克风刚才有点问题。", english: "Can everyone hear me? My microphone was acting up a bit.", hint: "Hint: Can everyone hear me? / microphone" },
+                { chinese: "关于这个项目，我想听听大家的看法。", english: "Regarding this project, I'd love to hear everyone's thoughts.", hint: "Hint: Regarding this project / thoughts" },
+                { chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "Hint: Sorry to interrupt / quick question" },
+                { chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "Hint: ahead of schedule / expect to" },
+                { chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "Hint: plate is full / might not have time" }
             ]
         };
 
@@ -653,7 +640,6 @@
             const list = questionBanks[currentMode];
             currentIndex = Math.floor(Math.random() * list.length);
             const q = list[currentIndex];
-            document.getElementById("category-pill").innerText = q.category;
             document.getElementById("chinese-text").innerText = q.chinese;
             document.getElementById("hint-text").innerText = q.hint;
             document.getElementById("user-input").value = "";
