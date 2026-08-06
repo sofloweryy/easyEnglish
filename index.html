@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>✦ Easy English ✦</title>
-    <!-- 引入Google Fonts的手写可爱风字体及Quicksand -->
+    <!-- 引入Google Fonts的手写可爱风字体（Ma Shan Zheng / ZCOOL KuaiLe）及Quicksand -->
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@700&family=Quicksand:wght@600;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <!-- 引入 Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,7 +25,7 @@
         }
 
         body {
-            /* 完美手写体与可爱风字体组合 */
+            /* 整体采用可爱手写风字体，中文部分更具手写感 */
             font-family: 'ZCOOL KuaiLe', "Comic Sans MS", cursive, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -64,7 +64,7 @@
             text-shadow: 2px 2px 0px #FFE5EC;
         }
 
-        /* 模式切换卡片开关（单词 vs 短语） */
+        /* 模式切换卡片开关（左边单词 vs 右边短语） */
         .mode-switch-bar {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -79,7 +79,8 @@
         .mode-tab {
             background: transparent;
             border: none;
-            font-family: inherit;
+            /* 标签内部也使用手写字体 */
+            font-family: 'ZCOOL KuaiLe', cursive, sans-serif;
             font-size: 1.05rem;
             font-weight: 400;
             padding: 6px 0;
@@ -177,11 +178,14 @@
             font-size: 1rem;
             margin-bottom: 6px;
             box-shadow: 2px 2px 0px var(--border-dark);
+            font-family: 'ZCOOL KuaiLe', cursive, sans-serif;
         }
 
         .chinese-prompt {
-            font-size: 1.3rem;
-            letter-spacing: 0.5px;
+            /* 赋予题目中文更加强烈的手写感字体 */
+            font-family: 'Ma Shan Zheng', cursive, sans-serif;
+            font-size: 1.55rem;
+            letter-spacing: 1px;
             line-height: 1.4;
             margin-bottom: 6px;
             color: var(--text-main);
@@ -254,7 +258,7 @@
         }
 
         .voice-status-tip {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
             margin-bottom: 10px;
             height: 18px;
@@ -382,6 +386,7 @@
             margin: 0 0 4px 0;
             font-size: 1.5rem;
             text-align: center;
+            font-family: 'Ma Shan Zheng', cursive, sans-serif;
         }
 
         .modal-card label {
@@ -434,10 +439,10 @@
             <div class="brand-title">Easy English</div>
         </div>
 
-        <!-- 模式切换开关：单词 vs 短语 -->
+        <!-- 模式切换开关：左边高频单词，右边常用短语 -->
         <div class="mode-switch-bar">
-            <button class="mode-tab active" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
-            <button class="mode-tab" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
+            <button class="mode-tab active" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
+            <button class="mode-tab" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
         </div>
 
         <!-- 顶部信息面板 -->
@@ -455,7 +460,7 @@
         </div>
 
         <div class="sketch-card">
-            <div id="category-pill" class="category-pill">✈️ 载入中...</div>
+            <div id="category-pill" class="category-pill">🔥 载入中...</div>
             <div class="chinese-prompt" id="chinese-text">正在翻阅手帐页面...</div>
             <div class="hint-text" id="hint-text"></div>
             
@@ -521,11 +526,21 @@
 
         let currentUser = null;
         let score = 0;
-        let streak = 0; // 代表打卡天数
-        let currentMode = 'phrase'; // 默认短语模式
+        let streak = 0; 
+        let currentMode = 'word'; // 默认打开左边的单词模式
 
-        // 题库分类：短语 & 单词（单词包含音标字段）
+        // 题库分类：单词 & 短语
         const questionBanks = {
+            word: [
+                { category: "🔥 高频单词", chinese: "高效的、有成效的", english: "efficient", phonetic: "[ɪˈfɪʃnt]", hint: "Hint: e _ _ _ _ _ _ t (9 letters)" },
+                { category: "🔥 高频单词", chinese: "灵感、启发", english: "inspiration", phonetic: "[ˌɪnspəˈreɪʃn]", hint: "Hint: i _ _ _ _ _ _ _ _ n (11 letters)" },
+                { category: "🔥 高频单词", chinese: "优先事项、首要任务", english: "priority", phonetic: "[praɪˈɔːrəti]", hint: "Hint: p _ _ _ _ _ _ y (8 letters)" },
+                { category: "🔥 高频单词", chinese: "灵活的、可变通的", english: "flexible", phonetic: "[ˈfleksəbl]", hint: "Hint: f _ _ _ _ _ _ e (8 letters)" },
+                { category: "🔥 高频单词", chinese: "策略、战略", english: "strategy", phonetic: "[ˈstrætədʒi]", hint: "Hint: s _ _ _ _ _ _ y (8 letters)" },
+                { category: "🔥 高频单词", chinese: "合作、协作", english: "collaboration", phonetic: "[kəˌlæbəˈreɪʃn]", hint: "Hint: c _ _ _ _ _ _ _ _ _ _ _ n (13 letters)" },
+                { category: "🔥 高频单词", chinese: "成就、成绩", english: "achievement", phonetic: "[əˈtʃiːvmənt]", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
+                { category: "🔥 高频单词", chinese: "挑战、质疑", english: "challenge", phonetic: "[ˈtʃælɪndʒ]", hint: "Hint: c _ _ _ _ _ _ _ e (9 letters)" }
+            ],
             phrase: [
                 { category: "✈️ 机场海关", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
                 { category: "🧳 酒店入住", chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
@@ -536,16 +551,6 @@
                 { category: "💼 礼貌打断", chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "Hint: Sorry to interrupt / quick question" },
                 { category: "💼 进度汇报", chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "Hint: ahead of schedule / expect to" },
                 { category: "💼 职场拒绝", chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "Hint: plate is full / might not have time" }
-            ],
-            word: [
-                { category: "🔥 高频单词", chinese: "高效的、有成效的", english: "efficient", phonetic: "[ɪˈfɪʃnt]", hint: "Hint: e _ _ _ _ _ _ t (9 letters)" },
-                { category: "🔥 高频单词", chinese: "灵感、启发", english: "inspiration", phonetic: "[ˌɪnspəˈreɪʃn]", hint: "Hint: i _ _ _ _ _ _ _ _ n (11 letters)" },
-                { category: "🔥 高频单词", chinese: "优先事项、首要任务", english: "priority", phonetic: "[praɪˈɔːrəti]", hint: "Hint: p _ _ _ _ _ _ y (8 letters)" },
-                { category: "🔥 高频单词", chinese: "灵活的、可变通的", english: "flexible", phonetic: "[ˈfleksəbl]", hint: "Hint: f _ _ _ _ _ _ e (8 letters)" },
-                { category: "🔥 高频单词", chinese: "策略、战略", english: "strategy", phonetic: "[ˈstrætədʒi]", hint: "Hint: s _ _ _ _ _ _ y (8 letters)" },
-                { category: "🔥 高频单词", chinese: "合作、协作", english: "collaboration", phonetic: "[kəˌlæbəˈreɪʃn]", hint: "Hint: c _ _ _ _ _ _ _ _ _ _ _ n (13 letters)" },
-                { category: "🔥 高频单词", chinese: "achievement", chinese: "成就、成绩", english: "achievement", phonetic: "[əˈtʃiːvmənt]", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
-                { category: "🔥 高频单词", chinese: "挑战、质疑", english: "challenge", phonetic: "[ˈtʃælɪndʒ]", hint: "Hint: c _ _ _ _ _ _ _ e (9 letters)" }
             ]
         };
 
@@ -567,7 +572,6 @@
                 if (localScore) score = parseInt(localScore);
                 if (localStreak) streak = parseInt(localStreak);
                 
-                // 检查并执行每日打卡逻辑
                 checkDailyCheckIn();
                 updateStatsUI();
             }
@@ -575,13 +579,11 @@
             loadQuestion();
         });
 
-        // 真实打卡天数校验：每天第一次打开/答题时算作今日已打卡
         function checkDailyCheckIn() {
-            const todayStr = new Date().toDateString(); // 例如 "Sun Aug 06 2026"
+            const todayStr = new Date().toDateString();
             const lastCheckInDate = localStorage.getItem('ee_last_checkin_date');
 
             if (lastCheckInDate !== todayStr) {
-                // 如果今天还没打过卡，天数加1，并更新最后打卡日期
                 streak += 1;
                 localStorage.setItem('ee_last_checkin_date', todayStr);
                 localStorage.setItem('ee_streak', streak);
@@ -590,8 +592,8 @@
 
         function switchMode(mode) {
             currentMode = mode;
-            document.getElementById('tab-phrase').className = mode === 'phrase' ? 'mode-tab active' : 'mode-tab';
             document.getElementById('tab-word').className = mode === 'word' ? 'mode-tab active' : 'mode-tab';
+            document.getElementById('tab-phrase').className = mode === 'phrase' ? 'mode-tab active' : 'mode-tab';
             loadQuestion();
         }
 
@@ -678,7 +680,6 @@
                 score = data.score || 0;
                 streak = data.streak || 0;
                 
-                // 云端用户也同样校验每日打卡
                 const todayStr = new Date().toDateString();
                 const lastCheckInDate = localStorage.getItem('ee_last_checkin_date');
                 if (lastCheckInDate !== todayStr) {
