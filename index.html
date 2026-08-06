@@ -413,26 +413,6 @@
             font-size: 1rem;
             color: var(--text-muted);
         }
-
-        /* 手机添加桌面引导浮窗样式 */
-        #install-banner {
-            display: none;
-            position: fixed;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;
-            max-width: 400px;
-            background: #FFF9E6;
-            border: 2.5px solid var(--border-dark);
-            border-radius: 16px;
-            padding: 12px 14px;
-            box-shadow: 4px 6px 0px var(--border-dark);
-            z-index: 99;
-            align-items: center;
-            justify-content: space-between;
-            font-family: var(--font-handwriting);
-        }
     </style>
 </head>
 <body>
@@ -485,15 +465,15 @@
 
     <button class="surprise-btn" onclick="openSurpriseModal()">✨ 点击有惊喜</button>
 
-    <!-- 手机桌面安装引导浮窗 -->
-    <div id="install-banner">
-        <div style="font-size: 1.05rem; line-height: 1.4;">
-            📱 <b>添加到手机桌面</b><br>
-            <span style="font-size: 0.9rem; color: var(--text-muted);">随时随地打卡，体验更丝滑！</span>
-        </div>
-        <div style="display: flex; gap: 6px;">
-            <button class="sketch-btn primary" id="install-action-btn" style="padding: 6px 10px; font-size: 1rem;">添加</button>
-            <button class="sketch-btn" onclick="dismissInstall()" style="padding: 6px 8px; font-size: 1rem;">✕</button>
+    <!-- 手机桌面安装引导弹窗 -->
+    <div id="install-modal" class="modal-overlay">
+        <div class="modal-card" style="text-align: center;">
+            <h3>✨ 添加到手机桌面</h3>
+            <p style="font-size: 1.05rem; line-height: 1.5; color: var(--text-main); margin: 8px 0 16px 0;">
+                随时随地打开打卡，<br>体验像原生 App 一样更丝滑！
+            </p>
+            <button class="sketch-btn primary" id="install-action-btn" style="width: 100%; margin-bottom: 8px;">立即添加</button>
+            <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="dismissInstall()">下次再说</button>
         </div>
     </div>
 
@@ -552,13 +532,13 @@
 
         let currentIndex = 0;
 
-        // PWA 安装提示逻辑
+        // PWA 安装提示弹窗逻辑
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             if (!localStorage.getItem('ee_install_dismissed')) {
-                document.getElementById('install-banner').style.display = 'flex';
+                document.getElementById('install-modal').style.display = 'flex';
             }
         });
 
@@ -570,14 +550,15 @@
                     console.log('用户接受了安装');
                 }
                 deferredPrompt = null;
-                document.getElementById('install-banner').style.display = 'none';
+                document.getElementById('install-modal').style.display = 'none';
             } else {
                 alert('提示：你可以点击手机浏览器菜单（如Safari的“分享”或Chrome的“...”），然后选择“添加到主屏幕”即可！');
+                document.getElementById('install-modal').style.display = 'none';
             }
         });
 
         function dismissInstall() {
-            document.getElementById('install-banner').style.display = 'none';
+            document.getElementById('install-modal').style.display = 'none';
             localStorage.setItem('ee_install_dismissed', 'true');
         }
 
