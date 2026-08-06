@@ -7,8 +7,6 @@
     <!-- 引入Google Fonts的手写可爱风字体（Ma Shan Zheng / ZCOOL KuaiLe）及Quicksand -->
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@700&family=Quicksand:wght@600;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
-    <!-- 引入 Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-color: #FAF6ED;
@@ -415,6 +413,26 @@
             font-size: 1rem;
             color: var(--text-muted);
         }
+
+        /* 手机添加桌面引导浮窗样式 */
+        #install-banner {
+            display: none;
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 400px;
+            background: #FFF9E6;
+            border: 2.5px solid var(--border-dark);
+            border-radius: 16px;
+            padding: 12px 14px;
+            box-shadow: 4px 6px 0px var(--border-dark);
+            z-index: 99;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-handwriting);
+        }
     </style>
 </head>
 <body>
@@ -467,6 +485,18 @@
 
     <button class="surprise-btn" onclick="openSurpriseModal()">✨ 点击有惊喜</button>
 
+    <!-- 手机桌面安装引导浮窗 -->
+    <div id="install-banner">
+        <div style="font-size: 1.05rem; line-height: 1.4;">
+            📱 <b>添加到手机桌面</b><br>
+            <span style="font-size: 0.9rem; color: var(--text-muted);">随时随地打卡，体验更丝滑！</span>
+        </div>
+        <div style="display: flex; gap: 6px;">
+            <button class="sketch-btn primary" id="install-action-btn" style="padding: 6px 10px; font-size: 1rem;">添加</button>
+            <button class="sketch-btn" onclick="dismissInstall()" style="padding: 6px 8px; font-size: 1rem;">✕</button>
+        </div>
+    </div>
+
     <!-- 设置昵称弹窗 -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-card">
@@ -492,10 +522,6 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
-        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
         let score = 10;
         let streak = 1; 
         let currentMode = 'word';
@@ -525,6 +551,35 @@
         };
 
         let currentIndex = 0;
+
+        // PWA 安装提示逻辑
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!localStorage.getItem('ee_install_dismissed')) {
+                document.getElementById('install-banner').style.display = 'flex';
+            }
+        });
+
+        document.getElementById('install-action-btn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('用户接受了安装');
+                }
+                deferredPrompt = null;
+                document.getElementById('install-banner').style.display = 'none';
+            } else {
+                alert('提示：你可以点击手机浏览器菜单（如Safari的“分享”或Chrome的“...”），然后选择“添加到主屏幕”即可！');
+            }
+        });
+
+        function dismissInstall() {
+            document.getElementById('install-banner').style.display = 'none';
+            localStorage.setItem('ee_install_dismissed', 'true');
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             const localName = localStorage.getItem('ee_nickname');
