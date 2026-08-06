@@ -49,19 +49,37 @@
             position: relative;
         }
 
-        .header {
-            text-align: center;
+        /* 顶部区域：标题与右上角统计数据 */
+        .header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 8px;
+            position: relative;
         }
 
         .brand-title {
             font-family: 'Quicksand', sans-serif;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
             letter-spacing: 1px;
             margin: 0;
             color: var(--text-main);
             text-shadow: 2px 2px 0px #FFE5EC;
+            line-height: 1.2;
+        }
+
+        .stats-badge-top {
+            background: #FFF1F2;
+            border: 2px solid var(--border-dark);
+            padding: 4px 8px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 0px var(--border-dark);
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            align-items: flex-end;
         }
 
         .mode-switch-bar {
@@ -95,73 +113,14 @@
             box-shadow: 1.5px 1.5px 0px var(--border-dark);
         }
 
-        .top-info-panel {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            background: #FFF1F2;
-            padding: 8px 12px;
-            border-radius: 14px;
-            border: 2px solid var(--border-dark);
-            box-shadow: 2.5px 2.5px 0px var(--border-dark);
-            font-family: var(--font-handwriting);
-        }
-
-        .user-section {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .user-info-row {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 1.1rem;
-        }
-
-        .user-tag span {
-            color: var(--accent-terracotta);
-        }
-
-        .login-mini-btn {
-            background: #FFE5EC;
-            color: var(--border-dark);
-            border: 1.5px solid var(--border-dark);
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            box-shadow: 1px 1px 0px var(--border-dark);
-            font-family: var(--font-handwriting);
-        }
-        .login-mini-btn:active {
-            transform: translate(1px, 1px);
-            box-shadow: none;
-        }
-
-        .stats-group {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 2px;
-            font-size: 1.1rem;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-
+        /* 题目卡片 */
         .sketch-card {
             background: #FFFCF7;
             border: 2px dashed #E6DEC9;
             border-radius: 16px;
-            padding: 14px 12px;
+            padding: 14px 12px 10px 12px;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             position: relative;
         }
 
@@ -260,10 +219,10 @@
         }
 
         .voice-status-tip {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
-            margin-bottom: 10px;
-            height: 22px;
+            margin-bottom: 8px;
+            height: 20px;
             font-family: var(--font-handwriting);
         }
 
@@ -271,6 +230,7 @@
             display: grid;
             grid-template-columns: 1.3fr 1fr 1fr;
             gap: 6px;
+            margin-bottom: 6px;
         }
 
         .sketch-btn {
@@ -299,6 +259,45 @@
         .sketch-btn.primary {
             background: #2C2A29;
             color: #FFFFFF;
+        }
+
+        /* 底部行：左侧留空或小提示，右下角登录/昵称 */
+        .card-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1.5px dashed #E6DEC9;
+        }
+
+        .user-tag-bottom {
+            font-size: 1rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-tag-bottom span {
+            color: var(--accent-terracotta);
+            font-weight: 700;
+        }
+
+        .login-mini-btn {
+            background: #FFE5EC;
+            color: var(--border-dark);
+            border: 1.5px solid var(--border-dark);
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 1.5px 1.5px 0px var(--border-dark);
+            font-family: var(--font-handwriting);
+        }
+        .login-mini-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: none;
         }
 
         #result-box {
@@ -418,8 +417,15 @@
 <body>
 
     <div class="container">
-        <div class="header">
-            <div class="brand-title">Easy English</div>
+        <!-- 顶部：品牌名与右上角统计 -->
+        <div class="header-area">
+            <div>
+                <div class="brand-title">Easy English</div>
+            </div>
+            <div class="stats-badge-top">
+                <div>🔥 打卡: <span id="streak">1</span> 天</div>
+                <div>⭐ 积分: <span id="score">10</span> 分</div>
+            </div>
         </div>
 
         <div class="mode-switch-bar">
@@ -427,19 +433,7 @@
             <button class="mode-tab" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
         </div>
 
-        <div class="top-info-panel">
-            <div class="user-section">
-                <div class="user-info-row">
-                    <span class="user-tag">👤 <span id="user-display">本地游客</span></span>
-                </div>
-                <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">设置昵称</button>
-            </div>
-            <div class="stats-group">
-                <div class="stat-item">🔥 打卡:<span id="streak">1</span>天</div>
-                <div class="stat-item">⭐ 积分:<span id="score">10</span>分</div>
-            </div>
-        </div>
-
+        <!-- 核心题目卡片 -->
         <div class="sketch-card">
             <div id="category-pill" class="category-pill">🔥 载入中...</div>
             <div class="chinese-prompt" id="chinese-text">正在翻阅手帐页面...</div>
@@ -457,6 +451,14 @@
                 <button class="sketch-btn primary" onclick="checkAnswer()">提交 ✍️</button>
                 <button class="sketch-btn" onclick="nextQuestion()">换题 🍃</button>
                 <button class="sketch-btn" onclick="showAnswer()">答案 👀</button>
+            </div>
+
+            <!-- 卡片右下角：昵称与设置 -->
+            <div class="card-footer-row">
+                <div class="user-tag-bottom">
+                    👤 <span id="user-display">本地游客</span>
+                </div>
+                <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">设置昵称</button>
             </div>
         </div>
 
