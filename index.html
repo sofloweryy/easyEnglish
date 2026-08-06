@@ -3,134 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌍 英语生存模拟器：旅行 & 工作闯关</title>
+    <title>🌍 英语生存涂鸦本</title>
     <!-- 引入 Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- 引入手绘风格字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-color: #1f2937;
+            --main-bg: #FFF8E1; /* 温暖奶油色 */
+            --card-bg: #FFFFFF;
+            --primary: #FFC107; /* 亮黄色 */
+            --primary-dark: #FFA000;
+            --secondary: #64B5F6; /* 柔和天蓝色 */
+            --text-dark: #3E2723; /* 深棕色，非纯黑 */
+            --correct: #8BC34A; /* 手绘绿色 */
+            --wrong: #E57373;   /* 手绘红色 */
+            --border-radius: 15px;
+            --font-main: 'Klee One', cursive;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: var(--font-main);
+            background-color: var(--main-bg);
+            color: var(--text-dark);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 手绘背景纹理 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36z8gAFkNfwxhgzPUPEGZYgFAGEGEAuhEQEre1f/oAAAAASUVORK5CYII=');
+            opacity: 0.3;
+            z-index: -1;
         }
 
         .container {
             width: 100%;
-            max-width: 600px;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            max-width: 650px;
             text-align: center;
+            position: relative;
         }
 
-        h1 { font-size: 1.5rem; margin-bottom: 5px; color: var(--primary); }
-        .subtitle { color: #6b7280; font-size: 0.85rem; margin-bottom: 15px; }
+        /* 顶部标题区域 */
+        .header-area {
+            margin-bottom: 30px;
+        }
 
+        h1 {
+            font-size: 2.5rem;
+            margin: 0 0 10px 0;
+            text-shadow: 2px 2px 0px #FFE082;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        /* 手绘风格徽章 */
+        .visit-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 2px solid var(--text-dark);
+            transform: rotate(-2deg);
+            box-shadow: 2px 2px 0 var(--text-dark);
+            font-weight: bold;
+        }
+
+        /* 状态栏 */
         .stats {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--text-dark);
+            box-shadow: 3px 3px 0 var(--text-dark);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 挑战卡片 */
+        .challenge-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 25px;
+            border: 3px solid var(--text-dark);
+            box-shadow: 5px 5px 0 var(--text-dark);
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        /* 卡片上的手绘装饰角 */
+        .challenge-box::before {
+            content: "★";
+            position: absolute;
+            top: -15px; right: -15px;
+            font-size: 2rem;
+            color: var(--primary);
+            transform: rotate(15deg);
+        }
+
+        .category-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #FFF3E0;
+            border: 2px solid var(--text-dark);
+            padding: 5px 15px;
+            border-radius: 20px;
             margin-bottom: 20px;
             font-size: 0.9rem;
-            color: #6b7280;
-            background: #f9fafb;
-            padding: 10px;
-            border-radius: 8px;
         }
 
-        .badge {
-            background: #e0e7ff;
-            color: var(--primary);
-            padding: 4px 10px;
-            border-radius: 20px;
+        .chinese-prompt {
+            font-size: 1.8rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
             font-weight: bold;
-            font-size: 0.8rem;
         }
 
-        .challenge-box {
-            margin: 20px 0;
-            padding: 20px;
-            border: 2px dashed #e5e7eb;
-            border-radius: 12px;
-            background: #fafaf9;
-        }
-
-        .chinese-prompt { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; }
-        .hint { font-size: 0.9rem; color: #9ca3af; margin-bottom: 20px; }
-
-        input[type="text"] {
-            width: 80%;
-            padding: 12px 15px;
+        .hint-text {
             font-size: 1rem;
-            border: 2px solid #d1d5db;
-            border-radius: 8px;
-            outline: none;
-            text-align: center;
+            color: #795548;
+            margin-bottom: 25px;
+            font-style: italic;
+            opacity: 0.7;
         }
 
-        input[type="text"]:focus { border-color: var(--primary); }
+        /* 输入区域 */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
 
-        .btn-group {
-            margin-top: 20px;
+        textarea {
+            width: 100%;
+            height: 80px;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-family: var(--font-main);
+            border: 3px solid var(--text-dark);
+            border-radius: var(--border-radius);
+            background: #FFFDE7;
+            resize: none;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: var(--primary-dark);
+            box-shadow: 3px 3px 0 var(--primary-dark);
+        }
+
+        /* 语音控制按钮组 */
+        .voice-controls {
             display: flex;
-            gap: 10px;
             justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .icon-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--text-dark);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 2px 2px 0 var(--text-dark);
+        }
+
+        .icon-btn:hover {
+            background: #F0F4C3;
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 var(--text-dark);
+        }
+
+        .icon-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 var(--text-dark);
+        }
+
+        .icon-btn.listening {
+            background: var(--wrong);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* 主操作按钮 */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 8px;
+            font-family: var(--font-main);
+            font-weight: bold;
+            border: 3px solid var(--text-dark);
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 50px; /* 药丸形按钮 */
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            box-shadow: 3px 3px 0 var(--text-dark);
+            background: var(--primary);
+            color: var(--text-dark);
         }
-        button:hover { background-color: var(--primary-hover); }
-        button.secondary { background-color: #e5e7eb; color: #374151; }
-        button.secondary:hover { background-color: #d1d5db; }
 
-        #result { margin-top: 15px; font-size: 1.05rem; font-weight: bold; min-height: 25px; }
-        .correct { color: #10b981; }
-        .wrong { color: #ef4444; }
+        button:hover {
+            background: var(--primary-dark);
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--text-dark);
+        }
+
+        button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 var(--text-dark);
+        }
+
+        button.secondary {
+            background: var(--secondary);
+        }
+        button.secondary:hover { background: #42A5F5; }
+
+        /* 结果反馈区域 */
+        #result {
+            font-size: 1.3rem;
+            min-height: 60px;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .correct-msg {
+            background: var(--correct);
+            color: white;
+            border: 2px solid var(--text-dark);
+            font-weight: bold;
+        }
+
+        .wrong-msg {
+            background: var(--wrong);
+            color: white;
+            border: 2px solid var(--text-dark);
+            font-weight: bold;
+        }
+
+        /* 动画 */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(229, 115, 115, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(229, 115, 115, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(229, 115, 115, 0); }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 500px) {
+            h1 { font-size: 2rem; }
+            .chinese-prompt { font-size: 1.5rem; }
+            .stats { flex-direction: column; gap: 10px; }
+            .stat-box { width: 100%; box-sizing: border-box; justify-content: center;}
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>🌍 英语生存模拟器</h1>
-        <div class="subtitle">已累计为 <span id="total-users" style="font-weight:bold; color:var(--primary);">...</span> 位用户提供过学习服务</div>
+        <div class="header-area">
+            <h1>🌍 英语生存涂鸦本</h1>
+            <div class="subtitle">涂鸦出你的国际范儿！</div>
+            <span class="visit-badge">第 <span id="total-users">...</span> 位练习生</span>
+        </div>
 
         <div class="stats">
-            <div>🔥 连击: <span id="streak">0</span></div>
-            <div>⭐ 积分: <span id="score">0</span></div>
+            <div class="stat-box">🔥 连击: <span id="streak">0</span></div>
+            <div class="stat-box">⭐ 积分: <span id="score">0</span></div>
         </div>
 
         <div class="challenge-box">
-            <div id="category-badge" class="badge">加载中...</div>
-            <div class="chinese-prompt" id="chinese-text">准备加载题目...</div>
-            <div class="hint" id="hint-text"></div>
+            <div id="category-tag" class="category-tag">
+                <span id="cat-icon">✈️</span> <span id="category-badge">加载中...</span>
+            </div>
             
-            <input type="text" id="user-input" placeholder="在此输入你的英文回答..." autocomplete="off" id="answer-input">
+            <div class="chinese-prompt" id="chinese-text">准备好了吗？</div>
+            <div class="hint-text" id="hint-text"></div>
+            
+            <div class="input-group">
+                <textarea id="user-input" placeholder="在此写下你的英文，或点击下方话筒说出来..." autocomplete="off"></textarea>
+            </div>
+
+            <!-- 新增的语音控制按钮 -->
+            <div class="voice-controls">
+                <button class="icon-btn" onclick="readQuestion()" title="听我读例句">🔊</button>
+                <button id="mic-btn" class="icon-btn" onclick="startListening()" title="按住说英语">🎙️</button>
+            </div>
             
             <div class="btn-group">
-                <button onclick="checkAnswer()">提交回答</button>
-                <button class="secondary" onclick="nextQuestion()">下一题</button>
-                <button class="secondary" onclick="showAnswer()">偷看答案</button>
+                <button onclick="checkAnswer()">提交回答 🚀</button>
+                <button class="secondary" onclick="nextQuestion()">下一题 ➡️</button>
+                <button class="secondary" onclick="showAnswer()">看一眼答案 👀</button>
             </div>
         </div>
 
@@ -138,7 +337,7 @@
     </div>
 
     <script>
-        // === 1. Supabase 配置 (已自动填好) ===
+        // === 1. Supabase 配置 (你的密钥) ===
         const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
         
@@ -147,105 +346,30 @@
         // 页面加载时：记录访问 + 获取总人数
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                // 使用 localStorage 防止自己测试时 F5 重复计数
-                const hasVisited = localStorage.getItem('has_visited_app');
+                const hasVisited = localStorage.getItem('has_visited_doodle');
                 if (!hasVisited) {
                     await _supabase.from('app_visitors').insert([{}]);
-                    localStorage.setItem('has_visited_app', 'true');
+                    localStorage.setItem('has_visited_doodle', 'true');
                 }
-
-                // 获取总访问次数
                 const { count, error } = await _supabase
                     .from('app_visitors')
                     .select('*', { count: 'exact', head: true });
-
                 if (!error) {
                     document.getElementById('total-users').innerText = count || 1;
                 }
             } catch (err) {
-                console.log("Supabase 统计连接失败", err);
+                console.log("Supabase 统计连接失败");
                 document.getElementById('total-users').innerText = "1+";
             }
         });
 
-        // 绑定回车键直接提交
-        document.getElementById('user-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkAnswer();
-            }
-        });
-
-        // === 2. 题库与闯关逻辑 ===
+        // === 2. 题库与逻辑 ===
         const questions = [
             // 旅行篇
-            { category: "✈️ 旅行 · 机场", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Where is the boarding gate..." },
-            { category: "🧳 旅行 · 海关", chinese: "我来这里是旅游，呆一个星期。", english: "I am here for vacation, staying for a week.", hint: "vacation / staying for..." },
-            { category: "🏨 旅行 · 酒店", chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "air conditioner / broken / switch" },
-            { category: "🍜 旅行 · 餐厅", chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "contain / allergic to" },
-            { category: "🚕 旅行 · 问路", chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "subway station / nearby" },
-
+            { cat: "✈️", category: "旅行 · 机场", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "登机口: Boarding gate" },
+            { cat: "🧳", category: "旅行 · 海关", chinese: "我来这里是旅游，呆一个星期。", english: "I am here for vacation, staying for a week.", hint: "度假: vacation" },
+            { cat: "🏨", category: "旅行 · 酒店", chinese: "不好意思，我的房间空调坏了。", english: "Excuse me, the air conditioner in my room is broken.", hint: "空调: air conditioner" },
+            { cat: "🍜", category: "旅行 · 餐厅", chinese: "这个里面有花生吗？我过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "过敏: allergic" },
+            { cat: "🚕", category: "旅行 · 问路", chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "地铁站: subway station" },
             // 工作篇
-            { category: "💼 工作 · 会议", chinese: "大家能听到我说话吗？我的麦克风刚才有点问题。", english: "Can everyone hear me? My microphone was acting up a bit.", hint: "Can everyone hear me? / microphone" },
-            { category: "💼 工作 · 沟通", chinese: "关于这个项目，我想听听大家的看法。", english: "Regarding this project, I'd love to hear everyone's thoughts.", hint: "Regarding this project / thoughts" },
-            { category: "💼 工作 · 礼貌打断", chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "Sorry to interrupt / quick question" },
-            { category: "💼 工作 · 进度", chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "ahead of schedule / expect to" },
-            { category: "💼 工作 · 拒绝/推脱", chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "plate is full / might not have time" }
-        ];
-
-        let currentIndex = 0;
-        let score = 0;
-        let streak = 0;
-
-        function loadQuestion() {
-            const q = questions[currentIndex];
-            document.getElementById("category-badge").innerText = q.category;
-            document.getElementById("chinese-text").innerHTML = `请把下面这句话用英语说出来：<br>“${q.chinese}”`;
-            document.getElementById("hint-text").innerText = `💡 提示: ${q.hint}`;
-            document.getElementById("user-input").value = "";
-            document.getElementById("result").innerText = "";
-        }
-
-        function checkAnswer() {
-            const inputElem = document.getElementById("user-input");
-            const userVal = inputElem.value.trim().toLowerCase();
-            if (!userVal) return;
-
-            const cleanUser = userVal.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
-            const target = questions[currentIndex].english.toLowerCase();
-            const cleanTarget = target.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
-            const resultDiv = document.getElementById("result");
-
-            if (cleanUser === cleanTarget || (cleanUser.length > 5 && cleanTarget.includes(cleanUser))) {
-                score += 10;
-                streak += 1;
-                resultDiv.innerHTML = `<span class="correct">🎉 太棒了！答对了！完美过关！</span>`;
-                setTimeout(nextQuestion, 1500);
-            } else {
-                streak = 0;
-                resultDiv.innerHTML = `<span class="wrong">❌ 差一点点！正确参考：<br><b>${questions[currentIndex].english}</b></span>`;
-            }
-            updateStats();
-        }
-
-        function showAnswer() {
-            document.getElementById("result").innerHTML = `<span style="color:#d97706;">💡 参考答案: ${questions[currentIndex].english}</span>`;
-            streak = 0;
-            updateStats();
-        }
-
-        function nextQuestion() {
-            currentIndex = Math.floor(Math.random() * questions.length);
-            loadQuestion();
-            document.getElementById("user-input").focus();
-        }
-
-        function updateStats() {
-            document.getElementById("score").innerText = score;
-            document.getElementById("streak").innerText = streak;
-        }
-
-        // 初始化加载第一题
-        nextQuestion();
-    </script>
-</body>
-</html>
+            { cat: "💼", category: "工作 · 会议", chinese: "大家能听到我说话吗？", english: "Can everyone hear me?", hint: "简单的开场白" },
