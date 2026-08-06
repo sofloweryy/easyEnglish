@@ -130,7 +130,7 @@ body{
     color:#668FEA;
 }
 
-/* 题目区域（调整中文题名字号，避免过大） */
+/* 题目区域 */
 .word-area{
     text-align:center;
     padding: 10px 0;
@@ -433,7 +433,10 @@ textarea::placeholder{
 <script>
     const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // 防止重复声明导致的崩溃
+    window.supabaseClient = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = window.supabaseClient;
 
     let score = 10;
     let streak = 1;
