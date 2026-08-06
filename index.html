@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>✦ Easy English ✦</title>
-    <!-- 引入Quicksand字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+    <!-- 引入Google Fonts的手写可爱风字体及Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@700&family=Quicksand:wght@600;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <!-- 引入 Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -25,8 +25,8 @@
         }
 
         body {
-            /* 采用手写风与可爱圆体作为全局中文字体 */
-            font-family: "PingFang SC", "Comic Sans MS", "Microsoft YaHei", "Quicksand", sans-serif;
+            /* 完美手写体与可爱风字体组合 */
+            font-family: 'ZCOOL KuaiLe', "Comic Sans MS", cursive, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
@@ -81,7 +81,7 @@
             border: none;
             font-family: inherit;
             font-size: 1.05rem;
-            font-weight: 700;
+            font-weight: 400;
             padding: 6px 0;
             border-radius: 8px;
             cursor: pointer;
@@ -120,7 +120,6 @@
             align-items: center;
             gap: 5px;
             font-size: 1.05rem;
-            font-weight: 700;
         }
 
         .user-tag span {
@@ -134,7 +133,6 @@
             padding: 2px 8px;
             border-radius: 6px;
             font-size: 0.85rem;
-            font-weight: bold;
             cursor: pointer;
             box-shadow: 1px 1px 0px var(--border-dark);
             font-family: inherit;
@@ -149,7 +147,6 @@
             flex-direction: column;
             align-items: flex-end;
             gap: 2px;
-            font-weight: 700;
             font-size: 1.05rem;
         }
 
@@ -178,14 +175,12 @@
             padding: 2px 14px;
             border-radius: 16px;
             font-size: 1rem;
-            font-weight: 700;
             margin-bottom: 6px;
             box-shadow: 2px 2px 0px var(--border-dark);
         }
 
         .chinese-prompt {
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1.3rem;
             letter-spacing: 0.5px;
             line-height: 1.4;
             margin-bottom: 6px;
@@ -273,8 +268,7 @@
 
         .sketch-btn {
             font-family: inherit;
-            font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             padding: 8px 4px;
             border: 2px solid var(--border-dark);
             border-radius: 10px;
@@ -317,7 +311,7 @@
             gap: 6px;
         }
 
-        .feedback-success { background: #E8F5E9; color: #2E7D32; font-size: 1.1rem !important; font-weight: 700; }
+        .feedback-success { background: #E8F5E9; color: #2E7D32; font-size: 1.1rem !important; font-family: inherit; }
         .feedback-error { background: #FFEBEE; color: #C62828; }
 
         .answer-audio-btn {
@@ -349,8 +343,7 @@
             border-radius: 14px;
             padding: 10px;
             font-family: inherit;
-            font-size: 1.15rem;
-            font-weight: 700;
+            font-size: 1.2rem;
             cursor: pointer;
             box-shadow: 3px 4px 0px var(--border-dark);
             transition: all 0.08s ease;
@@ -387,14 +380,13 @@
 
         .modal-card h3 {
             margin: 0 0 4px 0;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             text-align: center;
         }
 
         .modal-card label {
             display: block;
-            font-size: 0.95rem;
-            font-weight: bold;
+            font-size: 1rem;
             color: var(--text-muted);
             margin-top: 8px;
         }
@@ -423,8 +415,7 @@
             border: 2px solid var(--border-dark);
             border-radius: 8px;
             padding: 0 8px;
-            font-size: 0.95rem;
-            font-weight: bold;
+            font-size: 1rem;
             cursor: pointer;
             white-space: nowrap;
             box-shadow: 1.5px 1.5px 0px var(--border-dark);
@@ -533,7 +524,7 @@
         let streak = 0;
         let currentMode = 'phrase'; // 默认短语模式
 
-        // 题库分类：短语 & 单词
+        // 题库分类：短语 & 单词（单词增加音标字段）
         const questionBanks = {
             phrase: [
                 { category: "✈️ 机场海关", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
@@ -547,14 +538,14 @@
                 { category: "💼 职场拒绝", chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "Hint: plate is full / might not have time" }
             ],
             word: [
-                { category: "🔥 高频单词", chinese: "高效的、有成效的", english: "efficient", hint: "Hint: e _ _ _ _ _ _ t (9 letters)" },
-                { category: "🔥 高频单词", chinese: "灵感、启发", english: "inspiration", hint: "Hint: i _ _ _ _ _ _ _ _ n (11 letters)" },
-                { category: "🔥 高频单词", chinese: "优先事项、首要任务", english: "priority", hint: "Hint: p _ _ _ _ _ _ y (8 letters)" },
-                { category: "🔥 高频单词", chinese: "灵活的、可变通的", english: "flexible", hint: "Hint: f _ _ _ _ _ _ e (8 letters)" },
-                { category: "🔥 高频单词", chinese: "策略、战略", english: "strategy", hint: "Hint: s _ _ _ _ _ _ y (8 letters)" },
-                { category: "🔥 高频单词", chinese: "合作、协作", english: "collaboration", hint: "Hint: c _ _ _ _ _ _ _ _ _ _ _ n (13 letters)" },
-                { category: "🔥 高频单词", chinese: "成就、成绩", english: "achievement", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
-                { category: "🔥 高频单词", chinese: "挑战、质疑", english: "challenge", hint: "Hint: c _ _ _ _ _ _ _ e (9 letters)" }
+                { category: "🔥 高频单词", chinese: "高效的、有成效的", english: "efficient", phonetic: "[ɪˈfɪʃnt]", hint: "Hint: e _ _ _ _ _ _ t (9 letters)" },
+                { category: "🔥 高频单词", chinese: "灵感、启发", english: "inspiration", phonetic: "[ˌɪnspəˈreɪʃn]", hint: "Hint: i _ _ _ _ _ _ _ _ n (11 letters)" },
+                { category: "🔥 高频单词", chinese: "优先事项、首要任务", english: "priority", phonetic: "[praɪˈɔːrəti]", hint: "Hint: p _ _ _ _ _ _ y (8 letters)" },
+                { category: "🔥 高频单词", chinese: "灵活的、可变通的", english: "flexible", phonetic: "[ˈfleksəbl]", hint: "Hint: f _ _ _ _ _ _ e (8 letters)" },
+                { category: "🔥 高频单词", chinese: "策略、战略", english: "strategy", phonetic: "[ˈstrætədʒi]", hint: "Hint: s _ _ _ _ _ _ y (8 letters)" },
+                { category: "🔥 高频单词", chinese: "合作、协作", english: "collaboration", phonetic: "[kəˌlæbəˈreɪʃn]", hint: "Hint: c _ _ _ _ _ _ _ _ _ _ _ n (13 letters)" },
+                { category: "🔥 高频单词", chinese: "成就、成绩", english: "achievement", phonetic: "[əˈtʃiːvmənt]", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
+                { category: "🔥 高频单词", chinese: "挑战、质疑", english: "challenge", phonetic: "[ˈtʃælɪndʒ]", hint: "Hint: c _ _ _ _ _ _ _ e (9 letters)" }
             ]
         };
 
@@ -723,7 +714,11 @@
             } else {
                 streak = 0;
                 resultBox.className = "feedback-error";
-                resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${list[currentIndex].english}</span>
+                let displayContent = list[currentIndex].english;
+                if (currentMode === 'word' && list[currentIndex].phonetic) {
+                    displayContent += ` <span style="font-size: 0.9rem; color: var(--text-muted); font-family: 'Quicksand', sans-serif;">${list[currentIndex].phonetic}</span>`;
+                }
+                resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${displayContent}</span>
                                       <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
             }
             updateStatsUI();
@@ -734,7 +729,11 @@
             const list = questionBanks[currentMode];
             const resultBox = document.getElementById("result-box");
             resultBox.className = "feedback-error";
-            resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${list[currentIndex].english}</span>
+            let displayContent = list[currentIndex].english;
+            if (currentMode === 'word' && list[currentIndex].phonetic) {
+                displayContent += ` <span style="font-size: 0.9rem; color: var(--text-muted); font-family: 'Quicksand', sans-serif;">${list[currentIndex].phonetic}</span>`;
+            }
+            resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${displayContent}</span>
                                   <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
             streak = 0;
             updateStatsUI();
@@ -748,15 +747,14 @@
             const utterance = new SpeechSynthesisUtterance(decodedText);
             utterance.lang = 'en-US';
             
-            // 自动筛选标准自然的英文语音
             const voices = window.speechSynthesis.getVoices();
             const standardVoice = voices.find(v => v.lang === 'en-US' && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('US English'))) || voices.find(v => v.lang.startsWith('en'));
             if (standardVoice) {
                 utterance.voice = standardVoice;
             }
             
-            utterance.rate = 1.0;  // 标准正常语速
-            utterance.pitch = 1.0; // 标准正常音调
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
             window.speechSynthesis.speak(utterance);
         }
 
