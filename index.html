@@ -133,20 +133,16 @@ body{
 /* 单词区域 */
 .word-area{
     text-align:center;
-}
-
-.tag{
-    color:var(--pink);
-    font-size:15px;
-    font-weight: 700;
+    padding: 10px 0;
 }
 
 .word{
-    margin:10px 0 5px 0;
-    font-size:38px;
+    margin:5px 0 5px 0;
+    font-size:24px;
     color:var(--blue);
     font-weight:bold;
     word-break: break-all;
+    line-height: 1.4;
 }
 
 .meaning{
@@ -158,12 +154,12 @@ body{
 .hint{
     margin-top:8px;
     color:#999;
-    font-size:16px;
+    font-size:15px;
 }
 
 /* 输入 */
 .input-wrap{
-    margin-top:25px;
+    margin-top:20px;
     position:relative;
 }
 
@@ -371,7 +367,6 @@ textarea::placeholder{
         </div>
 
         <div class="word-area">
-            <div class="tag" id="card-tag">Today's Word</div>
             <div class="word" id="chinese-text">加载中...</div>
             <div class="meaning" id="meaning-text" style="display:none;"></div>
             <div class="hint" id="hint-text">Hint: --</div>
@@ -436,7 +431,6 @@ textarea::placeholder{
 </div>
 
 <script>
-    // 已为你配置好对应的 Supabase 链接与密钥
     const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -488,7 +482,6 @@ textarea::placeholder{
         currentMode = mode;
         document.getElementById('tab-word').className = mode === 'word' ? 'tab active' : 'tab';
         document.getElementById('tab-phrase').className = mode === 'phrase' ? 'tab active' : 'tab';
-        document.getElementById('card-tag').innerText = mode === 'word' ? "Today's Word" : "Today's Phrase";
         loadQuestion();
     }
 
@@ -569,7 +562,6 @@ textarea::placeholder{
     function openSurpriseModal() { document.getElementById('surprise-modal').style.display = 'flex'; }
     function closeSurpriseModal() { document.getElementById('surprise-modal').style.display = 'none'; }
 
-    // 通过 Supabase 自定义表发送 6 位验证码逻辑
     async function sendSupabaseCode() {
         const email = document.getElementById('reg-email').value.trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -578,7 +570,6 @@ textarea::placeholder{
             return;
         }
 
-        // 随机生成 6 位数字验证码
         const code = Math.floor(100000 + Math.random() * 900000).toString();
 
         const btn = document.getElementById('send-code-btn');
@@ -586,7 +577,6 @@ textarea::placeholder{
         btn.innerText = "发送中...";
 
         try {
-            // 将验证码写入 Supabase 的 email_codes 表
             const { error } = await supabase
                 .from('email_codes')
                 .insert([{ email: email, code: code, is_used: false }]);
@@ -603,7 +593,6 @@ textarea::placeholder{
         }
     }
 
-    // 60秒倒计时
     function startCountdown(btn) {
         let countdown = 60;
         const timer = setInterval(() => {
@@ -618,7 +607,6 @@ textarea::placeholder{
         }, 1000);
     }
 
-    // 验证并保存
     async function verifyAndSave() {
         const nickname = document.getElementById('reg-nickname').value.trim() || "flower";
         const email = document.getElementById('reg-email').value.trim();
@@ -631,7 +619,6 @@ textarea::placeholder{
 
         if (email) {
             try {
-                // 去 Supabase 查询该邮箱最新的一条有效验证码
                 const { data, error } = await supabase
                     .from('email_codes')
                     .select('*')
@@ -646,7 +633,6 @@ textarea::placeholder{
                     return;
                 }
 
-                // 验证成功，将该验证码标记为已使用
                 await supabase
                     .from('email_codes')
                     .update({ is_used: true })
