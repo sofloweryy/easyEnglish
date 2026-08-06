@@ -486,7 +486,7 @@
             <div class="user-tag-bottom">
                 👤 <span id="user-display">本地游客</span>
             </div>
-            <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">设置昵称</button>
+            <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">修改昵称</button>
         </div>
     </div>
 
@@ -517,13 +517,13 @@
         </div>
     </div>
 
-    <!-- 设置昵称弹窗 -->
+    <!-- 修改昵称弹窗（已彻底移除邮箱输入） -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3>个性昵称设置</h3>
+            <h3>修改个性昵称</h3>
             <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0; font-family: var(--font-handwriting);">输入你的专属昵称，开启英语手帐打卡之旅~</p>
             
-            <label>昵称</label>
+            <label>新昵称</label>
             <input type="text" id="reg-nickname" placeholder="例如：flower">
 
             <button class="sketch-btn primary" style="width: 100%; margin: 14px 0 6px 0;" onclick="saveNicknameLocally()">保存昵称</button>
