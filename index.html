@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>✦ Easy English ✦</title>
-    <!-- 引入 Caveat（更美观的英文手写体）与 Long Cang（中文书法手写体） -->
+    <!-- 引入 Caveat（英文手写体）与 Long Cang（中文书法手写体） -->
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Long+Cang&display=swap" rel="stylesheet">
     <!-- 引入 Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,7 +25,6 @@
         }
 
         body {
-            /* 全局统一改为手写风格字体 */
             font-family: 'Long Cang', cursive, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -361,7 +360,7 @@
             border: 2px solid var(--border-dark);
             border-radius: 10px;
             padding: 0 10px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: bold;
             cursor: pointer;
             white-space: nowrap;
@@ -423,21 +422,21 @@
     <div id="login-modal">
         <div class="modal-card">
             <h3>云端账号同步</h3>
-            <p style="font-size: 1rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0; font-family: 'Long Cang', cursive;">输入常用电子邮箱接收验证码</p>
+            <p style="font-size: 1rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0; font-family: 'Long Cang', cursive;">获取邮箱随机 6 位验证码完成绑定</p>
             
             <label>昵称</label>
-            <input type="text" id="reg-nickname" placeholder="例如：手帐达人 / 杰克">
+            <input type="text" id="reg-nickname" placeholder="例如：手帐达人">
 
             <label>电子邮箱</label>
-            <input type="email" id="reg-account" placeholder="请输入常用电子邮箱">
+            <input type="email" id="reg-account" placeholder="请输入常用邮箱">
 
-            <label>验证码</label>
+            <label>6位随机验证码</label>
             <div class="verify-row">
-                <input type="text" id="reg-code" placeholder="输入收到的验证码">
-                <button class="verify-btn" onclick="sendVerifyCode()">获取验证码</button>
+                <input type="text" id="reg-code" placeholder="输入邮件中的6位数" maxlength="6">
+                <button class="verify-btn" onclick="sendOtpCode()">获取验证码</button>
             </div>
 
-            <button class="sketch-btn primary" style="width: 100%; margin: 14px 0 6px 0;" onclick="handleAuthSubmit()">完成绑定 / 登录</button>
+            <button class="sketch-btn primary" style="width: 100%; margin: 14px 0 6px 0;" onclick="verifyAndLogin()">确认绑定 / 登录</button>
             <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="closeModal()">取消</button>
         </div>
     </div>
@@ -466,43 +465,45 @@
         function openModal() { document.getElementById('login-modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('login-modal').style.display = 'none'; }
 
-        async function sendVerifyCode() {
-            const account = document.getElementById('reg-account').value.trim();
-            if (!account || !account.includes('@')) {
+        // 点击发送 6 位随机验证码
+        async function sendOtpCode() {
+            const email = document.getElementById('reg-account').value.trim();
+            if (!email || !email.includes('@')) {
                 alert('请输入合法的电子邮箱地址！');
                 return;
             }
 
             const { error } = await _supabase.auth.signInWithOtp({
-                email: account,
+                email: email,
                 options: { shouldCreateUser: true }
             });
 
             if (error) {
-                alert('验证码发送失败: ' + error.message);
+                alert('发送失败: ' + error.message);
             } else {
-                alert('✅ 验证码已发送至您的邮箱，请前往查收！');
+                alert('✅ 随机 6 位验证码已发送至您的邮箱，请去查收！');
             }
         }
 
-        async function handleAuthSubmit() {
+        // 输入 6 位数字后点击校验登录
+        async function verifyAndLogin() {
             const nickname = document.getElementById('reg-nickname').value.trim() || "手帐练习生";
-            const account = document.getElementById('reg-account').value.trim();
+            const email = document.getElementById('reg-account').value.trim();
             const token = document.getElementById('reg-code').value.trim();
 
-            if (!account || !token) {
-                alert('请输入邮箱和收到的验证码！');
+            if (!email || !token) {
+                alert('请输入邮箱和收到的 6 位验证码！');
                 return;
             }
 
             const { data, error } = await _supabase.auth.verifyOtp({
-                email: account,
+                email: email,
                 token: token,
                 type: 'email'
             });
 
             if (error) {
-                alert('验证失败，请检查验证码是否正确: ' + error.message);
+                alert('验证码错误或已失效: ' + error.message);
                 return;
             }
 
