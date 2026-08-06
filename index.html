@@ -449,7 +449,7 @@
                 <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">点击云端绑定</button>
             </div>
             <div class="stats-group">
-                <div class="stat-item">🔥 打卡: <span id="streak">0</span> 天</div>
+                <div class="stat-item">🔥 连击: <span id="streak">0</span> 次</div>
                 <div class="stat-item">⭐ 积分: <span id="score">0</span> 分</div>
             </div>
         </div>
@@ -524,7 +524,7 @@
         let streak = 0;
         let currentMode = 'phrase'; // 默认短语模式
 
-        // 题库分类：短语 & 单词（单词增加音标字段）
+        // 题库分类：短语 & 单词（单词包含音标字段）
         const questionBanks = {
             phrase: [
                 { category: "✈️ 机场海关", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
