@@ -243,6 +243,7 @@
             font-family: inherit;
             font-weight: 700;
             font-size: 0.9rem;
+/*****************************/
             padding: 12px;
             border: 2.5px solid var(--border-dark);
             border-radius: 16px;
@@ -267,23 +268,43 @@
             grid-column: span 2;
         }
 
+        /* 结果/答案展示区：采用可爱的英文字体与独立语音按钮 */
         #result-box {
             margin-top: 12px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            min-height: 42px;
+            font-size: 0.95rem;
+            font-family: 'Architects Daughter', cursive, sans-serif;
+            font-weight: bold;
+            min-height: 48px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             border-radius: 14px;
-            padding: 8px;
-            text-align: center;
+            padding: 10px 14px;
+            text-align: left;
             border: 2.5px solid var(--border-dark);
             box-shadow: 3px 3px 0px var(--border-dark);
+            gap: 10px;
         }
 
         .feedback-success { background: #E8F5E9; color: #2E7D32; }
         .feedback-error { background: #FFEBEE; color: #C62828; }
+
+        .answer-audio-btn {
+            background: #FFF;
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--border-dark);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .answer-audio-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--border-dark);
+            background: #FFE5EC;
+        }
 
         /* 登录弹窗样式 */
         #login-modal {
@@ -587,12 +608,13 @@
                 score += 10;
                 streak += 1;
                 resultBox.className = "feedback-success";
-                resultBox.innerHTML = "✨ 回答完美！生存连击 +1";
+                resultBox.innerHTML = `<span>✨ 回答完美！连击 +1</span>`;
                 setTimeout(nextQuestion, 1500);
             } else {
                 streak = 0;
                 resultBox.className = "feedback-error";
-                resultBox.innerHTML = `💡 差一点，参考标准表达：<br><b>${questions[currentIndex].english}</b>`;
+                resultBox.innerHTML = `<span>💡 参考：${questions[currentIndex].english}</span>
+                                      <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(questions[currentIndex].english)}')">🔊 听朗读</button>`;
             }
             updateStatsUI();
             syncUserDataToCloud();
@@ -601,10 +623,19 @@
         function showAnswer() {
             const resultBox = document.getElementById("result-box");
             resultBox.className = "feedback-error";
-            resultBox.innerHTML = `💡 手帐参考答案：<br><b>${questions[currentIndex].english}</b>`;
+            resultBox.innerHTML = `<span>💡 答案：${questions[currentIndex].english}</span>
+                                  <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(questions[currentIndex].english)}')">🔊 听朗读</button>`;
             streak = 0;
             updateStatsUI();
             syncUserDataToCloud();
+        }
+
+        function playAudio(text) {
+            const decodedText = decodeURIComponent(text);
+            const utterance = new SpeechSynthesisUtterance(decodedText);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
         }
 
         function nextQuestion() {
@@ -629,7 +660,7 @@
             }
 
             const recognition = new SpeechRecognition();
-            recognition.lang = 'en-US'; // 识别英文口语
+            recognition.lang = 'en-US';
             recognition.interimResults = false;
             recognition.maxAlternatives = 1;
 
@@ -641,11 +672,7 @@
                 isHolding = true;
                 btn.classList.add('recording');
                 tip.innerText = "正在聆听，请说话...";
-                try {
-                    recognition.start();
-                } catch (err) {
-                    // 已经在运行则忽略
-                }
+                try { recognition.start(); } catch (err) {}
             };
 
             const stopRecording = (e) => {
@@ -654,9 +681,7 @@
                 isHolding = false;
                 btn.classList.remove('recording');
                 tip.innerText = "长按说话转文字";
-                try {
-                    recognition.stop();
-                } catch (err) {}
+                try { recognition.stop(); } catch (err) {}
             };
 
             recognition.onresult = (event) => {
@@ -676,7 +701,6 @@
                 btn.classList.remove('recording');
             };
 
-            // 绑定触控与鼠标事件实现“按住说话、松手识别”
             btn.addEventListener('mousedown', startRecording);
             btn.addEventListener('mouseup', stopRecording);
             btn.addEventListener('mouseleave', stopRecording);
