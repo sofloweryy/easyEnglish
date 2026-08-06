@@ -542,9 +542,8 @@
         let currentUser = null;
         let score = 10;
         let streak = 1; 
-        let currentMode = 'word'; // 默认打开左边的单词模式
+        let currentMode = 'word';
 
-        // 题库分类：单词 & 短语
         const questionBanks = {
             word: [
                 { category: "🔥 高频单词", chinese: "高效的、有成效的", english: "efficient", phonetic: "[ɪˈfɪʃnt]", hint: "Hint: e _ _ _ _ _ _ t (9 letters)" },
@@ -603,6 +602,11 @@
                 localStorage.setItem('ee_last_checkin_date', todayStr);
                 localStorage.setItem('ee_streak', streak);
             }
+        }
+
+        function updateStatsUI() {
+            document.getElementById('score').innerText = score;
+            document.getElementById('streak').innerText = streak;
         }
 
         function switchMode(mode) {
@@ -831,7 +835,11 @@
                 isHolding = true;
                 btn.classList.add('recording');
                 tip.innerText = "正在聆听，请说话...";
-                try { recognition.start(); } catch (err) {}
+                try {
+                    recognition.start();
+                } catch(err) {
+                    console.log(err);
+                }
             };
 
             const stopRecording = (e) => {
@@ -839,37 +847,40 @@
                 if (!isHolding) return;
                 isHolding = false;
                 btn.classList.remove('recording');
-                tip.innerText = "长按麦克风可说话转文字";
-                try { recognition.stop(); } catch (err) {}
-            };
-
-            recognition.onresult = (event) => {
-                inputArea.value = event.results[0][0].transcript;
-                tip.innerText = "转换成功！";
-                setTimeout(() => { tip.innerText = "长按麦克风可说话转文字"; }, 1500);
-            };
-
-            recognition.onerror = () => {
-                btn.classList.remove('recording');
-                tip.innerText = "识别失败，请重试";
-                setTimeout(() => { tip.innerText = "长按麦克风可说话转文字"; }, 1500);
-            };
-
-            recognition.onend = () => {
-                btn.classList.remove('recording');
+                tip.innerText = "正在识别中...";
+                try {
+                    recognition.stop();
+                } catch(err) {
+                    console.log(err);
+                }
             };
 
             btn.addEventListener('mousedown', startRecording);
             btn.addEventListener('mouseup', stopRecording);
             btn.addEventListener('mouseleave', stopRecording);
 
-            btn.addEventListener('touchstart', startRecording, {passive: false});
-            btn.addEventListener('touchend', stopRecording, {passive: false});
-        }
+            btn.addEventListener('touchstart', startRecording);
+            btn.addEventListener('touchend', stopRecording);
 
-        function updateStatsUI() {
-            document.getElementById("score").innerText = score;
-            document.getElementById("streak").innerText = streak;
+            recognition.onresult = (event) => {
+                const speechToText = event.results[0][0].transcript;
+                inputArea.value = speechToText;
+                tip.innerText = "识别成功！点击提交查看";
+            };
+
+            recognition.onerror = () => {
+                tip.innerText = "识别出错，请重试";
+                btn.classList.remove('recording');
+                isHolding = false;
+            };
+
+            recognition.onend = () => {
+                btn.classList.remove('recording');
+                isHolding = false;
+                if(tip.innerText === "正在聆听，请说话...") {
+                    tip.innerText = "长按麦克风可说话转文字";
+                }
+            };
         }
     </script>
 </body>
