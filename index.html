@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>✦ Easy English ✦</title>
-    <!-- 引入 Caveat（英文手写体）与 Long Cang（中文书法手写体） -->
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Long+Cang&display=swap" rel="stylesheet">
+    <!-- 引入更清爽美观的可爱圆体与英文现代字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
     <!-- 引入 Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -15,7 +15,7 @@
             --border-dark: #2C2A29;
             --accent-terracotta: #E07A5F;
             --text-main: #2C2A29;
-            --text-muted: #7E766D;
+            --text-muted: #8C8275;
         }
 
         * {
@@ -25,11 +25,11 @@
         }
 
         body {
-            font-family: 'Long Cang', cursive, -apple-system, sans-serif;
+            font-family: 'Noto Sans SC', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 16px 12px;
+            padding: 12px 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -40,21 +40,21 @@
             width: 100%;
             max-width: 420px;
             background: var(--card-bg);
-            border-radius: 32px 24px 28px 26px;
+            border-radius: 28px 22px 24px 24px;
             border: 2.5px solid var(--border-dark);
-            padding: 20px 16px;
-            box-shadow: 6px 8px 0px rgba(44, 42, 41, 0.85);
+            padding: 16px 14px;
+            box-shadow: 5px 7px 0px rgba(44, 42, 41, 0.85);
             position: relative;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .brand-title {
-            font-family: 'Caveat', cursive, serif;
-            font-size: 2.6rem;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 2.4rem;
             font-weight: 700;
             letter-spacing: 1px;
             margin: 0;
@@ -67,26 +67,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             background: #FFF1F2;
-            padding: 10px 14px;
-            border-radius: 16px;
-            border: 2.5px solid var(--border-dark);
-            box-shadow: 3px 3px 0px var(--border-dark);
+            padding: 8px 12px;
+            border-radius: 14px;
+            border: 2px solid var(--border-dark);
+            box-shadow: 2.5px 2.5px 0px var(--border-dark);
         }
 
         .user-section {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }
 
         .user-info-row {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 1.05rem;
-            font-weight: bold;
+            gap: 5px;
+            font-size: 0.95rem;
+            font-weight: 700;
         }
 
         .user-tag span {
@@ -97,9 +97,9 @@
             background: #FFE5EC;
             color: var(--border-dark);
             border: 1.5px solid var(--border-dark);
-            padding: 2px 10px;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 1px 1px 0px var(--border-dark);
@@ -116,23 +116,23 @@
             align-items: flex-end;
             gap: 2px;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
         }
 
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
 
-        /* 核心手帐卡片 */
+        /* 核心卡片 */
         .sketch-card {
             background: #FFFCF7;
-            border: 2.5px dashed #E6DEC9;
-            border-radius: 20px;
-            padding: 16px 14px;
+            border: 2px dashed #E6DEC9;
+            border-radius: 16px;
+            padding: 14px 12px;
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             position: relative;
         }
 
@@ -141,41 +141,44 @@
             background: #E8F5E9;
             color: #2E7D32;
             border: 2px solid var(--border-dark);
-            padding: 2px 14px;
-            border-radius: 20px;
-            font-size: 1rem;
+            padding: 1px 12px;
+            border-radius: 16px;
+            font-size: 0.9rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             box-shadow: 2px 2px 0px var(--border-dark);
         }
 
         .chinese-prompt {
-            font-size: 1.6rem;
+            font-size: 1.35rem;
             font-weight: 700;
             line-height: 1.3;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
+            color: #222;
         }
 
         .hint-text {
-            font-size: 1.25rem;
+            font-size: 1.05rem;
             color: var(--text-muted);
-            margin-bottom: 12px;
-            font-family: 'Caveat', cursive;
+            margin-bottom: 10px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
         }
 
         .input-container-wrapper {
             position: relative;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         textarea {
             width: 100%;
-            height: 76px;
-            padding: 8px 42px 8px 12px;
-            font-size: 1.35rem;
-            font-family: 'Caveat', cursive, sans-serif;
-            border: 2.5px solid var(--border-dark);
-            border-radius: 14px;
+            height: 64px;
+            padding: 8px 38px 8px 10px;
+            font-size: 1.15rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            border: 2px solid var(--border-dark);
+            border-radius: 12px;
             background: #FFFFFF;
             resize: none;
             outline: none;
@@ -191,15 +194,16 @@
         .inline-tools {
             position: absolute;
             right: 8px;
-            bottom: 12px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
 
         .mini-tool-btn {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: 2px solid var(--border-dark);
             background: #FFF;
@@ -207,8 +211,8 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 0.85rem;
-            box-shadow: 1px 1px 0px var(--border-dark);
+            font-size: 0.95rem;
+            box-shadow: 1.5px 1.5px 0px var(--border-dark);
             transition: all 0.08s ease;
         }
 
@@ -220,36 +224,41 @@
         }
 
         .voice-status-tip {
-            font-size: 1rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            font-family: 'Long Cang', cursive;
             margin-bottom: 10px;
-            height: 18px;
+            height: 16px;
         }
 
+        /* 重新排版：精简紧凑的一行多列按钮布局 */
         .action-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            grid-template-columns: 1.3fr 1fr 1fr;
+            gap: 6px;
         }
 
         .sketch-btn {
             font-family: inherit;
             font-weight: 700;
-            font-size: 1.25rem;
-            padding: 8px 10px;
-            border: 2.5px solid var(--border-dark);
-            border-radius: 14px;
+            font-size: 0.95rem;
+            padding: 8px 4px;
+            border: 2px solid var(--border-dark);
+            border-radius: 10px;
             cursor: pointer;
-            box-shadow: 2.5px 2.5px 0px var(--border-dark);
+            box-shadow: 2px 2px 0px var(--border-dark);
             transition: all 0.08s ease;
             background: #FFFFFF;
             color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            white-space: nowrap;
         }
 
         .sketch-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px var(--border-dark);
+            transform: translate(1.5px, 1.5px);
+            box-shadow: 0.5px 0.5px 0px var(--border-dark);
         }
 
         .sketch-btn.primary {
@@ -257,45 +266,41 @@
             color: #FFFFFF;
         }
 
-        .sketch-btn.full {
-            grid-column: span 2;
-        }
-
         #result-box {
-            margin-top: 10px;
-            font-size: 1.3rem;
-            font-family: 'Caveat', cursive, sans-serif;
-            font-weight: bold;
-            min-height: 48px;
+            margin-top: 8px;
+            font-size: 1.1rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            min-height: 42px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-radius: 12px;
-            padding: 8px 12px;
+            border-radius: 10px;
+            padding: 6px 10px;
             text-align: left;
-            border: 2.5px solid var(--border-dark);
-            box-shadow: 3px 3px 0px var(--border-dark);
-            gap: 8px;
+            border: 2px solid var(--border-dark);
+            box-shadow: 2.5px 2.5px 0px var(--border-dark);
+            gap: 6px;
         }
 
-        .feedback-success { background: #E8F5E9; color: #2E7D32; font-family: 'Long Cang', cursive !important; font-size: 1.3rem !important; }
+        .feedback-success { background: #E8F5E9; color: #2E7D32; font-family: 'Noto Sans SC', sans-serif !important; font-size: 1.05rem !important; font-weight: 700; }
         .feedback-error { background: #FFEBEE; color: #C62828; }
 
         .answer-audio-btn {
             background: #FFF;
-            border: 2px solid var(--border-dark);
-            border-radius: 8px;
-            padding: 3px 8px;
-            font-size: 1rem;
+            border: 1.5px solid var(--border-dark);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-size: 0.85rem;
             cursor: pointer;
-            box-shadow: 2px 2px 0px var(--border-dark);
+            box-shadow: 1.5px 1.5px 0px var(--border-dark);
             white-space: nowrap;
             flex-shrink: 0;
-            font-family: 'Long Cang', cursive;
+            font-family: 'Noto Sans SC', sans-serif;
         }
         .answer-audio-btn:active {
             transform: translate(1px, 1px);
-            box-shadow: 1px 1px 0px var(--border-dark);
+            box-shadow: none;
             background: #FFE5EC;
         }
 
@@ -313,27 +318,26 @@
         .modal-card {
             background: #FFFCF7;
             border: 2.5px solid var(--border-dark);
-            border-radius: 24px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 16px;
             width: 90%;
-            max-width: 340px;
-            box-shadow: 6px 8px 0px var(--border-dark);
+            max-width: 320px;
+            box-shadow: 5px 7px 0px var(--border-dark);
             text-align: left;
         }
 
         .modal-card h3 {
             margin: 0 0 2px 0;
-            font-family: 'Long Cang', cursive;
-            font-size: 2.1rem;
+            font-size: 1.5rem;
             text-align: center;
         }
 
         .modal-card label {
             display: block;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-weight: bold;
             color: var(--text-muted);
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .modal-card input {
@@ -341,16 +345,16 @@
             padding: 6px 10px;
             margin-top: 2px;
             border: 2px solid var(--border-dark);
-            border-radius: 10px;
+            border-radius: 8px;
             font-family: inherit;
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             outline: none;
             background: #FFF;
         }
 
         .verify-row {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin-top: 2px;
         }
         .verify-row input { margin-top: 0; }
@@ -358,18 +362,18 @@
         .verify-btn {
             background: #FFE5EC;
             border: 2px solid var(--border-dark);
-            border-radius: 10px;
-            padding: 0 10px;
-            font-size: 1.05rem;
+            border-radius: 8px;
+            padding: 0 8px;
+            font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
             white-space: nowrap;
-            box-shadow: 2px 2px 0px var(--border-dark);
+            box-shadow: 1.5px 1.5px 0px var(--border-dark);
             font-family: inherit;
         }
         .verify-btn:active {
             transform: translate(1px, 1px);
-            box-shadow: 1px 1px 0px var(--border-dark);
+            box-shadow: none;
         }
     </style>
 </head>
@@ -389,8 +393,8 @@
                 <button class="login-mini-btn" onclick="openModal()" id="login-btn-text">点击云端绑定</button>
             </div>
             <div class="stats-group">
-                <div class="stat-item">🔥 连续打卡: <span id="streak">0</span> 天</div>
-                <div class="stat-item">⭐ 学习积分: <span id="score">0</span> 分</div>
+                <div class="stat-item">🔥 打卡: <span id="streak">0</span> 天</div>
+                <div class="stat-item">⭐ 积分: <span id="score">0</span> 分</div>
             </div>
         </div>
 
@@ -400,18 +404,18 @@
             <div class="hint-text" id="hint-text"></div>
             
             <div class="input-container-wrapper">
-                <textarea id="user-input" placeholder="请在此写下你的英文表达..." autocomplete="off"></textarea>
+                <textarea id="user-input" placeholder="请在此输入英文表达..." autocomplete="off"></textarea>
                 <div class="inline-tools">
                     <button class="mini-tool-btn" id="voice-btn" title="长按语音输入">🎤</button>
-                    <button class="mini-tool-btn" onclick="clearInput()" title="清空内容">🧹</button>
                 </div>
             </div>
             <div class="voice-status-tip" id="voice-tip">长按麦克风可说话转文字</div>
 
+            <!-- 三个按钮优化为紧凑一行 -->
             <div class="action-grid">
-                <button class="sketch-btn primary" onclick="checkAnswer()">提交回答 ✍️</button>
-                <button class="sketch-btn" onclick="nextQuestion()">换一题 🍃</button>
-                <button class="sketch-btn full" onclick="showAnswer()">偷看参考答案 👀</button>
+                <button class="sketch-btn primary" onclick="checkAnswer()">提交 ✍️</button>
+                <button class="sketch-btn" onclick="nextQuestion()">换题 🍃</button>
+                <button class="sketch-btn" onclick="showAnswer()">答案 👀</button>
             </div>
         </div>
 
@@ -422,7 +426,7 @@
     <div id="login-modal">
         <div class="modal-card">
             <h3>云端账号同步</h3>
-            <p style="font-size: 1rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0; font-family: 'Long Cang', cursive;">获取邮箱随机 6 位验证码完成绑定</p>
+            <p style="font-size: 0.9rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0;">获取邮箱随机 6 位验证码完成绑定</p>
             
             <label>昵称</label>
             <input type="text" id="reg-nickname" placeholder="例如：手帐达人">
@@ -432,11 +436,11 @@
 
             <label>6位随机验证码</label>
             <div class="verify-row">
-                <input type="text" id="reg-code" placeholder="输入邮件中的6位数" maxlength="6">
+                <input type="text" id="reg-code" placeholder="输入6位数" maxlength="6">
                 <button class="verify-btn" onclick="sendOtpCode()">获取验证码</button>
             </div>
 
-            <button class="sketch-btn primary" style="width: 100%; margin: 14px 0 6px 0;" onclick="verifyAndLogin()">确认绑定 / 登录</button>
+            <button class="sketch-btn primary" style="width: 100%; margin: 12px 0 4px 0;" onclick="verifyAndLogin()">确认绑定 / 登录</button>
             <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="closeModal()">取消</button>
         </div>
     </div>
@@ -465,7 +469,6 @@
         function openModal() { document.getElementById('login-modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('login-modal').style.display = 'none'; }
 
-        // 点击发送 6 位随机验证码
         async function sendOtpCode() {
             const email = document.getElementById('reg-account').value.trim();
             if (!email || !email.includes('@')) {
@@ -485,7 +488,6 @@
             }
         }
 
-        // 输入 6 位数字后点击校验登录
         async function verifyAndLogin() {
             const nickname = document.getElementById('reg-nickname').value.trim() || "手帐练习生";
             const email = document.getElementById('reg-account').value.trim();
@@ -565,7 +567,7 @@
             currentIndex = Math.floor(Math.random() * questions.length);
             const q = questions[currentIndex];
             document.getElementById("category-pill").innerText = q.category;
-            document.getElementById("chinese-text").innerHTML = `“${q.chinese}”`;
+            document.getElementById("chinese-text").innerText = q.chinese;
             document.getElementById("hint-text").innerText = q.hint;
             document.getElementById("user-input").value = "";
             const resultBox = document.getElementById("result-box");
@@ -582,7 +584,7 @@
 
             if (!cleanUser) {
                 resultBox.className = "feedback-error";
-                resultBox.innerHTML = `<span style="font-family: 'Long Cang', cursive; font-size: 1.2rem;">⚠️ 请先写下或说出你的英文回答哦</span>`;
+                resultBox.innerHTML = `<span style="font-size: 0.95rem;">⚠️ 请先输入或说出英文回答</span>`;
                 return;
             }
 
@@ -595,8 +597,8 @@
             } else {
                 streak = 0;
                 resultBox.className = "feedback-error";
-                resultBox.innerHTML = `<span style="font-family: 'Caveat', cursive; font-size: 1.3rem;">💡 答案：${questions[currentIndex].english}</span>
-                                      <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(questions[currentIndex].english)}')">🔊 听朗读</button>`;
+                resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${questions[currentIndex].english}</span>
+                                      <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(questions[currentIndex].english)}')">🔊 朗读</button>`;
             }
             updateStatsUI();
             syncUserDataToCloud();
@@ -605,8 +607,8 @@
         function showAnswer() {
             const resultBox = document.getElementById("result-box");
             resultBox.className = "feedback-error";
-            resultBox.innerHTML = `<span style="font-family: 'Caveat', cursive; font-size: 1.3rem;">💡 答案：${questions[currentIndex].english}</span>
-                                  <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(questions[currentIndex].english)}')">🔊 听朗读</button>`;
+            resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${questions[currentIndex].english}</span>
+                                  <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(questions[currentIndex].english)}')">🔊 朗读</button>`;
             streak = 0;
             updateStatsUI();
             syncUserDataToCloud();
@@ -630,11 +632,6 @@
 
         function nextQuestion() {
             loadQuestion();
-        }
-
-        function clearInput() {
-            document.getElementById("user-input").value = "";
-            document.getElementById("user-input").focus();
         }
 
         function initSpeechRecognition() {
