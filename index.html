@@ -1,799 +1,535 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>✦ Easy English ✦</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@700&family=Quicksand:wght@600;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <style>
-        :root {
-            --bg-color: #FAF6ED;
-            --card-bg: #FFFFFF;
-            --border-dark: #2C2A29;
-            --accent-terracotta: #E07A5F;
-            --text-main: #2C2A29;
-            --text-muted: #8C8275;
-            --font-handwriting: 'ZCOOL KuaiLe', cursive, sans-serif;
-            --font-title-hand: 'Ma Shan Zheng', cursive, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Easy English</title>
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 
-        body {
-            font-family: var(--font-handwriting);
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 16px 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+<style>
+:root{
+    --paper:#FFF9F0;
+    --ink:#403C3A;
+    --blue:#8CAFFF;
+    --pink:#F3A9BF;
+    --yellow:#FFE5A6;
+    --gray:#8E8986;
+}
 
-        .container {
-            width: 100%;
-            max-width: 420px;
-            background: var(--card-bg);
-            border-radius: 30px 24px 26px 26px;
-            border: 2.5px solid var(--border-dark);
-            padding: 22px 18px 18px 18px;
-            box-shadow: 5px 7px 0px rgba(44, 42, 41, 0.85);
-            position: relative;
-            margin-bottom: 12px;
-        }
+*{
+    box-sizing:border-box;
+}
 
-        /* 顶部区域：标题与右上角统计数据 */
-        .header-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
+body{
+    margin:0;
+    background:#FFF9F0;
+    font-family:"Quicksand","Microsoft YaHei",sans-serif;
+    color:var(--ink);
+}
 
-        .brand-title {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 2.1rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin: 0;
-            color: var(--text-main);
-            text-shadow: 2px 2px 0px #FFE5EC;
-            line-height: 1.2;
-        }
 
-        /* 右上角：打卡与积分 */
-        .stats-badge-top {
-            background: #FFF1F2;
-            border: 2px solid var(--border-dark);
-            padding: 5px 10px;
-            border-radius: 12px;
-            box-shadow: 2px 2px 0px var(--border-dark);
-            font-size: 0.95rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            align-items: flex-end;
-            font-family: 'Quicksand', sans-serif;
-            font-weight: 700;
-        }
+/* 页面 */
+.app{
+    max-width:430px;
+    margin:auto;
+    min-height:100vh;
+    padding:25px 22px;
+}
 
-        .mode-switch-bar {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 14px;
-            background: #F3EFEA;
-            padding: 5px;
-            border-radius: 14px;
-            border: 2px solid var(--border-dark);
-        }
 
-        .mode-tab {
-            background: transparent;
-            border: none;
-            font-family: var(--font-handwriting);
-            font-size: 1.15rem;
-            padding: 8px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: all 0.1s ease;
-        }
+/* 顶部 */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
 
-        .mode-tab.active {
-            background: #FFFFFF;
-            color: var(--text-main);
-            border: 1.5px solid var(--border-dark);
-            box-shadow: 1.5px 1.5px 0px var(--border-dark);
-        }
 
-        /* 题目卡片 */
-        .sketch-card {
-            background: #FFFCF7;
-            border: 2px dashed #E6DEC9;
-            border-radius: 18px;
-            padding: 22px 14px 14px 14px;
-            text-align: center;
-            margin-bottom: 12px;
-            position: relative;
-        }
+.logo{
+    font-size:42px;
+    font-weight:700;
+    letter-spacing:-1px;
+}
 
-        .chinese-prompt {
-            font-family: var(--font-title-hand);
-            font-size: 1.85rem;
-            letter-spacing: 1px;
-            line-height: 1.4;
-            margin-bottom: 10px;
-            color: var(--text-main);
-        }
+.logo .blue{
+    color:var(--blue);
+}
 
-        .hint-text {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 14px;
-            font-family: 'Quicksand', sans-serif;
-            font-weight: 600;
-        }
 
-        .input-container-wrapper {
-            position: relative;
-            margin-bottom: 8px;
-        }
+.logo:after{
+    content:"✦";
+    color:var(--pink);
+    font-size:28px;
+}
 
-        textarea {
-            width: 100%;
-            height: 70px;
-            padding: 10px 42px 10px 12px;
-            font-size: 1.2rem;
-            font-family: 'Quicksand', sans-serif;
-            font-weight: 600;
-            border: 2px solid var(--border-dark);
-            border-radius: 14px;
-            background: #FFFFFF;
-            resize: none;
-            outline: none;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-            user-select: text;
-        }
 
-        textarea::placeholder {
-            font-family: var(--font-handwriting);
-            font-size: 1.15rem;
-            color: var(--text-muted);
-        }
+.status{
+    background:#fff;
+    border:2px solid var(--ink);
+    border-radius:20px;
+    padding:10px 16px;
+    font-size:14px;
+    line-height:22px;
+    box-shadow:3px 4px 0 var(--ink);
+}
 
-        textarea:focus {
-            border-color: var(--accent-terracotta);
-            box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.15), inset 0 2px 4px rgba(0,0,0,0.02);
-        }
 
-        .inline-tools {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+/* 主卡片 */
 
-        .mini-tool-btn {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            border: 2px solid var(--border-dark);
-            background: #FFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1rem;
-            box-shadow: 1.5px 1.5px 0px var(--border-dark);
-            transition: all 0.08s ease;
-        }
+.study-card{
 
-        .mini-tool-btn:active, .mini-tool-btn.recording {
-            transform: translate(1px, 1px);
-            box-shadow: none;
-            background: #FF8FA3;
-            color: white;
-        }
+    margin-top:35px;
 
-        .voice-status-tip {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            height: 20px;
-        }
+    background:#fff;
 
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1.3fr 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
+    border:2px solid var(--ink);
 
-        .sketch-btn {
-            font-family: var(--font-handwriting);
-            font-size: 1.2rem;
-            padding: 10px 6px;
-            border: 2px solid var(--border-dark);
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 2px 2px 0px var(--border-dark);
-            transition: all 0.08s ease;
-            background: #FFFFFF;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            white-space: nowrap;
-        }
+    border-radius:32px;
 
-        .sketch-btn:active {
-            transform: translate(1.5px, 1.5px);
-            box-shadow: 0.5px 0.5px 0px var(--border-dark);
-        }
+    padding:25px;
 
-        .sketch-btn.primary {
-            background: #2C2A29;
-            color: #FFFFFF;
-        }
+    position:relative;
 
-        #result-box {
-            margin-top: 10px;
-            font-size: 1.2rem;
-            font-family: var(--font-handwriting);
-            min-height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-radius: 12px;
-            padding: 8px 12px;
-            text-align: left;
-            border: 2px solid var(--border-dark);
-            box-shadow: 2.5px 2.5px 0px var(--border-dark);
-            gap: 8px;
-        }
+    box-shadow:5px 6px 0 var(--ink);
 
-        .feedback-success { background: #E8F5E9; color: #2E7D32; }
-        .feedback-error { background: #FFEBEE; color: #C62828; }
+}
 
-        .answer-audio-btn {
-            background: #FFF;
-            border: 1.5px solid var(--border-dark);
-            border-radius: 8px;
-            padding: 3px 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 1.5px 1.5px 0px var(--border-dark);
-            white-space: nowrap;
-            flex-shrink: 0;
-            font-family: var(--font-handwriting);
-        }
-        .answer-audio-btn:active {
-            transform: translate(1px, 1px);
-            box-shadow: none;
-            background: #FFE5EC;
-        }
 
-        /* 底部操作双栏：左边“点击有惊喜”，右边“登录与昵称” */
-        .bottom-action-bar {
-            width: 100%;
-            max-width: 420px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
+/* 胶带 */
 
-        .surprise-btn-bottom {
-            background: #FFF5F7;
-            color: var(--accent-terracotta);
-            border: 2px solid var(--border-dark);
-            border-radius: 16px;
-            padding: 12px;
-            font-family: var(--font-handwriting);
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 3px 4px 0px var(--border-dark);
-            transition: all 0.08s ease;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        .surprise-btn-bottom:active {
-            transform: translate(1.5px, 1.5px);
-            box-shadow: 1px 1.5px 0px var(--border-dark);
-        }
+.study-card:before{
 
-        .user-panel-bottom {
-            background: #FFFCF7;
-            border: 2px solid var(--border-dark);
-            border-radius: 16px;
-            padding: 10px 12px;
-            box-shadow: 3px 4px 0px var(--border-dark);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    content:"";
 
-        .user-tag-bottom {
-            font-size: 1rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+    position:absolute;
 
-        .user-tag-bottom span {
-            color: var(--accent-terracotta);
-            font-weight: 700;
-        }
+    top:-15px;
 
-        .login-mini-btn {
-            background: #FFE5EC;
-            color: var(--border-dark);
-            border: 1.5px solid var(--border-dark);
-            padding: 4px 10px;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            box-shadow: 1.5px 1.5px 0px var(--border-dark);
-            font-family: var(--font-handwriting);
-            white-space: nowrap;
-        }
-        .login-mini-btn:active {
-            transform: translate(1px, 1px);
-            box-shadow: none;
-        }
+    left:45px;
 
-        /* 底部常驻下载引导条（默认网页展示，App打开时自动隐藏） */
-        .bottom-install-banner {
-            display: flex;
-            width: 100%;
-            max-width: 420px;
-            background: #FFFCF7;
-            border: 2px solid var(--border-dark);
-            border-radius: 16px;
-            padding: 12px 16px;
-            box-shadow: 3px 4px 0px var(--border-dark);
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
+    width:90px;
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(44, 42, 41, 0.65);
-            backdrop-filter: blur(4px);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
+    height:25px;
 
-        .modal-card {
-            background: #FFFCF7;
-            border: 2.5px solid var(--border-dark);
-            border-radius: 20px;
-            padding: 18px;
-            width: 90%;
-            max-width: 340px;
-            box-shadow: 5px 7px 0px var(--border-dark);
-            text-align: left;
-            font-family: var(--font-handwriting);
-            max-height: 85vh;
-            overflow-y: auto;
-        }
+    background:var(--yellow);
 
-        .modal-card h3 {
-            margin: 0 0 6px 0;
-            font-size: 1.6rem;
-            text-align: center;
-            font-family: var(--font-title-hand);
-        }
+    transform:rotate(-5deg);
 
-        .modal-card label {
-            display: block;
-            font-size: 1.05rem;
-            color: var(--text-muted);
-            margin-top: 10px;
-        }
+    opacity:.8;
 
-        .modal-card input {
-            width: 100%;
-            padding: 8px 10px;
-            margin-top: 4px;
-            border: 2px solid var(--border-dark);
-            border-radius: 10px;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.1rem;
-            outline: none;
-            background: #FFF;
-        }
+}
 
-        .guide-box {
-            background: #FFF9F0;
-            border: 1.5px solid var(--border-dark);
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 10px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-    </style>
+
+/* 欢迎语 */
+
+.subtitle{
+
+    text-align:center;
+
+    color:#999;
+
+    font-size:16px;
+
+    margin-bottom:22px;
+
+}
+
+
+
+/* tabs */
+
+.tabs{
+
+    display:flex;
+
+    border:2px solid var(--ink);
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    margin-bottom:35px;
+
+}
+
+
+.tab{
+
+    flex:1;
+
+    border:0;
+
+    background:#FFF;
+
+    padding:13px;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    color:#999;
+
+}
+
+
+.tab.active{
+
+    background:#EEF4FF;
+
+    color:#668FEA;
+
+}
+
+
+
+/* 单词区域 */
+
+.word-area{
+
+    text-align:center;
+
+}
+
+
+.tag{
+
+    color:var(--pink);
+
+    font-size:15px;
+
+}
+
+
+.word{
+
+    margin:15px 0;
+
+    font-size:52px;
+
+    color:var(--blue);
+
+    font-weight:bold;
+
+}
+
+
+.meaning{
+
+    font-family:"ZCOOL KuaiLe";
+
+    font-size:30px;
+
+}
+
+
+.hint{
+
+    margin-top:12px;
+
+    color:#999;
+
+    font-size:18px;
+
+}
+
+
+/* 输入 */
+
+.input-wrap{
+
+    margin-top:30px;
+
+    position:relative;
+
+}
+
+
+textarea{
+
+    width:100%;
+
+    height:100px;
+
+    border:2px solid var(--ink);
+
+    border-radius:22px;
+
+    padding:18px;
+
+    font-size:18px;
+
+    resize:none;
+
+    outline:none;
+
+}
+
+
+textarea::placeholder{
+
+    color:#AAA;
+
+}
+
+
+
+.voice{
+
+    position:absolute;
+
+    right:15px;
+
+    bottom:15px;
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    background:#FFEAF1;
+
+    border:2px solid var(--ink);
+
+}
+
+
+
+/* 按钮 */
+
+.actions{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:22px;
+
+}
+
+
+.btn{
+
+    border:2px solid var(--ink);
+
+    border-radius:20px;
+
+    padding:14px;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    box-shadow:3px 4px 0 var(--ink);
+
+}
+
+
+.submit{
+
+    flex:1;
+
+    background:#F7B0C6;
+
+}
+
+
+.next{
+
+    background:#FFF1C9;
+
+}
+
+
+.answer{
+
+    background:#EEF4FF;
+
+}
+
+
+/* 底部 */
+
+.bottom{
+
+    margin-top:25px;
+
+    background:white;
+
+    border:2px solid var(--ink);
+
+    border-radius:25px;
+
+    padding:18px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    box-shadow:3px 4px 0 var(--ink);
+
+}
+
+
+
+.result{
+
+    margin-top:15px;
+
+    min-height:30px;
+
+    text-align:center;
+
+}
+
+
+</style>
+
 </head>
+
+
 <body>
 
-    <div class="container">
-        <!-- 顶部：品牌名与右上角统计 -->
-        <div class="header-area">
-            <div class="brand-title">Easy English</div>
-            <div class="stats-badge-top">
-                <div>🔥 打卡: <span id="streak">1</span> 天</div>
-                <div>⭐ 积分: <span id="score">10</span> 分</div>
-            </div>
-        </div>
+<div class="app">
 
-        <div class="mode-switch-bar">
-            <button class="mode-tab active" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
-            <button class="mode-tab" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
-        </div>
 
-        <!-- 核心题目卡片 -->
-        <div class="sketch-card">
-            <div class="chinese-prompt" id="chinese-text">正在翻阅手帐页面...</div>
-            <div class="hint-text" id="hint-text"></div>
-            
-            <div class="input-container-wrapper">
-                <textarea id="user-input" placeholder="请在此输入英文..." autocomplete="off"></textarea>
-                <div class="inline-tools">
-                    <button class="mini-tool-btn" id="voice-btn" title="长按语音输入">🎤</button>
-                </div>
-            </div>
-            <div class="voice-status-tip" id="voice-tip">长按麦克风可说话转文字</div>
+<div class="header">
 
-            <div class="action-grid">
-                <button class="sketch-btn primary" onclick="checkAnswer()">提交 ✍️</button>
-                <button class="sketch-btn" onclick="nextQuestion()">换题 🍃</button>
-                <button class="sketch-btn" onclick="showAnswer()">答案 👀</button>
-            </div>
-        </div>
 
-        <div id="result-box"></div>
-    </div>
+<div class="logo">
+Easy <span class="blue">English</span>
+</div>
 
-    <!-- 底部双栏：左边点击有惊喜，右边登录与昵称 -->
-    <div class="bottom-action-bar">
-        <button class="surprise-btn-bottom" onclick="openSurpriseModal()">✨ 点击有惊喜</button>
-        <div class="user-panel-bottom">
-            <div class="user-tag-bottom">
-                👤 <span id="user-display">本地游客</span>
-            </div>
-            <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">修改昵称</button>
-        </div>
-    </div>
 
-    <!-- 底部常驻下载引导条（通过JS判断：网页展示，App打开时自动隐藏） -->
-    <div id="bottom-install-banner" class="bottom-install-banner">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 1.5rem;">📱</span>
-            <div style="font-size: 0.95rem; line-height: 1.3;">
-                <div style="font-weight: 700;">保存到手机桌面</div>
-                <div style="color: var(--text-muted); font-size: 0.85rem;">点此查看一键安装App教程</div>
-            </div>
-        </div>
-        <button class="sketch-btn primary" onclick="openSurpriseModal()" style="padding: 6px 12px; font-size: 0.95rem;">查看教程</button>
-    </div>
+<div class="status">
+🔥 连续1天<br>
+⭐ 10分
+</div>
 
-    <!-- 修改昵称与邮箱弹窗 -->
-    <div id="login-modal" class="modal-overlay">
-        <div class="modal-card">
-            <h3>修改账号与昵称</h3>
-            <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0; font-family: var(--font-handwriting);">绑定专属邮箱与昵称，开启手帐打卡之旅~</p>
-            
-            <label>专属昵称</label>
-            <input type="text" id="reg-nickname" placeholder="例如：flower">
 
-            <label>绑定邮箱</label>
-            <input type="email" id="reg-email" placeholder="例如：your_email@domain.com">
+</div>
 
-            <button class="sketch-btn primary" style="width: 100%; margin: 16px 0 8px 0;" onclick="saveNicknameLocally()">保存信息</button>
-            <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="closeLoginModal()">取消</button>
-        </div>
-    </div>
 
-    <!-- 点击有惊喜弹窗（仅保留开发者联系方式） -->
-    <div id="surprise-modal" class="modal-overlay">
-        <div class="modal-card">
-            <h3>✨ 开发者寄语</h3>
-            <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 2px 0 14px 0;">感谢使用 Easy English 手帐打卡！</p>
-            
-            <div class="guide-box" style="text-align: center; padding: 16px;">
-                <div style="font-weight: 700; color: var(--accent-terracotta); margin-bottom: 8px; font-size: 1.1rem;">联系美丽且智慧的开发者</div>
-                邮箱：<br>
-                <span style="color: #2E7D32; font-size: 1rem; word-break: break-all; font-family: 'Quicksand', sans-serif; font-weight: 700;">zhaihuahua1701@gmail.com</span>
-            </div>
 
-            <button class="sketch-btn primary" style="width: 100%; margin-top: 14px;" onclick="closeSurpriseModal()">知道啦 ❤️</button>
-        </div>
-    </div>
 
-    <script>
-        // 自动检测是否通过 App / 独立 PWA 模式打开
-        window.addEventListener('DOMContentLoaded', () => {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-            if (isStandalone) {
-                const banner = document.getElementById('bottom-install-banner');
-                if (banner) {
-                    banner.style.display = 'none';
-                }
-            }
+<div class="study-card">
 
-            const localName = localStorage.getItem('ee_nickname');
-            const localEmail = localStorage.getItem('ee_email');
-            const localScore = localStorage.getItem('ee_score');
-            const localStreak = localStorage.getItem('ee_streak');
-            if (localName) {
-                document.getElementById('user-display').innerText = localName;
-                document.getElementById('login-btn-text').innerText = '修改';
-            }
-            if (localEmail) {
-                document.getElementById('reg-email').value = localEmail;
-            }
-            if (localScore) score = parseInt(localScore);
-            if (localStreak) streak = parseInt(localStreak);
-            
-            checkDailyCheckIn();
-            updateStatsUI();
-            initSpeechRecognition();
-            loadQuestion();
-        });
 
-        let score = 10;
-        let streak = 1; 
-        let currentMode = 'word';
+<div class="subtitle">
+今天也学习一点点英语吧 ♡
+</div>
 
-        const questionBanks = {
-            word: [
-                { chinese: "高效的、有成效的", english: "efficient", phonetic: "[ɪˈfɪʃnt]", hint: "Hint: e _ _ _ _ _ _ t (9 letters)" },
-                { chinese: "灵感、启发", english: "inspiration", phonetic: "[ˌɪnspəˈreɪʃn]", hint: "Hint: i _ _ _ _ _ _ _ _ n (11 letters)" },
-                { chinese: "优先事项、首要任务", english: "priority", phonetic: "[praɪˈɔːrəti]", hint: "Hint: p _ _ _ _ _ _ y (8 letters)" },
-                { chinese: "灵活的、可变通的", english: "flexible", phonetic: "[ˈfleksəbl]", hint: "Hint: f _ _ _ _ _ _ e (8 letters)" },
-                { chinese: "策略、战略", english: "strategy", phonetic: "[ˈstrætədʒi]", hint: "Hint: s _ _ _ _ _ _ y (8 letters)" },
-                { chinese: "合作、协作", english: "collaboration", phonetic: "[kəˌlæbəˈreɪʃn]", hint: "Hint: c _ _ _ _ _ _ _ _ _ _ _ n (13 letters)" },
-                { chinese: "成就、成绩", english: "achievement", phonetic: "[əˈtʃiːvmənt]", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
-                { chinese: "挑战、质疑", english: "challenge", phonetic: "[ˈtʃælɪndʒ]", hint: "Hint: c _ _ _ _ _ _ _ e (9 letters)" }
-            ],
-            phrase: [
-                { chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
-                { chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
-                { chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "Hint: contain peanuts / allergic" },
-                { chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "Hint: subway station / nearby" },
-                { chinese: "大家能听到我说话吗？我的麦克风刚才有点问题。", english: "Can everyone hear me? My microphone was acting up a bit.", hint: "Hint: Can everyone hear me? / microphone" },
-                { chinese: "关于这个项目，我想听听大家的看法。", english: "Regarding this project, I'd love to hear everyone's thoughts.", hint: "Hint: Regarding this project / thoughts" },
-                { chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "Hint: Sorry to interrupt / quick question" },
-                { chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "Hint: ahead of schedule / expect to" },
-                { chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "Hint: plate is full / might not have time" }
-            ]
-        };
 
-        let currentIndex = 0;
+<div class="tabs">
 
-        function checkDailyCheckIn() {
-            const todayStr = new Date().toDateString();
-            const lastCheckInDate = localStorage.getItem('ee_last_checkin_date');
+<button class="tab active">
+🔤 高频单词
+</button>
 
-            if (lastCheckInDate !== todayStr) {
-                streak += 1;
-                localStorage.setItem('ee_last_checkin_date', todayStr);
-                localStorage.setItem('ee_streak', streak);
-            }
-        }
 
-        function updateStatsUI() {
-            document.getElementById('score').innerText = score;
-            document.getElementById('streak').innerText = streak;
-        }
+<button class="tab">
+💬 常用短语
+</button>
 
-        function switchMode(mode) {
-            currentMode = mode;
-            document.getElementById('tab-word').className = mode === 'word' ? 'mode-tab active' : 'mode-tab';
-            document.getElementById('tab-phrase').className = mode === 'phrase' ? 'mode-tab active' : 'mode-tab';
-            loadQuestion();
-        }
 
-        function openLoginModal() { 
-            const currentName = document.getElementById('user-display').innerText;
-            if (currentName !== '本地游客') {
-                document.getElementById('reg-nickname').value = currentName;
-            }
-            const currentEmail = localStorage.getItem('ee_email');
-            if (currentEmail) {
-                document.getElementById('reg-email').value = currentEmail;
-            }
-            document.getElementById('login-modal').style.display = 'flex'; 
-        }
-        function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
+</div>
 
-        function openSurpriseModal() { document.getElementById('surprise-modal').style.display = 'flex'; }
-        function closeSurpriseModal() { document.getElementById('surprise-modal').style.display = 'none'; }
 
-        function saveNicknameLocally() {
-            const nickname = document.getElementById('reg-nickname').value.trim() || "手帐练习生";
-            const email = document.getElementById('reg-email').value.trim();
-            document.getElementById('user-display').innerText = nickname;
-            document.getElementById('login-btn-text').innerText = '修改';
-            localStorage.setItem('ee_nickname', nickname);
-            if(email) localStorage.setItem('ee_email', email);
-            alert('✨ 账号信息保存成功！开始开心打卡吧~');
-            closeLoginModal();
-        }
 
-        function loadQuestion() {
-            const list = questionBanks[currentMode];
-            currentIndex = Math.floor(Math.random() * list.length);
-            const q = list[currentIndex];
-            document.getElementById("chinese-text").innerText = q.chinese;
-            document.getElementById("hint-text").innerText = q.hint;
-            document.getElementById("user-input").value = "";
-            const resultBox = document.getElementById("result-box");
-            resultBox.innerHTML = "";
-            resultBox.className = "";
-        }
 
-        function checkAnswer() {
-            const list = questionBanks[currentMode];
-            const userVal = document.getElementById("user-input").value.trim().toLowerCase();
-            const cleanUser = userVal.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
-            const target = list[currentIndex].english.toLowerCase();
-            const cleanTarget = target.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
-            const resultBox = document.getElementById("result-box");
+<div class="word-area">
 
-            if (!cleanUser) {
-                resultBox.className = "feedback-error";
-                resultBox.innerHTML = `<span style="font-size: 1.05rem;">⚠️ 请先输入或说出英文回答</span>`;
-                return;
-            }
 
-            if (cleanUser === cleanTarget || (cleanUser.length >= 3 && cleanTarget.includes(cleanUser))) {
-                score += 10;
-                resultBox.className = "feedback-success";
-                resultBox.innerHTML = `✨ 回答完美！积分 +10`;
-                setTimeout(nextQuestion, 1500);
-            } else {
-                resultBox.className = "feedback-error";
-                let displayContent = list[currentIndex].english;
-                if (currentMode === 'word' && list[currentIndex].phonetic) {
-                    displayContent += ` <span style="font-size: 0.95rem; color: var(--text-muted); font-family: 'Quicksand', sans-serif;">${list[currentIndex].phonetic}</span>`;
-                }
-                resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1.05rem;">💡 ${displayContent}</span>
-                                      <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
-            }
-            updateStatsUI();
-            localStorage.setItem('ee_score', score);
-        }
+<div class="tag">
+Today's Word
+</div>
 
-        function showAnswer() {
-            const list = questionBanks[currentMode];
-            const resultBox = document.getElementById("result-box");
-            resultBox.className = "feedback-error";
-            let displayContent = list[currentIndex].english;
-            if (currentMode === 'word' && list[currentIndex].phonetic) {
-                displayContent += ` <span style="font-size: 0.95rem; color: var(--text-muted); font-family: 'Quicksand', sans-serif;">${list[currentIndex].phonetic}</span>`;
-            }
-            resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1.05rem;">💡 ${displayContent}</span>
-                                  <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
-            updateStatsUI();
-            localStorage.setItem('ee_score', score);
-        }
 
-        function playAudio(text) {
-            if (!('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
-            const decodedText = decodeURIComponent(text);
-            const utterance = new SpeechSynthesisUtterance(decodedText);
-            utterance.lang = 'en-US';
-            const voices = window.speechSynthesis.getVoices();
-            const standardVoice = voices.find(v => v.lang === 'en-US' && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('US English'))) || voices.find(v => v.lang.startsWith('en'));
-            if (standardVoice) utterance.voice = standardVoice;
-            utterance.rate = 1.0;
-            utterance.pitch = 1.0;
-            window.speechSynthesis.speak(utterance);
-        }
+<div class="word">
+strategy
+</div>
 
-        function nextQuestion() {
-            loadQuestion();
-        }
 
-        function initSpeechRecognition() {
-            const btn = document.getElementById('voice-btn');
-            const tip = document.getElementById('voice-tip');
-            const inputArea = document.getElementById('user-input');
+<div class="meaning">
+策略、战略
+</div>
 
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                tip.innerText = "当前浏览器/环境不支持语音识别";
-                return;
-            }
 
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
+<div class="hint">
+Hint: s _ _ _ _ _ y
+</div>
 
-            let isHolding = false;
 
-            const startRecording = (e) => {
-                e.preventDefault();
-                if (isHolding) return;
-                isHolding = true;
-                btn.classList.add('recording');
-                tip.innerText = "正在聆听，请说话...";
-                try { 
-                    recognition.start(); 
-                } catch(err) { 
-                    console.log("语音已在运行", err); 
-                }
-            };
 
-            const stopRecording = (e) => {
-                e.preventDefault();
-                if (!isHolding) return;
-                isHolding = false;
-                btn.classList.remove('recording');
-                tip.innerText = "正在识别中...";
-                try { 
-                    recognition.stop(); 
-                } catch(err) { 
-                    console.log(err); 
-                }
-            };
+</div>
 
-            // 同时兼容手机触摸事件与桌面鼠标事件
-            btn.addEventListener('touchstart', startRecording, {passive: false});
-            btn.addEventListener('touchend', stopRecording, {passive: false});
-            btn.addEventListener('touchcancel', stopRecording, {passive: false});
-            
-            btn.addEventListener('mousedown', startRecording);
-            btn.addEventListener('mouseup', stopRecording);
-            btn.addEventListener('mouseleave', stopRecording);
 
-            recognition.onresult = (event) => {
-                inputArea.value = event.results[0][0].transcript;
-                tip.innerText = "识别成功！点击提交查看";
-            };
 
-            recognition.onerror = (event) => {
-                console.log("语音识别错误:", event.error);
-                tip.innerText = "识别出错或未授权麦克风，请重试";
-                btn.classList.remove('recording');
-                isHolding = false;
-            };
 
-            recognition.onend = () => {
-                btn.classList.remove('recording');
-                isHolding = false;
-                if(tip.innerText === "正在聆听，请说话...") {
-                    tip.innerText = "长按麦克风可说话转文字";
-                }
-            };
-        }
-    </script>
+<div class="input-wrap">
+
+
+<textarea placeholder="请在此输入英文..."></textarea>
+
+
+<button class="voice">
+🎤
+</button>
+
+
+</div>
+
+
+
+
+<div class="actions">
+
+
+<button class="btn submit">
+✍️ 提交答案
+</button>
+
+
+<button class="btn next">
+🍃 换题
+</button>
+
+
+<button class="btn answer">
+👀
+</button>
+
+
+</div>
+
+
+<div class="result"></div>
+
+
+
+</div>
+
+
+
+<div class="bottom">
+
+<span>
+✨ 点击有惊喜
+</span>
+
+
+<span>
+👤 flower
+</span>
+
+
+</div>
+
+
+
+</div>
+
+
 </body>
 </html>
