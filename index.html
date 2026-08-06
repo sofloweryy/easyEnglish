@@ -3,22 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>✈️ 职场与出海口语生存模拟器</title>
-    <!-- 引入手绘字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-    <!-- 引入 Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>✦ 岛屿口语手帐 · Global Survival</title>
+    <!-- 引入高级的手绘与衬线字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #F4F6F8;
-            --card-bg: #FFFFFF;
-            --border-color: #1F2937;
-            --primary: #4F46E5;         /* 极客蓝/专业感 */
-            --primary-hover: #4338CA;
-            --accent: #10B981;          /* 成功绿 */
-            --warning: #F59E0B;         /* 积分金 */
-            --text-main: #1F2937;
-            --shadow: 4px 4px 0px #1F2937;
+            --bg-color: #F7F5F0;        /* 高级燕麦纸张色 */
+            --card-bg: #FFFFFF;         /* 纯白质感纸面 */
+            --border-dark: #2C2A29;     /* 极简高级炭黑线条 */
+            --accent-terracotta: #D97706; /* 陶土橘点缀 */
+            --accent-sage: #658A6C;     /* 森林绿/成功色 */
+            --text-main: #2C2A29;
+            --text-muted: #78716C;
+            --soft-shadow: 0 10px 30px -10px rgba(44, 42, 41, 0.08);
         }
 
         * {
@@ -27,11 +24,11 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Noto Serif SC', -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 15px;
+            padding: 20px 16px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -40,364 +37,286 @@
 
         .container {
             width: 100%;
-            max-width: 480px;
+            max-width: 440px;
             background: var(--card-bg);
-            border: 3px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: var(--shadow);
+            /* 模拟手绘不规则圆角 */
+            border-radius: 28px 24px 30px 22px;
+            border: 2px solid var(--border-dark);
+            padding: 24px 20px;
+            box-shadow: var(--soft-shadow), 6px 6px 0px rgba(44, 42, 41, 0.9);
             position: relative;
         }
 
+        /* 顶部标题栏 */
         .header {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        h1 {
-            font-family: 'ZCOOL KuaiLe', cursive, sans-serif;
-            font-size: 1.6rem;
-            margin: 0 0 5px 0;
-            color: var(--primary);
+        .brand-title {
+            font-family: 'Caveat', cursive, serif;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+            margin: 0;
+            color: var(--text-main);
+            font-weight: 600;
         }
 
-        .subtitle {
+        .brand-sub {
             font-size: 0.8rem;
-            color: #6B7280;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 2px;
         }
 
-        /* 登录/用户信息栏 */
-        .user-bar {
+        /* 状态与控制栏 */
+        .top-info-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #EEF2FF;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
+            margin-bottom: 20px;
+            background: #FAF8F5;
             padding: 8px 12px;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-        }
-
-        .user-bar span {
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .login-btn-small {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
-
-        /* 状态栏 */
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .stat-badge {
-            flex: 1;
-            background: #FFFBEB;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            padding: 6px;
-            text-align: center;
-            font-size: 0.85rem;
-            font-weight: bold;
-            box-shadow: 2px 2px 0px var(--border-color);
-        }
-
-        .challenge-card {
-            background: #F9FAFB;
-            border: 2px dashed var(--border-color);
             border-radius: 14px;
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 15px;
+            border: 1.5px solid var(--border-dark);
         }
 
-        .tag {
+        .user-tag {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stats-group {
+            display: flex;
+            gap: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* 题目卡片：模拟精致手帐内页 */
+        .sketch-card {
+            background: #FFFEFC;
+            border: 2px dashed #D6D1C7;
+            border-radius: 20px;
+            padding: 22px 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .category-pill {
             display: inline-block;
-            background: #E0E7FF;
-            color: var(--primary);
-            border: 2px solid var(--border-color);
-            padding: 3px 10px;
+            background: #F3EFE6;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-dark);
+            padding: 3px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-weight: 700;
+            margin-bottom: 14px;
         }
 
-        .chinese-text {
+        .chinese-prompt {
             font-size: 1.15rem;
-            font-weight: bold;
-            line-height: 1.4;
+            font-weight: 700;
+            line-height: 1.6;
             margin-bottom: 10px;
         }
 
         .hint-text {
             font-size: 0.8rem;
-            color: #9CA3AF;
-            margin-bottom: 15px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+            font-family: monospace;
         }
 
-        .input-box {
-            width: 100%;
-            margin-bottom: 12px;
+        /* 优雅的输入框 */
+        .input-wrapper {
+            margin-bottom: 16px;
         }
 
         textarea {
             width: 100%;
-            height: 65px;
-            padding: 10px;
+            height: 75px;
+            padding: 12px;
             font-size: 0.95rem;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            background: #FFF;
+            font-family: inherit;
+            border: 2px solid var(--border-dark);
+            border-radius: 14px;
+            background: #FFFFFF;
             resize: none;
             outline: none;
-            font-family: inherit;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s;
         }
 
-        .tool-buttons {
+        textarea:focus {
+            border-color: var(--accent-terracotta);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+        }
+
+        /* 语音与工具按钮 */
+        .tools-row {
             display: flex;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
-        .circle-btn {
-            width: 40px;
-            height: 40px;
+        .icon-btn {
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            border: 2px solid var(--border-color);
+            border: 1.5px solid var(--border-dark);
             background: #FFF;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
             cursor: pointer;
-            box-shadow: 2px 2px 0px var(--border-color);
+            box-shadow: 2px 2px 0px var(--border-dark);
+            transition: transform 0.1s;
         }
 
-        .circle-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: none;
+        .icon-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--border-dark);
         }
 
-        .action-buttons {
+        /* 底部主操作按钮 */
+        .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .btn {
+        .sketch-btn {
             font-family: inherit;
-            font-weight: bold;
+            font-weight: 700;
             font-size: 0.9rem;
-            padding: 10px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
+            padding: 12px;
+            border: 2px solid var(--border-dark);
+            border-radius: 14px;
             cursor: pointer;
-            box-shadow: 3px 3px 0px var(--border-color);
-            background: var(--primary);
-            color: #FFF;
-        }
-
-        .btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px var(--border-color);
-        }
-
-        .btn.secondary {
-            background: #E5E7EB;
+            box-shadow: 3px 3px 0px var(--border-dark);
+            transition: all 0.1s ease;
+            background: #FFFFFF;
             color: var(--text-main);
         }
 
-        .btn.full-width {
+        .sketch-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px var(--border-dark);
+        }
+
+        .sketch-btn.primary {
+            background: #111827; /* 高级深碳黑 */
+            color: #FFFFFF;
+        }
+
+        .sketch-btn.full {
             grid-column: span 2;
         }
 
-        #result {
-            margin-top: 10px;
+        /* 反馈区域 */
+        #result-box {
+            margin-top: 15px;
             font-size: 0.85rem;
-            font-weight: bold;
-            min-height: 35px;
+            font-weight: 700;
+            min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
-            padding: 6px;
-        }
-
-        .correct { background: #D1FAE5; color: #065F46; border: 2px solid var(--border-color); }
-        .wrong { background: #FEE2E2; color: #991B1B; border: 2px solid var(--border-color); }
-
-        /* 登录弹窗遮罩 */
-        #login-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border: 3px solid var(--border-color);
-            border-radius: 14px;
-            width: 85%;
-            max-width: 320px;
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-        .modal-content input {
-            width: 100%;
+            border-radius: 12px;
             padding: 8px;
-            margin: 10px 0;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
+            text-align: center;
+        }
+
+        .feedback-success {
+            background: #F0FDF4;
+            color: #166534;
+            border: 1.5px solid var(--border-dark);
+        }
+
+        .feedback-error {
+            background: #FEF2F2;
+            color: #991B1B;
+            border: 1.5px solid var(--border-dark);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- 品牌页头 -->
         <div class="header">
-            <h1>✈️ 职场与出海口语生存</h1>
-            <div class="subtitle">告别死记硬背，每日搞定真实老外场景</div>
+            <div class="brand-title">Global Survival Sketchbook</div>
+            <div class="brand-sub">✦ 职场与出海口语手帐 ✦</div>
         </div>
 
-        <!-- 登录与云端存档栏 -->
-        <div class="user-bar">
-            <div>当前学习号: <span id="user-display">本地游客 (未云端同步)</span></div>
-            <button class="login-btn-small" onclick="openLoginModal()" id="login-btn-text">绑定账号</button>
+        <!-- 顶部信息：游客状态 + 积分连击 -->
+        <div class="top-info-bar">
+            <div class="user-tag">👤 <span>本地练习生</span></div>
+            <div class="stats-group">
+                <div>🔥 <span id="streak">0</span></div>
+                <div>⭐ <span id="score">0</span></div>
+            </div>
         </div>
 
-        <div class="stats-bar">
-            <div class="stat-badge">🔥 连击: <span id="streak">0</span></div>
-            <div class="stat-badge">⭐ 积分: <span id="score">0</span></div>
-        </div>
-
-        <div class="challenge-card">
-            <div id="category-badge" class="tag">载入中...</div>
-            <div class="chinese-text" id="chinese-text">正在加载情境...</div>
+        <!-- 核心手帐卡片 -->
+        <div class="sketch-card">
+            <div id="category-pill" class="category-pill">✈️ 载入中...</div>
+            <div class="chinese-prompt" id="chinese-text">正在翻阅手帐页面...</div>
             <div class="hint-text" id="hint-text"></div>
             
-            <div class="input-box">
-                <textarea id="user-input" placeholder="请输入对应的英文口语表达..." autocomplete="off"></textarea>
+            <div class="input-wrapper">
+                <textarea id="user-input" placeholder="请在此写下你的英文表达..." autocomplete="off"></textarea>
             </div>
 
-            <div class="tool-buttons">
-                <button class="circle-btn" onclick="speakTarget()" title="听标准发音">🔊</button>
-                <button class="circle-btn" onclick="clearInput()" title="清空">🧹</button>
+            <div class="tools-row">
+                <button class="icon-btn" onclick="speakTarget()" title="朗读标准发音">🔊</button>
+                <button class="icon-btn" onclick="clearInput()" title="清空内容">🧹</button>
             </div>
 
-            <div class="action-buttons">
-                <button class="btn" onclick="checkAnswer()">提交回答 🚀</button>
-                <button class="btn secondary" onclick="nextQuestion()">换一个 ➡️</button>
-                <button class="btn secondary full-width" onclick="showAnswer()">偷看答案 👀</button>
+            <div class="action-grid">
+                <button class="sketch-btn primary" onclick="checkAnswer()">提交回答 ✍️</button>
+                <button class="sketch-btn" onclick="nextQuestion()">换一题 🍃</button>
+                <button class="sketch-btn full" onclick="showAnswer()">偷看参考答案 👀</button>
             </div>
         </div>
 
-        <div id="result"></div>
-    </div>
-
-    <!-- 简单的绑定弹窗 -->
-    <div id="login-modal">
-        <div class="modal-content">
-            <h3>绑定你的学习账号</h3>
-            <p style="font-size: 0.8rem; color:#666;">输入你的常用邮箱，开启云端积分和连击同步：</p>
-            <input type="email" id="email-input" placeholder="输入邮箱 (例如 name@example.com)">
-            <button class="btn" style="width:100%; margin-top:5px;" onclick="sendMagicLink()">发送登录验证链接</button>
-            <button class="btn secondary" style="width:100%; margin-top:8px;" onclick="closeLoginModal()">取消</button>
-        </div>
+        <div id="result-box"></div>
     </div>
 
     <script>
-        // === 1. Supabase 配置 ===
-        const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
-        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-        let currentUser = null;
-        let score = 0;
-        let streak = 0;
-
-        // 页面初始化检查登录状态
-        window.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await _supabase.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                document.getElementById('user-display').innerText = currentUser.email.split('@')[0];
-                document.getElementById('login-btn-text').innerText = '已绑定';
-                loadUserDataFromCloud();
-            }
-        });
-
-        function openLoginModal() {
-            document.getElementById('login-modal').style.display = 'flex';
-        }
-        function closeLoginModal() {
-            document.getElementById('login-modal').style.display = 'none';
-        }
-
-        async function sendMagicLink() {
-            const email = document.getElementById('email-input').value.trim();
-            if (!email) {
-                alert('请输入有效的邮箱！');
-                return;
-            }
-            const { error } = await _supabase.auth.signInWithOtp({ email });
-            if (error) {
-                alert('发送失败: ' + error.message);
-            } else {
-                alert('验证链接已发送至您的邮箱，请去邮箱点击登录！');
-                closeLoginModal();
-            }
-        }
-
-        // 模拟云端存档读写（你可以根据需要将 score 和 streak 存入 Supabase 用户表）
-        async function loadUserDataFromCloud() {
-            // 这里可以预留从 Supabase 读取用户积分的逻辑
-        }
-
-        // === 2. 题库数据 (出国旅行 + 海外工作) ===
+        // 题库数据：真实海外出海与职场情境
         const questions = [
-            // 旅行篇
-            { category: "✈️ 旅行 · 机场海关", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "提示: Where is the boarding gate..." },
-            { category: "🧳 旅行 · 酒店入住", chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "提示: air conditioner / switch rooms" },
-            { category: "🍜 旅行 · 餐厅点餐", chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "提示: contain peanuts / allergic" },
-            { category: "🚕 旅行 · 城市问路", chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "提示: subway station / nearby" },
-
-            // 工作篇
-            { category: "💼 工作 · 远程会议", chinese: "大家能听到我说话吗？我的麦克风刚才有点问题。", english: "Can everyone hear me? My microphone was acting up a bit.", hint: "提示: Can everyone hear me? / microphone" },
-            { category: "💼 工作 · 表达观点", chinese: "关于这个项目，我想听听大家的看法。", english: "Regarding this project, I'd love to hear everyone's thoughts.", hint: "提示: Regarding this project / thoughts" },
-            { category: "💼 工作 · 礼貌打断", chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "提示: Sorry to interrupt / quick question" },
-            { category: "💼 工作 · 进度汇报", chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "提示: ahead of schedule / expect to" },
-            { category: "💼 工作 · 职场拒绝", chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "提示: plate is full / might not have time" }
+            { category: "✈️ 机场海关", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
+            { category: "🧳 酒店入住", chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
+            { category: "🍜 餐厅点餐", chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "Hint: contain peanuts / allergic" },
+            { category: "🚕 城市问路", chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "Hint: subway station / nearby" },
+            { category: "💼 远程会议", chinese: "大家能听到我说话吗？我的麦克风刚才有点问题。", english: "Can everyone hear me? My microphone was acting up a bit.", hint: "Hint: Can everyone hear me? / microphone" },
+            { category: "💼 表达观点", chinese: "关于这个项目，我想听听大家的看法。", english: "Regarding this project, I'd love to hear everyone's thoughts.", hint: "Hint: Regarding this project / thoughts" },
+            { category: "💼 礼貌打断", chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "Hint: Sorry to interrupt / quick question" },
+            { category: "💼 进度汇报", chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "Hint: ahead of schedule / expect to" },
+            { category: "💼 职场拒绝", chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "Hint: plate is full / might not have time" }
         ];
 
         let currentIndex = 0;
+        let score = 0;
+        let streak = 0;
 
         function loadQuestion() {
             currentIndex = Math.floor(Math.random() * questions.length);
             const q = questions[currentIndex];
-            document.getElementById("category-badge").innerText = q.category;
+            document.getElementById("category-pill").innerText = q.category;
             document.getElementById("chinese-text").innerHTML = `“${q.chinese}”`;
             document.getElementById("hint-text").innerText = q.hint;
             document.getElementById("user-input").value = "";
-            document.getElementById("result").innerHTML = "";
-            document.getElementById("result").className = "";
+            const resultBox = document.getElementById("result-box");
+            resultBox.innerHTML = "";
+            resultBox.className = "";
         }
 
         function checkAnswer() {
@@ -405,32 +324,32 @@
             const cleanUser = userVal.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
             const target = questions[currentIndex].english.toLowerCase();
             const cleanTarget = target.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
-            const resultDiv = document.getElementById("result");
+            const resultBox = document.getElementById("result-box");
 
             if (!cleanUser) {
-                resultDiv.className = "wrong";
-                resultDiv.innerText = "⚠️ 请先输入你的英文回答哦！";
+                resultBox.className = "feedback-error";
+                resultBox.innerText = "⚠️ 请先写下你的英文回答哦";
                 return;
             }
 
             if (cleanUser === cleanTarget || (cleanUser.length > 5 && cleanTarget.includes(cleanUser))) {
                 score += 10;
                 streak += 1;
-                resultDiv.className = "correct";
-                resultDiv.innerHTML = "🎉 回答完美！生存挑战成功 +10 分！";
+                resultBox.className = "feedback-success";
+                resultBox.innerHTML = "✨ 回答完美！生存连击 +1";
                 setTimeout(nextQuestion, 1500);
             } else {
                 streak = 0;
-                resultDiv.className = "wrong";
-                resultDiv.innerHTML = `❌ 差一点点！正确参考：<br><b>${questions[currentIndex].english}</b>`;
+                resultBox.className = "feedback-error";
+                resultBox.innerHTML = `💡 差一点，参考标准表达：<br><b>${questions[currentIndex].english}</b>`;
             }
             updateStats();
         }
 
         function showAnswer() {
-            const resultDiv = document.getElementById("result");
-            resultDiv.className = "wrong";
-            resultDiv.innerHTML = `💡 参考答案：<br><b>${questions[currentIndex].english}</b>`;
+            const resultBox = document.getElementById("result-box");
+            resultBox.className = "feedback-error";
+            resultBox.innerHTML = `💡 手帐参考答案：<br><b>${questions[currentIndex].english}</b>`;
             streak = 0;
             updateStats();
         }
