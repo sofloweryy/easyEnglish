@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌍 英语生存模拟器：旅行 & 工作闯关</title>
+    <!-- 引入 Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        h1 { font-size: 1.5rem; margin-bottom: 5px; color: var(--primary); }
+        .subtitle { color: #6b7280; font-size: 0.85rem; margin-bottom: 15px; }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            background: #f9fafb;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .badge {
+            background: #e0e7ff;
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .challenge-box {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #e5e7eb;
+            border-radius: 12px;
+            background: #fafaf9;
+        }
+
+        .chinese-prompt { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; }
+        .hint { font-size: 0.9rem; color: #9ca3af; margin-bottom: 20px; }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+        }
+
+        input[type="text"]:focus { border-color: var(--primary); }
+
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: var(--primary-hover); }
+        button.secondary { background-color: #e5e7eb; color: #374151; }
+        button.secondary:hover { background-color: #d1d5db; }
+
+        #result { margin-top: 15px; font-size: 1.05rem; font-weight: bold; min-height: 25px; }
+        .correct { color: #10b981; }
+        .wrong { color: #ef4444; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🌍 英语生存模拟器</h1>
+        <div class="subtitle">已累计为 <span id="total-users" style="font-weight:bold; color:var(--primary);">...</span> 位用户提供过学习服务</div>
+
+        <div class="stats">
+            <div>🔥 连击: <span id="streak">0</span></div>
+            <div>⭐ 积分: <span id="score">0</span></div>
+        </div>
+
+        <div class="challenge-box">
+            <div id="category-badge" class="badge">加载中...</div>
+            <div class="chinese-prompt" id="chinese-text">准备加载题目...</div>
+            <div class="hint" id="hint-text"></div>
+            
+            <input type="text" id="user-input" placeholder="在此输入你的英文回答..." autocomplete="off" id="answer-input">
+            
+            <div class="btn-group">
+                <button onclick="checkAnswer()">提交回答</button>
+                <button class="secondary" onclick="nextQuestion()">下一题</button>
+                <button class="secondary" onclick="showAnswer()">偷看答案</button>
+            </div>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // === 1. Supabase 配置 (已自动填好) ===
+        const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
+        
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        // 页面加载时：记录访问 + 获取总人数
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // 使用 localStorage 防止自己测试时 F5 重复计数
+                const hasVisited = localStorage.getItem('has_visited_app');
+                if (!hasVisited) {
+                    await _supabase.from('app_visitors').insert([{}]);
+                    localStorage.setItem('has_visited_app', 'true');
+                }
+
+                // 获取总访问次数
+                const { count, error } = await _supabase
+                    .from('app_visitors')
+                    .select('*', { count: 'exact', head: true });
+
+                if (!error) {
+                    document.getElementById('total-users').innerText = count || 1;
+                }
+            } catch (err) {
+                console.log("Supabase 统计连接失败", err);
+                document.getElementById('total-users').innerText = "1+";
+            }
+        });
+
+        // 绑定回车键直接提交
+        document.getElementById('user-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // === 2. 题库与闯关逻辑 ===
+        const questions = [
+            // 旅行篇
+            { category: "✈️ 旅行 · 机场", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Where is the boarding gate..." },
+            { category: "🧳 旅行 · 海关", chinese: "我来这里是旅游，呆一个星期。", english: "I am here for vacation, staying for a week.", hint: "vacation / staying for..." },
+            { category: "🏨 旅行 · 酒店", chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "air conditioner / broken / switch" },
+            { category: "🍜 旅行 · 餐厅", chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "contain / allergic to" },
+            { category: "🚕 旅行 · 问路", chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "subway station / nearby" },
+
+            // 工作篇
+            { category: "💼 工作 · 会议", chinese: "大家能听到我说话吗？我的麦克风刚才有点问题。", english: "Can everyone hear me? My microphone was acting up a bit.", hint: "Can everyone hear me? / microphone" },
+            { category: "💼 工作 · 沟通", chinese: "关于这个项目，我想听听大家的看法。", english: "Regarding this project, I'd love to hear everyone's thoughts.", hint: "Regarding this project / thoughts" },
+            { category: "💼 工作 · 礼貌打断", chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "Sorry to interrupt / quick question" },
+            { category: "💼 工作 · 进度", chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "ahead of schedule / expect to" },
+            { category: "💼 工作 · 拒绝/推脱", chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "plate is full / might not have time" }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let streak = 0;
+
+        function loadQuestion() {
+            const q = questions[currentIndex];
+            document.getElementById("category-badge").innerText = q.category;
+            document.getElementById("chinese-text").innerHTML = `请把下面这句话用英语说出来：<br>“${q.chinese}”`;
+            document.getElementById("hint-text").innerText = `💡 提示: ${q.hint}`;
+            document.getElementById("user-input").value = "";
+            document.getElementById("result").innerText = "";
+        }
+
+        function checkAnswer() {
+            const inputElem = document.getElementById("user-input");
+            const userVal = inputElem.value.trim().toLowerCase();
+            if (!userVal) return;
+
+            const cleanUser = userVal.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
+            const target = questions[currentIndex].english.toLowerCase();
+            const cleanTarget = target.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
+            const resultDiv = document.getElementById("result");
+
+            if (cleanUser === cleanTarget || (cleanUser.length > 5 && cleanTarget.includes(cleanUser))) {
+                score += 10;
+                streak += 1;
+                resultDiv.innerHTML = `<span class="correct">🎉 太棒了！答对了！完美过关！</span>`;
+                setTimeout(nextQuestion, 1500);
+            } else {
+                streak = 0;
+                resultDiv.innerHTML = `<span class="wrong">❌ 差一点点！正确参考：<br><b>${questions[currentIndex].english}</b></span>`;
+            }
+            updateStats();
+        }
+
+        function showAnswer() {
+            document.getElementById("result").innerHTML = `<span style="color:#d97706;">💡 参考答案: ${questions[currentIndex].english}</span>`;
+            streak = 0;
+            updateStats();
+        }
+
+        function nextQuestion() {
+            currentIndex = Math.floor(Math.random() * questions.length);
+            loadQuestion();
+            document.getElementById("user-input").focus();
+        }
+
+        function updateStats() {
+            document.getElementById("score").innerText = score;
+            document.getElementById("streak").innerText = streak;
+        }
+
+        // 初始化加载第一题
+        nextQuestion();
+    </script>
+</body>
+</html>
