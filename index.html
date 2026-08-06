@@ -17,7 +17,6 @@
             --accent-terracotta: #E07A5F;
             --text-main: #2C2A29;
             --text-muted: #8C8275;
-            /* 定义全局手写体变量 */
             --font-handwriting: 'ZCOOL KuaiLe', cursive, sans-serif;
             --font-title-hand: 'Ma Shan Zheng', cursive, sans-serif;
         }
@@ -29,7 +28,6 @@
         }
 
         body {
-            /* 整体采用可爱手写风字体 */
             font-family: var(--font-handwriting);
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -68,7 +66,6 @@
             text-shadow: 2px 2px 0px #FFE5EC;
         }
 
-        /* 模式切换卡片开关 */
         .mode-switch-bar {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -100,7 +97,6 @@
             box-shadow: 1.5px 1.5px 0px var(--border-dark);
         }
 
-        /* 顶部信息面板 */
         .top-info-panel {
             display: flex;
             justify-content: space-between;
@@ -161,7 +157,6 @@
             gap: 3px;
         }
 
-        /* 核心卡片 */
         .sketch-card {
             background: #FFFCF7;
             border: 2px dashed #E6DEC9;
@@ -345,7 +340,6 @@
             background: #FFE5EC;
         }
 
-        /* 底部价格惊喜按钮 */
         .surprise-btn {
             width: 100%;
             max-width: 420px;
@@ -367,7 +361,6 @@
             box-shadow: 1px 1.5px 0px var(--border-dark);
         }
 
-        /* 通用弹窗背景 */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -422,29 +415,6 @@
             font-size: 1rem;
             color: var(--text-muted);
         }
-
-        .verify-row {
-            display: flex;
-            gap: 6px;
-            margin-top: 2px;
-        }
-        .verify-row input { margin-top: 0; }
-
-        .verify-btn {
-            background: #FFE5EC;
-            border: 2px solid var(--border-dark);
-            border-radius: 8px;
-            padding: 0 8px;
-            font-size: 1.05rem;
-            cursor: pointer;
-            white-space: nowrap;
-            box-shadow: 1.5px 1.5px 0px var(--border-dark);
-            font-family: var(--font-handwriting);
-        }
-        .verify-btn:active {
-            transform: translate(1px, 1px);
-            box-shadow: none;
-        }
     </style>
 </head>
 <body>
@@ -454,19 +424,17 @@
             <div class="brand-title">Easy English</div>
         </div>
 
-        <!-- 模式切换开关 -->
         <div class="mode-switch-bar">
             <button class="mode-tab active" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
             <button class="mode-tab" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
         </div>
 
-        <!-- 顶部信息面板 -->
         <div class="top-info-panel">
             <div class="user-section">
                 <div class="user-info-row">
                     <span class="user-tag">👤 <span id="user-display">本地游客</span></span>
                 </div>
-                <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">点击云端绑定</button>
+                <button class="login-mini-btn" onclick="openLoginModal()" id="login-btn-text">设置昵称</button>
             </div>
             <div class="stats-group">
                 <div class="stat-item">🔥 打卡:<span id="streak">1</span>天</div>
@@ -497,33 +465,22 @@
         <div id="result-box"></div>
     </div>
 
-    <!-- 底部价格惊喜按钮 -->
     <button class="surprise-btn" onclick="openSurpriseModal()">✨ 点击有惊喜</button>
 
-    <!-- 登录/绑定弹窗 -->
+    <!-- 设置昵称弹窗 -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3>云端账号同步</h3>
-            <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0; font-family: var(--font-handwriting);">直接设置昵称本地畅玩，或使用邮箱验证码同步</p>
+            <h3>个性昵称设置</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0; font-family: var(--font-handwriting);">输入你的专属昵称，开启英语手帐打卡之旅~</p>
             
             <label>昵称</label>
-            <input type="text" id="reg-nickname" placeholder="例如：手帐达人">
+            <input type="text" id="reg-nickname" placeholder="例如：flower">
 
-            <label>电子邮箱 (可选)</label>
-            <input type="email" id="reg-account" placeholder="请输入常用邮箱">
-
-            <label>6位随机验证码 (若收不到可直接点上方保存昵称)</label>
-            <div class="verify-row">
-                <input type="text" id="reg-code" placeholder="输入6位数" maxlength="6">
-                <button class="verify-btn" onclick="sendOtpCode()">获取验证码</button>
-            </div>
-
-            <button class="sketch-btn primary" style="width: 100%; margin: 12px 0 4px 0;" onclick="saveProfileAndLogin()">保存昵称 / 绑定登录</button>
+            <button class="sketch-btn primary" style="width: 100%; margin: 14px 0 6px 0;" onclick="saveNicknameLocally()">保存昵称</button>
             <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="closeLoginModal()">取消</button>
         </div>
     </div>
 
-    <!-- 惊喜提示弹窗 -->
     <div id="surprise-modal" class="modal-overlay">
         <div class="modal-card" style="text-align: center;">
             <p style="font-size: 1.2rem; line-height: 1.6; color: var(--text-main); margin: 8px 0 16px 0; font-family: var(--font-handwriting);">
@@ -539,7 +496,6 @@
         const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-        let currentUser = null;
         let score = 10;
         let streak = 1; 
         let currentMode = 'word';
@@ -570,25 +526,19 @@
 
         let currentIndex = 0;
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await _supabase.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                await fetchUserData();
-            } else {
-                const localName = localStorage.getItem('ee_nickname');
-                const localScore = localStorage.getItem('ee_score');
-                const localStreak = localStorage.getItem('ee_streak');
-                if (localName) {
-                    document.getElementById('user-display').innerText = localName;
-                    document.getElementById('login-btn-text').innerText = '切换/修改';
-                }
-                if (localScore) score = parseInt(localScore);
-                if (localStreak) streak = parseInt(localStreak);
-                
-                checkDailyCheckIn();
-                updateStatsUI();
+        window.addEventListener('DOMContentLoaded', () => {
+            const localName = localStorage.getItem('ee_nickname');
+            const localScore = localStorage.getItem('ee_score');
+            const localStreak = localStorage.getItem('ee_streak');
+            if (localName) {
+                document.getElementById('user-display').innerText = localName;
+                document.getElementById('login-btn-text').innerText = '修改昵称';
             }
+            if (localScore) score = parseInt(localScore);
+            if (localStreak) streak = parseInt(localStreak);
+            
+            checkDailyCheckIn();
+            updateStatsUI();
             initSpeechRecognition();
             loadQuestion();
         });
@@ -628,100 +578,13 @@
         function openSurpriseModal() { document.getElementById('surprise-modal').style.display = 'flex'; }
         function closeSurpriseModal() { document.getElementById('surprise-modal').style.display = 'none'; }
 
-        async function sendOtpCode() {
-            const email = document.getElementById('reg-account').value.trim();
-            if (!email || !email.includes('@')) {
-                alert('请先输入正确的电子邮箱地址！');
-                return;
-            }
-
-            const { error } = await _supabase.auth.signInWithOtp({
-                email: email,
-                options: { shouldCreateUser: true }
-            });
-
-            if (error) {
-                if (error.message.includes('rate limit')) {
-                    alert('⚠️ 触发了邮件发送频率限制。你可以直接输入昵称并点“保存昵称”直接游玩！');
-                } else {
-                    alert('发送失败: ' + error.message);
-                }
-            } else {
-                alert('✅ 随机 6 位验证码已发送至您的邮箱！');
-            }
-        }
-
-        async function saveProfileAndLogin() {
+        function saveNicknameLocally() {
             const nickname = document.getElementById('reg-nickname').value.trim() || "手帐练习生";
-            const email = document.getElementById('reg-account').value.trim();
-            const token = document.getElementById('reg-code').value.trim();
-
-            if (email && token) {
-                const { data, error } = await _supabase.auth.verifyOtp({
-                    email: email,
-                    token: token,
-                    type: 'email'
-                });
-                if (error) {
-                    alert('验证码错误或已失效，但已为你成功保存本地昵称！');
-                } else {
-                    currentUser = data.user;
-                }
-            }
-
             document.getElementById('user-display').innerText = nickname;
-            document.getElementById('login-btn-text').innerText = '切换/修改';
+            document.getElementById('login-btn-text').innerText = '修改昵称';
             localStorage.setItem('ee_nickname', nickname);
-            
-            if (currentUser) {
-                await _supabase.from('user_profiles').upsert({
-                    id: currentUser.id,
-                    nickname: nickname,
-                    score: score,
-                    streak: streak,
-                    updated_at: new Date()
-                });
-            }
-
-            alert('✨ 昵称保存成功！开始打卡吧~');
+            alert('✨ 昵称保存成功！开始开心打卡吧~');
             closeLoginModal();
-        }
-
-        async function fetchUserData() {
-            if (!currentUser) return;
-            const { data } = await _supabase
-                .from('user_profiles')
-                .select('nickname, score, streak')
-                .eq('id', currentUser.id)
-                .single();
-            
-            if (data) {
-                score = data.score || 0;
-                streak = data.streak || 0;
-                
-                const todayStr = new Date().toDateString();
-                const lastCheckInDate = localStorage.getItem('ee_last_checkin_date');
-                if (lastCheckInDate !== todayStr) {
-                    streak += 1;
-                    localStorage.setItem('ee_last_checkin_date', todayStr);
-                }
-
-                document.getElementById('user-display').innerText = data.nickname || "已绑定用户";
-                document.getElementById('login-btn-text').innerText = '已同步云端';
-                updateStatsUI();
-                syncUserDataToCloud();
-            }
-        }
-
-        async function syncUserDataToCloud() {
-            localStorage.setItem('ee_score', score);
-            localStorage.setItem('ee_streak', streak);
-
-            if (!currentUser) return;
-            await _supabase
-                .from('user_profiles')
-                .update({ score: score, streak: streak, updated_at: new Date() })
-                .eq('id', currentUser.id);
         }
 
         function loadQuestion() {
@@ -766,7 +629,7 @@
                                       <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
             }
             updateStatsUI();
-            syncUserDataToCloud();
+            localStorage.setItem('ee_score', score);
         }
 
         function showAnswer() {
@@ -780,7 +643,7 @@
             resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1.05rem;">💡 ${displayContent}</span>
                                   <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
             updateStatsUI();
-            syncUserDataToCloud();
+            localStorage.setItem('ee_score', score);
         }
 
         function playAudio(text) {
