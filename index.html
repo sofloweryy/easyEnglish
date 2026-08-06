@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>✦ Easy English ✦</title>
-    <!-- 引入站酷快乐体，带来真正可爱、圆润的手写手帐风 -->
+    <!-- 引入站酷快乐体与Quicksand字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <!-- 引入 Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -49,12 +49,12 @@
 
         .header {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .brand-title {
             font-family: 'Quicksand', sans-serif;
-            font-size: 2.4rem;
+            font-size: 2.2rem;
             font-weight: 700;
             letter-spacing: 1px;
             margin: 0;
@@ -62,12 +62,44 @@
             text-shadow: 2px 2px 0px #FFE5EC;
         }
 
+        /* 模式切换卡片开关（单词 vs 短语） */
+        .mode-switch-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 10px;
+            background: #F3EFEA;
+            padding: 4px;
+            border-radius: 12px;
+            border: 2px solid var(--border-dark);
+        }
+
+        .mode-tab {
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 6px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.1s ease;
+        }
+
+        .mode-tab.active {
+            background: #FFFFFF;
+            color: var(--text-main);
+            border: 1.5px solid var(--border-dark);
+            box-shadow: 1.5px 1.5px 0px var(--border-dark);
+        }
+
         /* 顶部信息面板 */
         .top-info-panel {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             background: #FFF1F2;
             padding: 8px 12px;
             border-radius: 14px;
@@ -149,14 +181,13 @@
             box-shadow: 2px 2px 0px var(--border-dark);
         }
 
-        /* 可爱圆润的手写中文字体，字号适中 */
         .chinese-prompt {
             font-family: 'ZCOOL KuaiLe', cursive, sans-serif;
             font-size: 1.15rem;
             letter-spacing: 0.5px;
             line-height: 1.4;
             margin-bottom: 6px;
-            color: #2C2A29;
+            color: var(--text-main);
         }
 
         .hint-text {
@@ -232,7 +263,6 @@
             height: 16px;
         }
 
-        /* 按钮紧凑一行排布 */
         .action-grid {
             display: grid;
             grid-template-columns: 1.3fr 1fr 1fr;
@@ -386,6 +416,12 @@
             <div class="brand-title">Easy English</div>
         </div>
 
+        <!-- 模式切换开关：单词 vs 短语 -->
+        <div class="mode-switch-bar">
+            <button class="mode-tab active" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
+            <button class="mode-tab" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
+        </div>
+
         <!-- 顶部信息面板 -->
         <div class="top-info-panel">
             <div class="user-section">
@@ -406,14 +442,13 @@
             <div class="hint-text" id="hint-text"></div>
             
             <div class="input-container-wrapper">
-                <textarea id="user-input" placeholder="请在此输入英文表达..." autocomplete="off"></textarea>
+                <textarea id="user-input" placeholder="请在此输入英文..." autocomplete="off"></textarea>
                 <div class="inline-tools">
                     <button class="mini-tool-btn" id="voice-btn" title="长按语音输入">🎤</button>
                 </div>
             </div>
             <div class="voice-status-tip" id="voice-tip">长按麦克风可说话转文字</div>
 
-            <!-- 精简紧凑的一行多列按钮布局 -->
             <div class="action-grid">
                 <button class="sketch-btn primary" onclick="checkAnswer()">提交 ✍️</button>
                 <button class="sketch-btn" onclick="nextQuestion()">换题 🍃</button>
@@ -455,6 +490,34 @@
         let currentUser = null;
         let score = 0;
         let streak = 0;
+        let currentMode = 'phrase'; // 默认短语模式
+
+        // 题库分类：短语 & 单词
+        const questionBanks = {
+            phrase: [
+                { category: "✈️ 机场海关", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
+                { category: "🧳 酒店入住", chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
+                { category: "🍜 餐厅点餐", chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "Hint: contain peanuts / allergic" },
+                { category: "🚕 城市问路", chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "Hint: subway station / nearby" },
+                { category: "💼 远程会议", chinese: "大家能听到我说话吗？我的麦克风刚才有点问题。", english: "Can everyone hear me? My microphone was acting up a bit.", hint: "Hint: Can everyone hear me? / microphone" },
+                { category: "💼 表达观点", chinese: "关于这个项目，我想听听大家的看法。", english: "Regarding this project, I'd love to hear everyone's thoughts.", hint: "Hint: Regarding this project / thoughts" },
+                { category: "💼 礼貌打断", chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "Hint: Sorry to interrupt / quick question" },
+                { category: "💼 进度汇报", chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "Hint: ahead of schedule / expect to" },
+                { category: "💼 职场拒绝", chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "Hint: plate is full / might not have time" }
+            ],
+            word: [
+                { category: "🔥 高频单词", chinese: "高效的、有成效的", english: "efficient", hint: "Hint: e _ _ _ _ _ _ t (9 letters)" },
+                { category: "🔥 高频单词", chinese: "灵感、启发", english: "inspiration", hint: "Hint: i _ _ _ _ _ _ _ _ n (11 letters)" },
+                { category: "🔥 高频单词", chinese: "优先事项、首要任务", english: "priority", hint: "Hint: p _ _ _ _ _ _ y (8 letters)" },
+                { category: "🔥 高频单词", chinese: "灵活的、可变通的", english: "flexible", hint: "Hint: f _ _ _ _ _ _ e (8 letters)" },
+                { category: "🔥 高频单词", chinese: "策略、战略", english: "strategy", hint: "Hint: s _ _ _ _ _ _ y (8 letters)" },
+                { category: "🔥 高频单词", chinese: "合作、协作", english: "collaboration", hint: "Hint: c _ _ _ _ _ _ _ _ _ _ _ n (13 letters)" },
+                { category: "🔥 高频单词", chinese: "成就、成绩", english: "achievement", hint: "Hint: a _ _ _ _ _ _ _ _ _ t (11 letters)" },
+                { category: "🔥 高频单词", chinese: "挑战、质疑", english: "challenge", hint: "Hint: c _ _ _ _ _ _ _ e (9 letters)" }
+            ]
+        };
+
+        let currentIndex = 0;
 
         window.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await _supabase.auth.getSession();
@@ -474,10 +537,15 @@
                 updateStatsUI();
             }
             initSpeechRecognition();
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.getVoices();
-            }
+            loadQuestion();
         });
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('tab-phrase').className = mode === 'phrase' ? 'mode-tab active' : 'mode-tab';
+            document.getElementById('tab-word').className = mode === 'word' ? 'mode-tab active' : 'mode-tab';
+            loadQuestion();
+        }
 
         function openModal() { 
             const currentName = document.getElementById('user-display').innerText;
@@ -502,12 +570,12 @@
 
             if (error) {
                 if (error.message.includes('rate limit')) {
-                    alert('⚠️ 触发了邮件发送频率限制。你可以直接输入昵称并点“保存昵称”直接游玩，无需频繁发验证码！');
+                    alert('⚠️ 触发了邮件发送频率限制。你可以直接输入昵称并点“保存昵称”直接游玩！');
                 } else {
                     alert('发送失败: ' + error.message);
                 }
             } else {
-                alert('✅ 随机 6 位验证码已发送至您的邮箱，请去查收！');
+                alert('✅ 随机 6 位验证码已发送至您的邮箱！');
             }
         }
 
@@ -543,7 +611,7 @@
                 });
             }
 
-            alert('✨ 昵称保存成功！开始快乐打卡吧~');
+            alert('✨ 昵称保存成功！开始打卡吧~');
             closeModal();
         }
 
@@ -575,23 +643,10 @@
                 .eq('id', currentUser.id);
         }
 
-        const questions = [
-            { category: "✈️ 机场海关", chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
-            { category: "🧳 酒店入住", chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
-            { category: "🍜 餐厅点餐", chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "Hint: contain peanuts / allergic" },
-            { category: "🚕 城市问路", chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "Hint: subway station / nearby" },
-            { category: "💼 远程会议", chinese: "大家能听到我说话吗？我的麦克风刚才有点问题。", english: "Can everyone hear me? My microphone was acting up a bit.", hint: "Hint: Can everyone hear me? / microphone" },
-            { category: "💼 表达观点", chinese: "关于这个项目，我想听听大家的看法。", english: "Regarding this project, I'd love to hear everyone's thoughts.", hint: "Hint: Regarding this project / thoughts" },
-            { category: "💼 礼貌打断", chinese: "不好意思打断一下，我有一个小问题。", english: "Sorry to interrupt, but I have a quick question.", hint: "Hint: Sorry to interrupt / quick question" },
-            { category: "💼 进度汇报", chinese: "我们目前进度超前，预计明天能完成。", english: "We are currently ahead of schedule and expect to finish tomorrow.", hint: "Hint: ahead of schedule / expect to" },
-            { category: "💼 职场拒绝", chinese: "我现在手头有点满，这周可能腾不出时间。", english: "My plate is a bit full right now, I might not have time this week.", hint: "Hint: plate is full / might not have time" }
-        ];
-
-        let currentIndex = 0;
-
         function loadQuestion() {
-            currentIndex = Math.floor(Math.random() * questions.length);
-            const q = questions[currentIndex];
+            const list = questionBanks[currentMode];
+            currentIndex = Math.floor(Math.random() * list.length);
+            const q = list[currentIndex];
             document.getElementById("category-pill").innerText = q.category;
             document.getElementById("chinese-text").innerText = q.chinese;
             document.getElementById("hint-text").innerText = q.hint;
@@ -602,9 +657,10 @@
         }
 
         function checkAnswer() {
+            const list = questionBanks[currentMode];
             const userVal = document.getElementById("user-input").value.trim().toLowerCase();
             const cleanUser = userVal.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
-            const target = questions[currentIndex].english.toLowerCase();
+            const target = list[currentIndex].english.toLowerCase();
             const cleanTarget = target.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
             const resultBox = document.getElementById("result-box");
 
@@ -614,7 +670,7 @@
                 return;
             }
 
-            if (cleanUser === cleanTarget || (cleanUser.length > 5 && cleanTarget.includes(cleanUser))) {
+            if (cleanUser === cleanTarget || (cleanUser.length >= 3 && cleanTarget.includes(cleanUser))) {
                 score += 10;
                 streak += 1;
                 resultBox.className = "feedback-success";
@@ -623,18 +679,19 @@
             } else {
                 streak = 0;
                 resultBox.className = "feedback-error";
-                resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${questions[currentIndex].english}</span>
-                                      <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(questions[currentIndex].english)}')">🔊 朗读</button>`;
+                resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${list[currentIndex].english}</span>
+                                      <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
             }
             updateStatsUI();
             syncUserDataToCloud();
         }
 
         function showAnswer() {
+            const list = questionBanks[currentMode];
             const resultBox = document.getElementById("result-box");
             resultBox.className = "feedback-error";
-            resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${questions[currentIndex].english}</span>
-                                  <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(questions[currentIndex].english)}')">🔊 朗读</button>`;
+            resultBox.innerHTML = `<span style="font-family: 'Quicksand', sans-serif; font-size: 1rem;">💡 ${list[currentIndex].english}</span>
+                                  <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
             streak = 0;
             updateStatsUI();
             syncUserDataToCloud();
@@ -648,11 +705,6 @@
             utterance.lang = 'en-US';
             utterance.rate = 0.92;
             utterance.pitch = 1.0;
-
-            const voices = window.speechSynthesis.getVoices();
-            const preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Siri') || v.name.includes('Jenny'))) || voices.find(v => v.lang.startsWith('en'));
-            if (preferredVoice) utterance.voice = preferredVoice;
-
             window.speechSynthesis.speak(utterance);
         }
 
@@ -724,8 +776,6 @@
             document.getElementById("score").innerText = score;
             document.getElementById("streak").innerText = streak;
         }
-
-        loadQuestion();
     </script>
 </body>
 </html>
