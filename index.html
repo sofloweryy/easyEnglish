@@ -501,43 +501,33 @@
         <button class="sketch-btn primary" onclick="openSurpriseModal()" style="padding: 6px 12px; font-size: 0.95rem;">查看教程</button>
     </div>
 
-    <!-- 修改昵称弹窗 -->
+    <!-- 修改昵称与邮箱弹窗 -->
     <div id="login-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3>修改个性昵称</h3>
-            <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 0 0 8px 0; font-family: var(--font-handwriting);">输入你的专属昵称，开启英语手帐打卡之旅~</p>
+            <h3>修改账号与昵称</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 0 0 6px 0; font-family: var(--font-handwriting);">绑定专属邮箱与昵称，开启手帐打卡之旅~</p>
             
-            <label>新昵称</label>
+            <label>专属昵称</label>
             <input type="text" id="reg-nickname" placeholder="例如：flower">
 
-            <button class="sketch-btn primary" style="width: 100%; margin: 16px 0 8px 0;" onclick="saveNicknameLocally()">保存昵称</button>
+            <label>绑定邮箱</label>
+            <input type="email" id="reg-email" placeholder="例如：your_email@domain.com">
+
+            <button class="sketch-btn primary" style="width: 100%; margin: 16px 0 8px 0;" onclick="saveNicknameLocally()">保存信息</button>
             <button class="sketch-btn" style="width: 100%; background: #E5E7EB;" onclick="closeLoginModal()">取消</button>
         </div>
     </div>
 
-    <!-- 点击有惊喜弹窗（内含下载App完整傻瓜教程 + 开发者邮箱） -->
+    <!-- 点击有惊喜弹窗（仅保留开发者联系方式） -->
     <div id="surprise-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3>✨ 惊喜与安装指南</h3>
-            <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 2px 0 10px 0;">把网页存为手机App，打卡更丝滑！</p>
+            <h3>✨ 开发者寄语</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); text-align: center; margin: 2px 0 14px 0;">感谢使用 Easy English 手帐打卡！</p>
             
-            <div class="guide-box">
-                <div style="font-weight: 700; color: var(--accent-terracotta); margin-bottom: 4px;">🍎 苹果手机 (iPhone / Safari)</div>
-                1. 点击 Safari 底部中间的 <b>“分享”</b> 按钮（带箭头的方框）<br>
-                2. 向下滚动找到并点击 **“添加到主屏幕”**<br>
-                3. 点击右上角 **“添加”** 即可！
-            </div>
-
-            <div class="guide-box">
-                <div style="font-weight: 700; color: #2E7D32; margin-bottom: 4px;">🤖 安卓手机 (Chrome / 夸克 / Edge)</div>
-                1. 点击浏览器右上角的 **“三点菜单”**<br>
-                2. 选择 **“添加到主屏幕”** 或 **“安装应用”**<br>
-                3. 确认后桌面上就会出现 App 图标啦！
-            </div>
-
-            <div style="margin-top: 14px; text-align: center; font-size: 0.95rem; color: var(--text-muted);">
-                💌 开发者邮箱：<br>
-                <span style="color: #2E7D32; font-size: 0.95rem; word-break: break-all; font-family: 'Quicksand', sans-serif;">zhaihuahua1701@gmail.com</span>
+            <div class="guide-box" style="text-align: center; padding: 16px;">
+                <div style="font-weight: 700; color: var(--accent-terracotta); margin-bottom: 8px; font-size: 1.1rem;">联系美丽且智慧的开发者</div>
+                邮箱：<br>
+                <span style="color: #2E7D32; font-size: 1rem; word-break: break-all; font-family: 'Quicksand', sans-serif; font-weight: 700;">zhaihuahua1701@gmail.com</span>
             </div>
 
             <button class="sketch-btn primary" style="width: 100%; margin-top: 14px;" onclick="closeSurpriseModal()">知道啦 ❤️</button>
@@ -556,11 +546,15 @@
             }
 
             const localName = localStorage.getItem('ee_nickname');
+            const localEmail = localStorage.getItem('ee_email');
             const localScore = localStorage.getItem('ee_score');
             const localStreak = localStorage.getItem('ee_streak');
             if (localName) {
                 document.getElementById('user-display').innerText = localName;
                 document.getElementById('login-btn-text').innerText = '修改';
+            }
+            if (localEmail) {
+                document.getElementById('reg-email').value = localEmail;
             }
             if (localScore) score = parseInt(localScore);
             if (localStreak) streak = parseInt(localStreak);
@@ -629,6 +623,10 @@
             if (currentName !== '本地游客') {
                 document.getElementById('reg-nickname').value = currentName;
             }
+            const currentEmail = localStorage.getItem('ee_email');
+            if (currentEmail) {
+                document.getElementById('reg-email').value = currentEmail;
+            }
             document.getElementById('login-modal').style.display = 'flex'; 
         }
         function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
@@ -638,10 +636,12 @@
 
         function saveNicknameLocally() {
             const nickname = document.getElementById('reg-nickname').value.trim() || "手帐练习生";
+            const email = document.getElementById('reg-email').value.trim();
             document.getElementById('user-display').innerText = nickname;
             document.getElementById('login-btn-text').innerText = '修改';
             localStorage.setItem('ee_nickname', nickname);
-            alert('✨ 昵称保存成功！开始开心打卡吧~');
+            if(email) localStorage.setItem('ee_email', email);
+            alert('✨ 账号信息保存成功！开始开心打卡吧~');
             closeLoginModal();
         }
 
@@ -728,7 +728,7 @@
 
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
-                tip.innerText = "浏览器不支持语音识别";
+                tip.innerText = "当前浏览器/环境不支持语音识别";
                 return;
             }
 
@@ -745,7 +745,11 @@
                 isHolding = true;
                 btn.classList.add('recording');
                 tip.innerText = "正在聆听，请说话...";
-                try { recognition.start(); } catch(err) { console.log(err); }
+                try { 
+                    recognition.start(); 
+                } catch(err) { 
+                    console.log("语音已在运行", err); 
+                }
             };
 
             const stopRecording = (e) => {
@@ -754,22 +758,30 @@
                 isHolding = false;
                 btn.classList.remove('recording');
                 tip.innerText = "正在识别中...";
-                try { recognition.stop(); } catch(err) { console.log(err); }
+                try { 
+                    recognition.stop(); 
+                } catch(err) { 
+                    console.log(err); 
+                }
             };
 
+            // 同时兼容手机触摸事件与桌面鼠标事件
+            btn.addEventListener('touchstart', startRecording, {passive: false});
+            btn.addEventListener('touchend', stopRecording, {passive: false});
+            btn.addEventListener('touchcancel', stopRecording, {passive: false});
+            
             btn.addEventListener('mousedown', startRecording);
             btn.addEventListener('mouseup', stopRecording);
             btn.addEventListener('mouseleave', stopRecording);
-            btn.addEventListener('touchstart', startRecording);
-            btn.addEventListener('touchend', stopRecording);
 
             recognition.onresult = (event) => {
                 inputArea.value = event.results[0][0].transcript;
                 tip.innerText = "识别成功！点击提交查看";
             };
 
-            recognition.onerror = () => {
-                tip.innerText = "识别出错，请重试";
+            recognition.onerror = (event) => {
+                console.log("语音识别错误:", event.error);
+                tip.innerText = "识别出错或未授权麦克风，请重试";
                 btn.classList.remove('recording');
                 isHolding = false;
             };
