@@ -45,7 +45,7 @@ body{
 }
 
 .logo{
-    font-size:42px;
+    font-size:38px;
     font-weight:700;
     letter-spacing:-1px;
 }
@@ -57,21 +57,43 @@ body{
 .logo:after{
     content:"✦";
     color:var(--pink);
-    font-size:28px;
+    font-size:26px;
+}
+
+.header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
 }
 
 .status{
     background:#fff;
     border:2px solid var(--ink);
-    border-radius:20px;
-    padding:10px 16px;
-    font-size:14px;
-    line-height:22px;
-    box-shadow:3px 4px 0 var(--ink);
+    border-radius:18px;
+    padding:8px 12px;
+    font-size:13px;
+    line-height:20px;
+    box-shadow:2px 3px 0 var(--ink);
+    text-align: right;
+}
+
+.install-badge {
+    background: var(--yellow);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .study-card{
-    margin-top:35px;
+    margin-top:25px;
     background:#fff;
     border:2px solid var(--ink);
     border-radius:32px;
@@ -296,9 +318,11 @@ textarea::placeholder{
 <div class="app">
     <div class="header">
         <div class="logo">Easy <span class="blue">English</span></div>
-        <div class="status">
-            🔥 连续<span id="streak">1</span>天<br>
-            ⭐ <span id="score">10</span>分
+        <div class="header-right">
+            <div class="status">
+                🔥 连续<span id="streak">1</span>天 | ⭐ <span id="score">10</span>分
+            </div>
+            <div class="install-badge" onclick="openPwaModal()">📲 下载 App</div>
         </div>
     </div>
 
@@ -336,6 +360,23 @@ textarea::placeholder{
     </div>
 </div>
 
+<!-- PWA 下载引导弹窗 -->
+<div id="pwa-modal" class="modal-overlay">
+    <div class="modal-card" style="text-align: center;">
+        <h3>📲 添加到手机桌面</h3>
+        <p style="font-size: 0.95rem; color: var(--ink); line-height: 1.6; margin: 10px 0;">
+            为了获得更好的沉浸式学习体验，建议将本应用下载/添加到手机桌面作为 App 使用！
+        </p>
+        <div style="background: #FFF; border: 2px solid var(--ink); border-radius: 14px; padding: 10px; font-size: 0.85rem; color: var(--gray); margin-bottom: 15px; text-align: left;">
+            💡 <b>操作方法：</b><br>
+            • <b>iPhone (Safari)</b>：点击下方“分享”按钮，选择 <b>“添加到主屏幕”</b>。<br>
+            • <b>安卓 (Chrome)</b>：点击右上角菜单，选择 <b>“安装应用”</b> 或 <b>“添加到主屏幕”</b>。
+        </div>
+        <button class="btn submit" style="width: 100%; padding: 10px;" onclick="closePwaModal()">我知道啦</button>
+    </div>
+</div>
+
+<!-- 登录/绑定弹窗 -->
 <div id="login-modal" class="modal-overlay">
     <div class="modal-card">
         <h3>修改账号与邮箱</h3>
@@ -352,6 +393,7 @@ textarea::placeholder{
     </div>
 </div>
 
+<!-- 惊喜弹窗 -->
 <div id="surprise-modal" class="modal-overlay">
     <div class="modal-card">
         <div style="background: #FFF; border: 2.5px solid var(--ink); border-radius: 16px; padding: 14px; text-align: center; margin-top: 5px; box-shadow: 2px 2px 0 var(--ink);">
@@ -396,9 +438,27 @@ textarea::placeholder{
         document.getElementById('user-display-tag').innerText = `👤 ${localName}`;
     }
 
+    // 检查每日首次进入弹窗逻辑
+    checkDailyPwaPrompt();
     checkAuthSession();
     loadQuestion();
     initSpeechRecognition();
+
+    function checkDailyPwaPrompt() {
+        const today = new Date().toDateString(); // 获取当前日期字符串，例如 "Fri Aug 07 2026"
+        const lastPromptDate = localStorage.getItem('ee_last_pwa_prompt');
+        
+        if (lastPromptDate !== today) {
+            // 今天第一次进入，弹出下载引导
+            setTimeout(() => {
+                openPwaModal();
+            }, 600);
+            localStorage.setItem('ee_last_pwa_prompt', today);
+        }
+    }
+
+    function openPwaModal() { document.getElementById('pwa-modal').style.display = 'flex'; }
+    function closePwaModal() { document.getElementById('pwa-modal').style.display = 'none'; }
 
     async function checkAuthSession() {
         const { data: { session } } = await supabaseApp.auth.getSession();
