@@ -126,7 +126,7 @@ body{
     border:2px solid var(--ink);
     border-radius:18px;
     overflow:hidden;
-    margin-bottom:25px;
+    margin-bottom:20px;
 }
 
 .tab{
@@ -134,7 +134,7 @@ body{
     border:0;
     background:#FFF;
     padding:13px;
-    font-size:16px;
+    font-size:15px;
     font-weight:bold;
     color:#999;
     cursor: pointer;
@@ -145,6 +145,18 @@ body{
     color:#668FEA;
 }
 
+.category-badge {
+    display: inline-block;
+    background: var(--yellow);
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    box-shadow: 1px 1px 0 var(--ink);
+}
+
 .word-area{
     text-align:center;
     padding: 5px 0;
@@ -152,7 +164,7 @@ body{
 
 .word{
     margin:5px 0;
-    font-size:18px;
+    font-size:17px;
     color:var(--blue);
     font-weight:bold;
     word-break: break-all;
@@ -160,13 +172,13 @@ body{
 }
 
 .hint{
-    margin-top:8px;
+    margin-top:6px;
     color:#999;
-    font-size:15px;
+    font-size:14px;
 }
 
 .input-wrap{
-    margin-top:20px;
+    margin-top:18px;
     position:relative;
 }
 
@@ -218,7 +230,7 @@ textarea::placeholder{
 .actions{
     display:flex;
     gap:12px;
-    margin-top:18px;
+    margin-top:16px;
 }
 
 .btn{
@@ -250,7 +262,6 @@ textarea::placeholder{
 
 .bottom span { cursor: pointer; }
 
-/* 只有当有反馈时才会动态显示 */
 .result{
     margin-top:16px;
     display: none;
@@ -330,11 +341,12 @@ textarea::placeholder{
         <div class="subtitle">今天也学习一点点英语吧 ♡</div>
 
         <div class="tabs">
-            <button class="tab active" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
-            <button class="tab" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
+            <button class="tab active" id="tab-cet4" onclick="switchMode('cet4')">📘 四级核心词</button>
+            <button class="tab" id="tab-cet6" onclick="switchMode('cet6')">📙 六级进阶词</button>
         </div>
 
         <div class="word-area">
+            <div id="category-tag" class="category-badge">类别</div>
             <div class="word" id="chinese-text">加载中...</div>
             <div class="hint" id="hint-text">Hint: --</div>
         </div>
@@ -351,7 +363,6 @@ textarea::placeholder{
             <button class="btn answer" onclick="showAnswer()">👀 答案</button>
         </div>
 
-        <!-- 评语反馈区（默认隐藏，提交或看答案后才会弹出） -->
         <div class="result" id="result-box"></div>
     </div>
 
@@ -413,21 +424,44 @@ textarea::placeholder{
 
     let score = localStorage.getItem('ee_score') ? parseInt(localStorage.getItem('ee_score')) : 10;
     let streak = localStorage.getItem('ee_streak') ? parseInt(localStorage.getItem('ee_streak')) : 1;
-    let currentMode = 'word';
-    let currentIndex = 0;
+    let currentMode = 'cet4';
+    let currentItem = null;
 
+    // 四级与六级大规模核心题库
     const questionBanks = {
-        word: [
-            { chinese: "高效的、有成效的", english: "efficient", hint: "Hint: e _ _ _ _ _ _ t" },
-            { chinese: "灵感、启发", english: "inspiration", hint: "Hint: i _ _ _ _ _ _ _ _ n" },
-            { chinese: "优先事项、首要任务", english: "priority", hint: "Hint: p _ _ _ _ _ _ y" },
-            { chinese: "策略、战略", english: "strategy", hint: "Hint: s _ _ _ _ _ y" },
-            { chinese: "挑战、质疑", english: "challenge", hint: "Hint: c _ _ _ _ _ _ _ e" }
+        cet4: [
+            { category: "📘 四级核心 · 职场与社会", chinese: "获得、取得；获得声誉", english: "acquire", hint: "Hint: a _ _ _ _ _ e" },
+            { category: "📘 四级核心 · 认知与思维", chinese: "适应、改编", english: "adapt", hint: "Hint: a _ _ _ t" },
+            { category: "📘 四级核心 · 日常生活", chinese: "充足的、足够的", english: "adequate", hint: "Hint: a _ _ q _ _ _ e" },
+            { category: "📘 四级核心 · 情感心理", chinese: "焦虑的、渴望的", english: "anxious", hint: "Hint: a _ _ _ o _ s" },
+            { category: "📘 四级核心 · 科技创新", chinese: "人工的、人造的", english: "artificial", hint: "Hint: a _ _ _ f _ _ _ a l" },
+            { category: "📘 四级核心 · 学术研究", chinese: "评估、评价", english: "assess", hint: "Hint: a _ _ _ s s" },
+            { category: "📘 四级核心 · 社会经济", chinese: "假设、前提", english: "assumption", hint: "Hint: a _ _ _ m p t _ _ n" },
+            { category: "📘 四级核心 · 职场竞争", chinese: "获得、达到（目标）", english: "attain", hint: "Hint: a _ _ _ i n" },
+            { category: "📘 四级核心 · 日常生活", chinese: "可获得的、能买到的", english: "available", hint: "Hint: a _ _ i l _ _ l e" },
+            { category: "📘 四级核心 · 行为动词", chinese: "受益于、对...有益", english: "benefit", hint: "Hint: b _ _ e _ i t" },
+            { category: "📘 四级核心 · 科学自然", chinese: "特征、特性", english: "characteristic", hint: "Hint: c _ _ r _ c t _ r _ s t _ c" },
+            { category: "📘 四级核心 · 社会现象", chinese: "发生、偶然遇见", english: "encounter", hint: "Hint: e _ _ o _ n t _ r" },
+            { category: "📘 四级核心 · 逻辑思维", chinese: "强调、着重", english: "emphasize", hint: "Hint: e _ _ h _ s _ z e" },
+            { category: "📘 四级核心 · 商业贸易", chinese: "建立、设立", english: "establish", hint: "Hint: e _ _ a b _ _ s h" },
+            { category: "📘 四级核心 · 学术研究", chinese: "评估、估计", english: "evaluate", hint: "Hint: e _ _ l u _ t e" }
         ],
-        phrase: [
-            { chinese: "请问飞往伦敦的航班在哪登机？", english: "Where is the boarding gate for London?", hint: "Hint: Where is the boarding gate..." },
-            { chinese: "不好意思，我的房间空调坏了，能帮我换一间吗？", english: "Excuse me, the air conditioner in my room is broken. Can I switch rooms?", hint: "Hint: air conditioner / switch rooms" },
-            { chinese: "这个里面有花生吗？我对花生过敏。", english: "Does this contain peanuts? I'm allergic to peanuts.", hint: "Hint: contain peanuts / allergic" }
+        cet6: [
+            { category: "📙 六级进阶 · 学术研究", chinese: "加速、促进", english: "accelerate", hint: "Hint: a _ _ e l _ r _ t e" },
+            { category: "📙 六级进阶 · 社会热点", chinese: "积累、积聚", english: "accumulate", hint: "Hint: a _ _ u m _ l _ t e" },
+            { category: "📙 六级进阶 · 逻辑思维", chinese: "模糊的、暧昧的", english: "ambiguous", hint: "Hint: a _ _ i g _ o _ s" },
+            { category: "📙 六级进阶 · 职场商业", chinese: "促进、声援、拥护", english: "advocate", hint: "Hint: a _ v _ c _ t e" },
+            { category: "📙 六级进阶 · 科技生活", chinese: "自动的、不假思索的", english: "automatic", hint: "Hint: a _ t _ m _ t _ c" },
+            { category: "📙 六级进阶 · 法律社会", chinese: "合法的、正当的", english: "legitimate", hint: "Hint: l _ g _ t _ m _ t e" },
+            { category: "📙 六级进阶 · 学术论文", chinese: "显著的、值得注意的", english: "noticeable", hint: "Hint: n _ t _ c _ a b l e" },
+            { category: "📙 六级进阶 · 商务合同", chinese: "协商、谈判", english: "negotiate", hint: "Hint: n _ g _ t _ a t e" },
+            { category: "📙 六级进阶 · 心理情感", chinese: "悲观的", english: "pessimistic", hint: "Hint: p _ s _ i m _ s t _ c" },
+            { category: "📙 六级进阶 · 环境生态", chinese: "潜在的、有可能的", english: "potential", hint: "Hint: p _ t _ n t _ a l" },
+            { category: "📙 六级进阶 · 行为动词", chinese: "伴随、伴奏", english: "accompany", hint: "Hint: a _ c _ m p _ n y" },
+            { category: "📙 六级进阶 · 商务管理", chinese: "行政、管理、实施", english: "administer", hint: "Hint: a d m _ n _ s t _ r" },
+            { category: "📙 六级进阶 · 职场发展", chinese: "对...有吸引力的", english: "appealing", hint: "Hint: a p p _ a l _ n g" },
+            { category: "📙 六级进阶 · 社会生活", chinese: "可供选择的、非传统的", english: "alternative", hint: "Hint: a l t _ r n _ t _ v e" },
+            { category: "📙 六级进阶 · 学术研究", chinese: "彻底审查、仔细检查", english: "scrutinize", hint: "Hint: s c r _ t _ n _ z e" }
         ]
     };
 
@@ -471,32 +505,38 @@ textarea::placeholder{
 
     function switchMode(mode) {
         currentMode = mode;
-        document.getElementById('tab-word').className = mode === 'word' ? 'tab active' : 'tab';
-        document.getElementById('tab-phrase').className = mode === 'phrase' ? 'tab active' : 'tab';
+        document.getElementById('tab-cet4').className = mode === 'cet4' ? 'tab active' : 'tab';
+        document.getElementById('tab-cet6').className = mode === 'cet6' ? 'tab active' : 'tab';
         loadQuestion();
     }
 
     function loadQuestion() {
         const list = questionBanks[currentMode];
         if (!list || list.length === 0) return;
-        currentIndex = Math.floor(Math.random() * list.length);
-        const q = list[currentIndex];
         
-        document.getElementById("chinese-text").innerText = q.chinese;
-        document.getElementById("hint-text").innerText = q.hint;
+        // 随机抽题，尽量避免连续抽到同一题
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * list.length);
+        } while (list.length > 1 && currentItem && list[randomIndex].english === currentItem.english);
+
+        currentItem = list[randomIndex];
+        
+        document.getElementById("category-tag").innerText = currentItem.category;
+        document.getElementById("chinese-text").innerText = currentItem.chinese;
+        document.getElementById("hint-text").innerText = currentItem.hint;
         document.getElementById("user-input").value = "";
         
-        // 切换新题目时，隐藏反馈框
         const resultBox = document.getElementById("result-box");
         resultBox.innerHTML = "";
         resultBox.className = "result";
     }
 
     function checkAnswer() {
-        const list = questionBanks[currentMode];
+        if (!currentItem) return;
         const userVal = document.getElementById("user-input").value.trim().toLowerCase();
         const cleanUser = userVal.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
-        const target = list[currentIndex].english.toLowerCase();
+        const target = currentItem.english.toLowerCase();
         const cleanTarget = target.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
         const resultBox = document.getElementById("result-box");
 
@@ -515,15 +555,15 @@ textarea::placeholder{
             setTimeout(nextQuestion, 1500);
         } else {
             resultBox.className = "result feedback-error";
-            resultBox.innerHTML = `💡 正确答案: ${list[currentIndex].english} <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
+            resultBox.innerHTML = `💡 正确答案: ${currentItem.english} <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(currentItem.english)}')">🔊 朗读</button>`;
         }
     }
 
     function showAnswer() {
-        const list = questionBanks[currentMode];
+        if (!currentItem) return;
         const resultBox = document.getElementById("result-box");
         resultBox.className = "result feedback-error";
-        resultBox.innerHTML = `💡 正确答案: ${list[currentIndex].english} <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(list[currentIndex].english)}')">🔊 朗读</button>`;
+        resultBox.innerHTML = `💡 正确答案: ${currentItem.english} <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(currentItem.english)}')">🔊 朗读</button>`;
     }
 
     function nextQuestion() {
