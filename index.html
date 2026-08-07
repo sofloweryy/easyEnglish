@@ -341,8 +341,8 @@ textarea::placeholder{
         <div class="subtitle">今天也学习一点点英语吧 ♡</div>
 
         <div class="tabs">
-            <button class="tab active" id="tab-cet4" onclick="switchMode('cet4')">📘 四级核心词</button>
-            <button class="tab" id="tab-cet6" onclick="switchMode('cet6')">📙 六级进阶词</button>
+            <button class="tab active" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
+            <button class="tab" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
         </div>
 
         <div class="word-area">
@@ -424,12 +424,12 @@ textarea::placeholder{
 
     let score = localStorage.getItem('ee_score') ? parseInt(localStorage.getItem('ee_score')) : 10;
     let streak = localStorage.getItem('ee_streak') ? parseInt(localStorage.getItem('ee_streak')) : 1;
-    let currentMode = 'cet4';
+    let currentMode = 'word';
     let currentItem = null;
 
-    // 四级与六级大规模核心题库（带场景标签）
+    // 包含四六级核心词汇与短语的大规模题库（带精美生活/工作/旅行场景标签）
     const questionBanks = {
-        cet4: [
+        word: [
             { category: "💼 职场商务", chinese: "获得、取得；获得声誉", english: "acquire", hint: "Hint: a _ _ _ _ _ e" },
             { category: "🧠 认知思维", chinese: "适应、改编", english: "adapt", hint: "Hint: a _ _ _ t" },
             { category: "🛋️ 日常生活", chinese: "充足的、足够的", english: "adequate", hint: "Hint: a _ _ q _ _ _ e" },
@@ -444,9 +444,7 @@ textarea::placeholder{
             { category: "🌍 社会现象", chinese: "发生、偶然遇见", english: "encounter", hint: "Hint: e _ _ o _ n t _ r" },
             { category: "💡 逻辑思维", chinese: "强调、着重", english: "emphasize", hint: "Hint: e _ _ h _ s _ z e" },
             { category: "🤝 商业贸易", chinese: "建立、设立", english: "establish", hint: "Hint: e _ _ a b _ _ s h" },
-            { category: "📈 学术研究", chinese: "评估、估计", english: "evaluate", hint: "Hint: e _ _ l u _ t e" }
-        ],
-        cet6: [
+            { category: "📈 学术研究", chinese: "评估、估计", english: "evaluate", hint: "Hint: e _ _ l u _ t e" },
             { category: "🚀 科技生活", chinese: "加速、促进", english: "accelerate", hint: "Hint: a _ _ e l _ r _ t e" },
             { category: "📊 社会热点", chinese: "积累、积聚", english: "accumulate", hint: "Hint: a _ _ u m _ l _ t e" },
             { category: "🧐 逻辑思维", chinese: "模糊的、暧昧的", english: "ambiguous", hint: "Hint: a _ _ i g _ o _ s" },
@@ -456,12 +454,19 @@ textarea::placeholder{
             { category: "📝 学术论文", chinese: "显著的、值得注意的", english: "noticeable", hint: "Hint: n _ t _ c _ a b l e" },
             { category: "🤝 商务合同", chinese: "协商、谈判", english: "negotiate", hint: "Hint: n _ g _ t _ a t e" },
             { category: "🌧️ 心理情感", chinese: "悲观的", english: "pessimistic", hint: "Hint: p _ s _ i m _ s t _ c" },
-            { category: "🌱 环境生态", chinese: "潜在的、有可能的", english: "potential", hint: "Hint: p _ t _ n t _ a l" },
-            { category: "🎵 艺术生活", chinese: "伴随、伴奏", english: "accompany", hint: "Hint: a _ c _ m p _ n y" },
-            { category: "🏢 商务管理", chinese: "行政、管理、实施", english: "administer", hint: "Hint: a d m _ n _ s t _ r" },
-            { category: "✨ 职场发展", chinese: "对...有吸引力的", english: "appealing", hint: "Hint: a p p _ a l _ n g" },
-            { category: "🛤️ 交通旅行", chinese: "可供选择的、非传统的", english: "alternative", hint: "Hint: a l t _ r n _ t _ v e" },
-            { category: "🔍 学术研究", chinese: "彻底审查、仔细检查", english: "scrutinize", hint: "Hint: s c r _ t _ n _ z e" }
+            { category: "🌱 环境生态", chinese: "潜在的、有可能的", english: "potential", hint: "Hint: p _ t _ n t _ a l" }
+        ],
+        phrase: [
+            { category: "💼 职场工作", chinese: "充分利用、好好利用", english: "make the most of", hint: "Hint: m _ k _ _ h _ m _ s t _ f" },
+            { category: "🤝 商务社交", chinese: "与...保持联系", english: "keep in touch with", hint: "Hint: k _ _ p _ n t _ u c _ w _ t h" },
+            { category: "💡 日常生活", chinese: "实现、成为现实", english: "come true", hint: "Hint: c _ m _ t r _ e" },
+            { category: "🚀 职场行动", chinese: "付诸实践、实施", english: "put into practice", hint: "Hint: p _ t _ n t _ p r _ c t _ c e" },
+            { category: "📊 商务汇报", chinese: "考虑到、顾及", english: "take into account", hint: "Hint: t _ k _ _ n t _ a c c _ u n t" },
+            { category: "🛤️ 交通旅行", chinese: "出发、动身", english: "set off", hint: "Hint: s _ t _ f f" },
+            { category: "☕ 餐饮休闲", chinese: "精疲力竭、耗尽", english: "run out of", hint: "Hint: r _ n _ u t _ f" },
+            { category: "📋 日常生活", chinese: "查明、弄清楚", english: "find out", hint: "Hint: f _ n d _ u t" },
+            { category: "💻 科技应用", chinese: "依赖、依靠", english: "depend on", hint: "Hint: d _ p _ n d _ n" },
+            { category: "🎯 目标计划", chinese: "致力于、专心于", english: "dedicate to", hint: "Hint: d _ d _ c _ t e t _" }
         ]
     };
 
@@ -505,8 +510,8 @@ textarea::placeholder{
 
     function switchMode(mode) {
         currentMode = mode;
-        document.getElementById('tab-cet4').className = mode === 'cet4' ? 'tab active' : 'tab';
-        document.getElementById('tab-cet6').className = mode === 'cet6' ? 'tab active' : 'tab';
+        document.getElementById('tab-word').className = mode === 'word' ? 'tab active' : 'tab';
+        document.getElementById('tab-phrase').className = mode === 'phrase' ? 'tab active' : 'tab';
         loadQuestion();
     }
 
