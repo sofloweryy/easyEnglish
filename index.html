@@ -251,19 +251,22 @@ textarea::placeholder{
 .bottom span { cursor: pointer; }
 
 .result{
-    margin-top:12px;
-    min-height:35px;
+    margin-top:16px;
+    min-height:42px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align:center;
-    font-size: 15px;
-    border-radius: 12px;
-    padding: 0 10px;
+    font-size: 14px;
+    border-radius: 16px;
+    padding: 8px 12px;
+    background: #FFF9F0;
+    color: #8E8986;
+    border: 1.5px dashed var(--ink);
 }
 
-.feedback-success { background: #E8F5E9; color: #2E7D32; border: 1.5px solid var(--ink); }
-.feedback-error { background: #FFEBEE; color: #C62828; border: 1.5px solid var(--ink); }
+.feedback-success { background: #E8F5E9; color: #2E7D32; border: 1.5px solid var(--ink); border-style: solid; }
+.feedback-error { background: #FFEBEE; color: #C62828; border: 1.5px solid var(--ink); border-style: solid; }
 
 .answer-audio-btn {
     background: #FFF;
@@ -351,7 +354,7 @@ textarea::placeholder{
             <button class="btn answer" onclick="showAnswer()">👀 答案</button>
         </div>
 
-        <div class="result" id="result-box"></div>
+        <div class="result" id="result-box">✨ 随时输入或说出英文，检验一下学习成果吧~</div>
     </div>
 
     <div class="bottom">
@@ -486,7 +489,7 @@ textarea::placeholder{
         document.getElementById("user-input").value = "";
         
         const resultBox = document.getElementById("result-box");
-        resultBox.innerHTML = "";
+        resultBox.innerHTML = "✨ 随时输入或说出英文，检验一下学习成果吧~";
         resultBox.className = "result";
     }
 
