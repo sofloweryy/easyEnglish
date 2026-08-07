@@ -164,7 +164,7 @@ body{
 
 .word{
     margin:4px 0;
-    font-size:20px;
+    font-size:19px;
     color:var(--blue);
     font-weight:bold;
     word-break: break-all;
@@ -427,7 +427,7 @@ textarea::placeholder{
     let currentMode = 'word';
     let currentItem = null;
 
-    // 高频单词与四六级整句翻译题库
+    // 高频单词与地道生活整句问答题库
     const questionBanks = {
         word: [
             { category: "💼 职场商务", chinese: "获得、取得；获得声誉", english: "acquire", hint: "Hint: a _ _ _ _ _ e" },
@@ -442,14 +442,14 @@ textarea::placeholder{
             { category: "⚖️ 行为动词", chinese: "受益于、对...有益", english: "benefit", hint: "Hint: b _ _ e _ i t" }
         ],
         phrase: [
-            { category: "📜 四级翻译", chinese: "我们应该充分利用这次机会来提高英语水平。", english: "We should make the most of this opportunity to improve our English proficiency.", hint: "Hint: W... make the most of ... opportunity ..." },
-            { category: "📜 四级翻译", chinese: "无论遇到什么困难，我们都绝不应该放弃。", english: "No matter what difficulties we encounter, we should never give up.", hint: "Hint: No matter what ... encounter, we should never ..." },
-            { category: "📜 六级翻译", chinese: "随着科技的迅猛发展，人工智能在现代生活中扮演着越来越重要的角色。", english: "With the rapid development of science and technology, artificial intelligence plays an increasingly important role in modern life.", hint: "Hint: With the rapid development of ... artificial intelligence plays ..." },
-            { category: "📜 六级翻译", chinese: "环境保护已经成为全人类共同关注的焦点。", english: "Environmental protection has become the focus of common concern for all mankind.", hint: "Hint: Environmental protection has become ..." },
-            { category: "📜 四级翻译", chinese: "坚持就是胜利，只要你坚持不懈，就一定能实现梦想。", english: "Perseverance means victory; as long as you keep trying, you will surely realize your dream.", hint: "Hint: Perseverance means victory; as long as ..." },
-            { category: "📜 六级翻译", chinese: "只有通过各方的共同努力，我们才能有效解决这一社会问题。", english: "Only through the joint efforts of all parties can we effectively solve this social problem.", hint: "Hint: Only through the joint efforts ..." },
-            { category: "📜 四级翻译", chinese: "读书不仅能开阔我们的视野，还能丰富我们的心灵。", english: "Reading can not only broaden our horizons, but also enrich our minds.", hint: "Hint: Reading can not only broaden ..." },
-            { category: "📜 六级翻译", chinese: "近年来，中国经济持续保持稳健增长。", english: "In recent years, China's economy has maintained a steady growth continuously.", hint: "Hint: In recent years, China's economy has maintained ..." }
+            { category: "🍽️ 餐饮休闲", chinese: "你觉得今天的午餐怎么样？", english: "What do you think of today's lunch?", hint: "Hint: W... do you think of today's lunch?" },
+            { category: "☕ 日常交流", chinese: "你今天过得怎么样？", english: "How is your day going?", hint: "Hint: How is your day ..." },
+            { category: "🌧️ 天气谈话", chinese: "今天天气真好，我们去公园散步吧。", english: "It's such a nice day today. Let's go for a walk in the park.", hint: "Hint: It's such a nice day ... Let's go for a walk ..." },
+            { category: "🛒 购物消费", chinese: "请问这条裙子多少钱？", english: "How much is this dress?", hint: "Hint: How much is this ..." },
+            { category: "🗺️ 问路出行", chinese: "请问附近有地铁站吗？", english: "Excuse me, is there a subway station nearby?", hint: "Hint: Excuse me, is there a subway ..." },
+            { category: "⏰ 日常生活", chinese: "你能帮我个忙吗？", english: "Could you do me a favor?", hint: "Hint: Could you do me a ..." },
+            { category: "🤝 社交问候", chinese: "很高兴认识你！", english: "Nice to meet you!", hint: "Hint: Nice to meet ..." },
+            { category: "💡 建议意见", chinese: "我们今晚吃什么好呢？", english: "What shall we have for dinner tonight?", hint: "Hint: What shall we have for dinner ..." }
         ]
     };
 
@@ -522,7 +522,6 @@ textarea::placeholder{
     function checkAnswer() {
         if (!currentItem) return;
         const userVal = document.getElementById("user-input").value.trim().toLowerCase();
-        // 针对整句翻译，做基础标点/多余空格清洗后比对，或者容错匹配核心关键词
         const cleanUser = userVal.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").replace(/\s+/g," ");
         const target = currentItem.english.toLowerCase();
         const cleanTarget = target.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").replace(/\s+/g," ");
@@ -534,8 +533,7 @@ textarea::placeholder{
             return;
         }
 
-        // 如果用户输入的英文和标准答案高度匹配（或包含大部分核心译文）即算正确
-        if (cleanUser === cleanTarget || cleanUser.length >= Math.floor(cleanTarget.length * 0.7) && cleanTarget.includes(cleanUser)) {
+        if (cleanUser === cleanTarget || (cleanUser.length >= Math.floor(cleanTarget.length * 0.7) && cleanTarget.includes(cleanUser))) {
             score += 10;
             resultBox.className = "result feedback-success";
             resultBox.innerHTML = `✨ 翻译完美！积分 +10`;
