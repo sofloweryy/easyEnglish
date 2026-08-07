@@ -343,14 +343,11 @@ textarea::placeholder{
         <input type="text" id="reg-nickname" placeholder="例如：flower">
         <label>绑定邮箱</label>
         <input type="email" id="reg-email" placeholder="例如：your_email@domain.com">
-        <label>6位验证码</label>
-        <div style="display: flex; gap: 8px; margin-top: 4px;">
-            <input type="text" id="reg-code" maxlength="6" placeholder="输入6位验证码" style="margin-top: 0; flex: 1;">
-            <button class="btn next" id="send-code-btn" style="padding: 8px 12px; font-size: 0.85rem;" onclick="sendSupabaseCode()">获取验证码</button>
+        <div style="margin-top: 14px;">
+            <button class="btn submit" id="send-link-btn" style="width: 100%; padding: 10px;" onclick="sendLoginLink()">发送登录邮件</button>
         </div>
-        <div style="display: flex; gap: 10px; margin-top: 16px;">
-            <button class="btn submit" style="flex:1; padding: 10px;" onclick="verifyAndSave()">验证并保存</button>
-            <button class="btn next" style="flex:1; padding: 10px;" onclick="closeLoginModal()">取消</button>
+        <div style="margin-top: 10px;">
+            <button class="btn next" style="width: 100%; padding: 10px;" onclick="closeLoginModal()">关闭</button>
         </div>
     </div>
 </div>
@@ -393,12 +390,28 @@ textarea::placeholder{
 
     document.getElementById('score').innerText = score;
     document.getElementById('streak').innerText = streak;
+
+    // 检查本地存储并初始化昵称
     const localName = localStorage.getItem('ee_nickname');
     if (localName) {
         document.getElementById('user-display-tag').innerText = `👤 ${localName}`;
     }
+
+    // 页面加载时检查是否是通过 Supabase 邮件链接跳转回来的
+    checkAuthSession();
     loadQuestion();
     initSpeechRecognition();
+
+    async function checkAuthSession() {
+        // 获取当前登录状态
+        const { data: { session } } = await supabaseApp.auth.getSession();
+        if (session && session.user) {
+            const email = session.user.email;
+            localStorage.setItem('ee_email', email);
+            const savedNickname = localStorage.getItem('ee_nickname') || email.split('@')[0];
+            document.getElementById('user-display-tag').innerText = `👤 ${savedNickname}`;
+        }
+    }
 
     function switchMode(mode) {
         currentMode = mode;
@@ -484,86 +497,43 @@ textarea::placeholder{
     function openSurpriseModal() { document.getElementById('surprise-modal').style.display = 'flex'; }
     function closeSurpriseModal() { document.getElementById('surprise-modal').style.display = 'none'; }
 
-    async function sendSupabaseCode() {
+    async function sendLoginLink() {
+        const nickname = document.getElementById('reg-nickname').value.trim() || "flower";
         const email = document.getElementById('reg-email').value.trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
         if (!emailRegex.test(email)) {
-            alert("⚠️ 请先输入正确的邮箱地址！");
+            alert("⚠️ 请输入正确的邮箱地址！");
             return;
         }
-        const btn = document.getElementById('send-code-btn');
+
+        // 先把昵称存到本地
+        localStorage.setItem('ee_nickname', nickname);
+        document.getElementById('user-display-tag').innerText = `👤 ${nickname}`;
+
+        const btn = document.getElementById('send-link-btn');
         btn.disabled = true;
         btn.innerText = "发送中...";
 
         try {
-            // 调用 Supabase 官方 Auth 发送 OTP 验证码邮件
+            // 调用 Supabase 发送 Magic Link 登录邮件
             const { error } = await supabaseApp.auth.signInWithOtp({
                 email: email,
                 options: {
-                    shouldCreateUser: true
+                    emailRedirectTo: window.location.origin
                 }
             });
 
             if (error) throw error;
-            alert("✨ 验证码已通过 Supabase 官方邮件服务发送至您的邮箱，请注意查收！");
-            startCountdown(btn);
+            alert("✨ 登录邮件已发送！请前往您的邮箱查收，并点击邮件中的链接完成绑定与登录。");
+            closeLoginModal();
         } catch (err) {
             console.error(err);
-            alert("❌ 发送失败：" + (err.message || "请检查 Supabase Auth 邮箱配置是否正确"));
+            alert("❌ 发送失败：" + (err.message || "请检查网络或配置"));
+        } finally {
             btn.disabled = false;
-            btn.innerText = "获取验证码";
+            btn.innerText = "发送登录邮件";
         }
-    }
-
-    function startCountdown(btn) {
-        let countdown = 60;
-        const timer = setInterval(() => {
-            if (countdown > 0) {
-                btn.innerText = `${countdown}秒后重试`;
-                countdown--;
-            } else {
-                clearInterval(timer);
-                btn.disabled = false;
-                btn.innerText = "获取验证码";
-            }
-        }, 1000);
-    }
-
-    async function verifyAndSave() {
-        const nickname = document.getElementById('reg-nickname').value.trim() || "flower";
-        const email = document.getElementById('reg-email').value.trim();
-        const inputCode = document.getElementById('reg-code').value.trim();
-
-        if (email && !inputCode) {
-            alert("⚠️ 请输入收到的 6 位验证码！");
-            return;
-        }
-
-        if (email) {
-            try {
-                // 调用 Supabase 官方验证 OTP 接口
-                const { data, error } = await supabaseApp.auth.verifyOtp({
-                    email: email,
-                    token: inputCode,
-                    type: 'email'
-                });
-
-                if (error) {
-                    alert("❌ 验证码不正确或已失效！");
-                    return;
-                }
-            } catch (err) {
-                console.error(err);
-                alert("❌ 验证过程出错，请检查网络");
-                return;
-            }
-        }
-
-        document.getElementById('user-display-tag').innerText = `👤 ${nickname}`;
-        localStorage.setItem('ee_nickname', nickname);
-        if (email) localStorage.setItem('ee_email', email);
-        alert('✨ 验证成功，账号信息保存成功！');
-        closeLoginModal();
     }
 
     function initSpeechRecognition() {
