@@ -358,7 +358,7 @@ textarea::placeholder{
 <div id="surprise-modal" class="modal-overlay">
     <div class="modal-card">
         <div style="background: #FFF; border: 2.5px solid var(--ink); border-radius: 16px; padding: 14px; text-align: center; margin-top: 5px; box-shadow: 2px 2px 0 var(--ink);">
-            <div style="font-weight: 700; color: #F7B0C6; margin-bottom: 6px; font-size: 1.05rem;">联系美丽且智慧的开发者</div>
+            <div style="font-weight: 700; color: #F7B0C6; margin-bottom: 6px; font-size: 1.05rem;">联系开发者</div>
             <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 4px;">邮箱：</div>
             <span style="color: #2E7D32; font-size: 0.95rem; word-break: break-all; font-weight: 700;">zhaihuahua1701@gmail.com</span>
         </div>
@@ -491,22 +491,25 @@ textarea::placeholder{
             alert("⚠️ 请先输入正确的邮箱地址！");
             return;
         }
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
         const btn = document.getElementById('send-code-btn');
         btn.disabled = true;
         btn.innerText = "发送中...";
 
         try {
-            const { error } = await supabaseApp
-                .from('email_codes')
-                .insert([{ email: email, code: code, is_used: false }]);
+            // 调用 Supabase 官方 Auth 发送 OTP 验证码邮件
+            const { error } = await supabaseApp.auth.signInWithOtp({
+                email: email,
+                options: {
+                    shouldCreateUser: true
+                }
+            });
 
             if (error) throw error;
-            alert("✨ 验证码已成功写入 Supabase 数据库！\n（当前生成的 6 位验证码是: " + code + "）");
+            alert("✨ 验证码已通过 Supabase 官方邮件服务发送至您的邮箱，请注意查收！");
             startCountdown(btn);
         } catch (err) {
             console.error(err);
-            alert("❌ 写入数据库失败，请检查 Supabase 中是否存在名为 email_codes 的表！");
+            alert("❌ 发送失败：" + (err.message || "请检查 Supabase Auth 邮箱配置是否正确"));
             btn.disabled = false;
             btn.innerText = "获取验证码";
         }
@@ -538,28 +541,20 @@ textarea::placeholder{
 
         if (email) {
             try {
-                const { data, error } = await supabaseApp
-                    .from('email_codes')
-                    .select('*')
-                    .eq('email', email)
-                    .eq('code', inputCode)
-                    .eq('is_used', false)
-                    .order('created_at', { ascending: false })
-                    .limit(1);
+                // 调用 Supabase 官方验证 OTP 接口
+                const { data, error } = await supabaseApp.auth.verifyOtp({
+                    email: email,
+                    token: inputCode,
+                    type: 'email'
+                });
 
-                if (error || !data || data.length === 0) {
+                if (error) {
                     alert("❌ 验证码不正确或已失效！");
                     return;
                 }
-
-                await supabaseApp
-                    .from('email_codes')
-                    .update({ is_used: true })
-                    .eq('id', data[0].id);
-
             } catch (err) {
                 console.error(err);
-                alert("❌ 验证过程出错，请检查网络或数据库连接");
+                alert("❌ 验证过程出错，请检查网络");
                 return;
             }
         }
