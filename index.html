@@ -150,25 +150,25 @@ body{
     background: var(--yellow);
     border: 1.5px solid var(--ink);
     border-radius: 10px;
-    padding: 2px 8px;
+    padding: 2px 10px;
     font-size: 12px;
     font-weight: bold;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     box-shadow: 1px 1px 0 var(--ink);
 }
 
 .word-area{
     text-align:center;
-    padding: 5px 0;
+    padding: 2px 0 10px 0;
 }
 
 .word{
-    margin:5px 0;
-    font-size:17px;
+    margin:4px 0;
+    font-size:22px;
     color:var(--blue);
     font-weight:bold;
     word-break: break-all;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 .hint{
@@ -178,7 +178,7 @@ body{
 }
 
 .input-wrap{
-    margin-top:18px;
+    margin-top:14px;
     position:relative;
 }
 
@@ -263,7 +263,7 @@ textarea::placeholder{
 .bottom span { cursor: pointer; }
 
 .result{
-    margin-top:16px;
+    margin-top:14px;
     display: none;
     align-items: center;
     justify-content: center;
@@ -427,41 +427,41 @@ textarea::placeholder{
     let currentMode = 'cet4';
     let currentItem = null;
 
-    // 四级与六级大规模核心题库
+    // 四级与六级大规模核心题库（带场景标签）
     const questionBanks = {
         cet4: [
-            { category: "📘 四级核心 · 职场与社会", chinese: "获得、取得；获得声誉", english: "acquire", hint: "Hint: a _ _ _ _ _ e" },
-            { category: "📘 四级核心 · 认知与思维", chinese: "适应、改编", english: "adapt", hint: "Hint: a _ _ _ t" },
-            { category: "📘 四级核心 · 日常生活", chinese: "充足的、足够的", english: "adequate", hint: "Hint: a _ _ q _ _ _ e" },
-            { category: "📘 四级核心 · 情感心理", chinese: "焦虑的、渴望的", english: "anxious", hint: "Hint: a _ _ _ o _ s" },
-            { category: "📘 四级核心 · 科技创新", chinese: "人工的、人造的", english: "artificial", hint: "Hint: a _ _ _ f _ _ _ a l" },
-            { category: "📘 四级核心 · 学术研究", chinese: "评估、评价", english: "assess", hint: "Hint: a _ _ _ s s" },
-            { category: "📘 四级核心 · 社会经济", chinese: "假设、前提", english: "assumption", hint: "Hint: a _ _ _ m p t _ _ n" },
-            { category: "📘 四级核心 · 职场竞争", chinese: "获得、达到（目标）", english: "attain", hint: "Hint: a _ _ _ i n" },
-            { category: "📘 四级核心 · 日常生活", chinese: "可获得的、能买到的", english: "available", hint: "Hint: a _ _ i l _ _ l e" },
-            { category: "📘 四级核心 · 行为动词", chinese: "受益于、对...有益", english: "benefit", hint: "Hint: b _ _ e _ i t" },
-            { category: "📘 四级核心 · 科学自然", chinese: "特征、特性", english: "characteristic", hint: "Hint: c _ _ r _ c t _ r _ s t _ c" },
-            { category: "📘 四级核心 · 社会现象", chinese: "发生、偶然遇见", english: "encounter", hint: "Hint: e _ _ o _ n t _ r" },
-            { category: "📘 四级核心 · 逻辑思维", chinese: "强调、着重", english: "emphasize", hint: "Hint: e _ _ h _ s _ z e" },
-            { category: "📘 四级核心 · 商业贸易", chinese: "建立、设立", english: "establish", hint: "Hint: e _ _ a b _ _ s h" },
-            { category: "📘 四级核心 · 学术研究", chinese: "评估、估计", english: "evaluate", hint: "Hint: e _ _ l u _ t e" }
+            { category: "💼 职场商务", chinese: "获得、取得；获得声誉", english: "acquire", hint: "Hint: a _ _ _ _ _ e" },
+            { category: "🧠 认知思维", chinese: "适应、改编", english: "adapt", hint: "Hint: a _ _ _ t" },
+            { category: "🛋️ 日常生活", chinese: "充足的、足够的", english: "adequate", hint: "Hint: a _ _ q _ _ _ e" },
+            { category: "💭 情感心理", chinese: "焦虑的、渴望的", english: "anxious", hint: "Hint: a _ _ _ o _ s" },
+            { category: "💻 科技创新", chinese: "人工的、人造的", english: "artificial", hint: "Hint: a _ _ _ f _ _ _ a l" },
+            { category: "📚 学术研究", chinese: "评估、评价", english: "assess", hint: "Hint: a _ _ _ s s" },
+            { category: "📊 社会经济", chinese: "假设、前提", english: "assumption", hint: "Hint: a _ _ _ m p t _ _ n" },
+            { category: "🎯 职场竞争", chinese: "获得、达到（目标）", english: "attain", hint: "Hint: a _ _ _ i n" },
+            { category: "🛒 日常生活", chinese: "可获得的、能买到的", english: "available", hint: "Hint: a _ _ i l _ _ l e" },
+            { category: "⚖️ 行为动词", chinese: "受益于、对...有益", english: "benefit", hint: "Hint: b _ _ e _ i t" },
+            { category: "🧬 科学自然", chinese: "特征、特性", english: "characteristic", hint: "Hint: c _ _ r _ c t _ r _ s t _ c" },
+            { category: "🌍 社会现象", chinese: "发生、偶然遇见", english: "encounter", hint: "Hint: e _ _ o _ n t _ r" },
+            { category: "💡 逻辑思维", chinese: "强调、着重", english: "emphasize", hint: "Hint: e _ _ h _ s _ z e" },
+            { category: "🤝 商业贸易", chinese: "建立、设立", english: "establish", hint: "Hint: e _ _ a b _ _ s h" },
+            { category: "📈 学术研究", chinese: "评估、估计", english: "evaluate", hint: "Hint: e _ _ l u _ t e" }
         ],
         cet6: [
-            { category: "📙 六级进阶 · 学术研究", chinese: "加速、促进", english: "accelerate", hint: "Hint: a _ _ e l _ r _ t e" },
-            { category: "📙 六级进阶 · 社会热点", chinese: "积累、积聚", english: "accumulate", hint: "Hint: a _ _ u m _ l _ t e" },
-            { category: "📙 六级进阶 · 逻辑思维", chinese: "模糊的、暧昧的", english: "ambiguous", hint: "Hint: a _ _ i g _ o _ s" },
-            { category: "📙 六级进阶 · 职场商业", chinese: "促进、声援、拥护", english: "advocate", hint: "Hint: a _ v _ c _ t e" },
-            { category: "📙 六级进阶 · 科技生活", chinese: "自动的、不假思索的", english: "automatic", hint: "Hint: a _ t _ m _ t _ c" },
-            { category: "📙 六级进阶 · 法律社会", chinese: "合法的、正当的", english: "legitimate", hint: "Hint: l _ g _ t _ m _ t e" },
-            { category: "📙 六级进阶 · 学术论文", chinese: "显著的、值得注意的", english: "noticeable", hint: "Hint: n _ t _ c _ a b l e" },
-            { category: "📙 六级进阶 · 商务合同", chinese: "协商、谈判", english: "negotiate", hint: "Hint: n _ g _ t _ a t e" },
-            { category: "📙 六级进阶 · 心理情感", chinese: "悲观的", english: "pessimistic", hint: "Hint: p _ s _ i m _ s t _ c" },
-            { category: "📙 六级进阶 · 环境生态", chinese: "潜在的、有可能的", english: "potential", hint: "Hint: p _ t _ n t _ a l" },
-            { category: "📙 六级进阶 · 行为动词", chinese: "伴随、伴奏", english: "accompany", hint: "Hint: a _ c _ m p _ n y" },
-            { category: "📙 六级进阶 · 商务管理", chinese: "行政、管理、实施", english: "administer", hint: "Hint: a d m _ n _ s t _ r" },
-            { category: "📙 六级进阶 · 职场发展", chinese: "对...有吸引力的", english: "appealing", hint: "Hint: a p p _ a l _ n g" },
-            { category: "📙 六级进阶 · 社会生活", chinese: "可供选择的、非传统的", english: "alternative", hint: "Hint: a l t _ r n _ t _ v e" },
-            { category: "📙 六级进阶 · 学术研究", chinese: "彻底审查、仔细检查", english: "scrutinize", hint: "Hint: s c r _ t _ n _ z e" }
+            { category: "🚀 科技生活", chinese: "加速、促进", english: "accelerate", hint: "Hint: a _ _ e l _ r _ t e" },
+            { category: "📊 社会热点", chinese: "积累、积聚", english: "accumulate", hint: "Hint: a _ _ u m _ l _ t e" },
+            { category: "🧐 逻辑思维", chinese: "模糊的、暧昧的", english: "ambiguous", hint: "Hint: a _ _ i g _ o _ s" },
+            { category: "📢 职场商业", chinese: "促进、声援、拥护", english: "advocate", hint: "Hint: a _ v _ c _ t e" },
+            { category: "⚡ 科技生活", chinese: "自动的、不假思索的", english: "automatic", hint: "Hint: a _ t _ m _ t _ c" },
+            { category: "⚖️ 法律社会", chinese: "合法的、正当的", english: "legitimate", hint: "Hint: l _ g _ t _ m _ t e" },
+            { category: "📝 学术论文", chinese: "显著的、值得注意的", english: "noticeable", hint: "Hint: n _ t _ c _ a b l e" },
+            { category: "🤝 商务合同", chinese: "协商、谈判", english: "negotiate", hint: "Hint: n _ g _ t _ a t e" },
+            { category: "🌧️ 心理情感", chinese: "悲观的", english: "pessimistic", hint: "Hint: p _ s _ i m _ s t _ c" },
+            { category: "🌱 环境生态", chinese: "潜在的、有可能的", english: "potential", hint: "Hint: p _ t _ n t _ a l" },
+            { category: "🎵 艺术生活", chinese: "伴随、伴奏", english: "accompany", hint: "Hint: a _ c _ m p _ n y" },
+            { category: "🏢 商务管理", chinese: "行政、管理、实施", english: "administer", hint: "Hint: a d m _ n _ s t _ r" },
+            { category: "✨ 职场发展", chinese: "对...有吸引力的", english: "appealing", hint: "Hint: a p p _ a l _ n g" },
+            { category: "🛤️ 交通旅行", chinese: "可供选择的、非传统的", english: "alternative", hint: "Hint: a l t _ r n _ t _ v e" },
+            { category: "🔍 学术研究", chinese: "彻底审查、仔细检查", english: "scrutinize", hint: "Hint: s c r _ t _ n _ z e" }
         ]
     };
 
@@ -514,7 +514,6 @@ textarea::placeholder{
         const list = questionBanks[currentMode];
         if (!list || list.length === 0) return;
         
-        // 随机抽题，尽量避免连续抽到同一题
         let randomIndex;
         do {
             randomIndex = Math.floor(Math.random() * list.length);
