@@ -31,7 +31,6 @@ body{
     color:var(--ink);
 }
 
-/* 页面 */
 .app{
     max-width:430px;
     margin:auto;
@@ -39,7 +38,6 @@ body{
     padding:25px 22px;
 }
 
-/* 顶部 */
 .header{
     display:flex;
     justify-content:space-between;
@@ -72,7 +70,6 @@ body{
     box-shadow:3px 4px 0 var(--ink);
 }
 
-/* 主卡片 */
 .study-card{
     margin-top:35px;
     background:#fff;
@@ -83,7 +80,6 @@ body{
     box-shadow:5px 6px 0 var(--ink);
 }
 
-/* 胶带 */
 .study-card:before{
     content:"";
     position:absolute;
@@ -96,7 +92,6 @@ body{
     opacity:.8;
 }
 
-/* 欢迎语 */
 .subtitle{
     text-align:center;
     color:#999;
@@ -104,7 +99,6 @@ body{
     margin-bottom:22px;
 }
 
-/* tabs */
 .tabs{
     display:flex;
     border:2px solid var(--ink);
@@ -122,7 +116,6 @@ body{
     font-weight:bold;
     color:#999;
     cursor: pointer;
-    transition: all 0.1s;
 }
 
 .tab.active{
@@ -130,25 +123,18 @@ body{
     color:#668FEA;
 }
 
-/* 题目区域 */
 .word-area{
     text-align:center;
     padding: 10px 0;
 }
 
 .word{
-    margin:5px 0 5px 0;
+    margin:5px 0;
     font-size:18px;
     color:var(--blue);
     font-weight:bold;
     word-break: break-all;
     line-height: 1.5;
-}
-
-.meaning{
-    font-family:"ZCOOL KuaiLe";
-    font-size:26px;
-    margin-bottom:8px;
 }
 
 .hint{
@@ -157,7 +143,6 @@ body{
     font-size:15px;
 }
 
-/* 输入 */
 .input-wrap{
     margin-top:20px;
     position:relative;
@@ -195,12 +180,9 @@ textarea::placeholder{
     cursor: pointer;
     font-size: 1.1rem;
     box-shadow: 1.5px 1.5px 0 var(--ink);
-    transition: all 0.08s;
 }
 
-.voice:active, .voice.recording {
-    transform: translate(1px, 1px);
-    box-shadow: none;
+.voice.recording {
     background: #F7B0C6;
 }
 
@@ -211,7 +193,6 @@ textarea::placeholder{
     margin-top: 6px;
 }
 
-/* 按钮 */
 .actions{
     display:flex;
     gap:12px;
@@ -227,28 +208,12 @@ textarea::placeholder{
     box-shadow:3px 4px 0 var(--ink);
     cursor: pointer;
     font-family: inherit;
-    transition: all 0.08s;
 }
 
-.btn:active {
-    transform: translate(1.5px, 1.5px);
-    box-shadow: 1px 2px 0 var(--ink);
-}
+.submit{ flex:1; background:#F7B0C6; }
+.next{ background:#FFF1C9; }
+.answer{ background:#EEF4FF; }
 
-.submit{
-    flex:1;
-    background:#F7B0C6;
-}
-
-.next{
-    background:#FFF1C9;
-}
-
-.answer{
-    background:#EEF4FF;
-}
-
-/* 底部 */
 .bottom{
     margin-top:25px;
     background:white;
@@ -259,12 +224,9 @@ textarea::placeholder{
     justify-content:space-between;
     align-items: center;
     box-shadow:3px 4px 0 var(--ink);
-    cursor: pointer;
 }
 
-.bottom span {
-    cursor: pointer;
-}
+.bottom span { cursor: pointer; }
 
 .result{
     margin-top:12px;
@@ -289,11 +251,9 @@ textarea::placeholder{
     font-size: 14px;
     cursor: pointer;
     margin-left: 8px;
-    font-family: inherit;
     box-shadow: 1px 1px 0 var(--ink);
 }
 
-/* 弹窗样式 */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -316,19 +276,8 @@ textarea::placeholder{
     font-family: inherit;
 }
 
-.modal-card h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.4rem;
-    text-align: center;
-}
-
-.modal-card label {
-    display: block;
-    font-size: 0.9rem;
-    color: var(--gray);
-    margin-top: 8px;
-}
-
+.modal-card h3 { margin: 0 0 10px 0; font-size: 1.4rem; text-align: center; }
+.modal-card label { display: block; font-size: 0.9rem; color: var(--gray); margin-top: 8px; }
 .modal-card input {
     width: 100%;
     padding: 9px 12px;
@@ -345,21 +294,16 @@ textarea::placeholder{
 <body>
 
 <div class="app">
-
     <div class="header">
-        <div class="logo">
-            Easy <span class="blue">English</span>
-        </div>
-        <div class="status" id="status-box">
+        <div class="logo">Easy <span class="blue">English</span></div>
+        <div class="status">
             🔥 连续<span id="streak">1</span>天<br>
             ⭐ <span id="score">10</span>分
         </div>
     </div>
 
     <div class="study-card">
-        <div class="subtitle">
-            今天也学习一点点英语吧 ♡
-        </div>
+        <div class="subtitle">今天也学习一点点英语吧 ♡</div>
 
         <div class="tabs">
             <button class="tab active" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
@@ -368,7 +312,6 @@ textarea::placeholder{
 
         <div class="word-area">
             <div class="word" id="chinese-text">加载中...</div>
-            <div class="meaning" id="meaning-text" style="display:none;"></div>
             <div class="hint" id="hint-text">Hint: --</div>
         </div>
 
@@ -391,25 +334,20 @@ textarea::placeholder{
         <span onclick="openSurpriseModal()">✨ 点击有惊喜</span>
         <span onclick="openLoginModal()" id="user-display-tag">👤 flower</span>
     </div>
-
 </div>
 
-<!-- 修改昵称与绑定邮箱（含Supabase验证码）弹窗 -->
 <div id="login-modal" class="modal-overlay">
     <div class="modal-card">
         <h3>修改账号与邮箱</h3>
         <label>专属昵称</label>
         <input type="text" id="reg-nickname" placeholder="例如：flower">
-
         <label>绑定邮箱</label>
         <input type="email" id="reg-email" placeholder="例如：your_email@domain.com">
-
         <label>6位验证码</label>
         <div style="display: flex; gap: 8px; margin-top: 4px;">
             <input type="text" id="reg-code" maxlength="6" placeholder="输入6位验证码" style="margin-top: 0; flex: 1;">
-            <button class="btn next" id="send-code-btn" style="padding: 8px 12px; font-size: 0.85rem; white-space: nowrap;" onclick="sendSupabaseCode()">获取验证码</button>
+            <button class="btn next" id="send-code-btn" style="padding: 8px 12px; font-size: 0.85rem;" onclick="sendSupabaseCode()">获取验证码</button>
         </div>
-
         <div style="display: flex; gap: 10px; margin-top: 16px;">
             <button class="btn submit" style="flex:1; padding: 10px;" onclick="verifyAndSave()">验证并保存</button>
             <button class="btn next" style="flex:1; padding: 10px;" onclick="closeLoginModal()">取消</button>
@@ -417,11 +355,10 @@ textarea::placeholder{
     </div>
 </div>
 
-<!-- 点击有惊喜弹窗 -->
 <div id="surprise-modal" class="modal-overlay">
     <div class="modal-card">
         <h3>✨ 开发者寄语</h3>
-        <div style="background: #FFF; border: 2px solid var(--ink); border-radius: 16px; padding: 14px; text-align: center; margin-top: 10px; box-shadow: 2px 2px 0 var(--ink);">
+        <div style="background: #FFF; border: 2.5px solid var(--ink); border-radius: 16px; padding: 14px; text-align: center; margin-top: 10px; box-shadow: 2px 2px 0 var(--ink);">
             <div style="font-weight: 700; color: #F7B0C6; margin-bottom: 6px; font-size: 1.05rem;">联系美丽且智慧的开发者</div>
             <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 4px;">邮箱：</div>
             <span style="color: #2E7D32; font-size: 0.95rem; word-break: break-all; font-weight: 700;">zhaihuahua1701@gmail.com</span>
@@ -433,14 +370,12 @@ textarea::placeholder{
 <script>
     const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
-    
-    // 防止重复声明导致的崩溃
-    window.supabaseClient = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const supabase = window.supabaseClient;
+    const supabaseApp = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let score = 10;
-    let streak = 1;
+    let score = localStorage.getItem('ee_score') ? parseInt(localStorage.getItem('ee_score')) : 10;
+    let streak = localStorage.getItem('ee_streak') ? parseInt(localStorage.getItem('ee_streak')) : 1;
     let currentMode = 'word';
+    let currentIndex = 0;
 
     const questionBanks = {
         word: [
@@ -457,29 +392,15 @@ textarea::placeholder{
         ]
     };
 
-    let currentIndex = 0;
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const localName = localStorage.getItem('ee_nickname');
-        const localEmail = localStorage.getItem('ee_email');
-        const localScore = localStorage.getItem('ee_score');
-        const localStreak = localStorage.getItem('ee_streak');
-        
-        if (localName) {
-            document.getElementById('user-display-tag').innerText = `👤 ${localName}`;
-        }
-        if (localScore) score = parseInt(localScore);
-        if (localStreak) streak = parseInt(localStreak);
-
-        updateStatsUI();
-        loadQuestion();
-        initSpeechRecognition();
-    });
-
-    function updateStatsUI() {
-        document.getElementById('score').innerText = score;
-        document.getElementById('streak').innerText = streak;
+    // 页面一加载直接初始化，不依赖任何等待事件
+    document.getElementById('score').innerText = score;
+    document.getElementById('streak').innerText = streak;
+    const localName = localStorage.getItem('ee_nickname');
+    if (localName) {
+        document.getElementById('user-display-tag').innerText = `👤 ${localName}`;
     }
+    loadQuestion();
+    initSpeechRecognition();
 
     function switchMode(mode) {
         currentMode = mode;
@@ -521,7 +442,7 @@ textarea::placeholder{
             score += 10;
             resultBox.className = "result feedback-success";
             resultBox.innerHTML = `✨ 回答完美！积分 +10`;
-            updateStatsUI();
+            document.getElementById('score').innerText = score;
             localStorage.setItem('ee_score', score);
             setTimeout(nextQuestion, 1500);
         } else {
@@ -562,7 +483,6 @@ textarea::placeholder{
         document.getElementById('login-modal').style.display = 'flex';
     }
     function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
-
     function openSurpriseModal() { document.getElementById('surprise-modal').style.display = 'flex'; }
     function closeSurpriseModal() { document.getElementById('surprise-modal').style.display = 'none'; }
 
@@ -573,25 +493,22 @@ textarea::placeholder{
             alert("⚠️ 请先输入正确的邮箱地址！");
             return;
         }
-
         const code = Math.floor(100000 + Math.random() * 900000).toString();
-
         const btn = document.getElementById('send-code-btn');
         btn.disabled = true;
         btn.innerText = "发送中...";
 
         try {
-            const { error } = await supabase
+            const { error } = await supabaseApp
                 .from('email_codes')
                 .insert([{ email: email, code: code, is_used: false }]);
 
             if (error) throw error;
-
             alert("✨ 验证码已成功写入 Supabase 数据库！\n（当前生成的 6 位验证码是: " + code + "）");
             startCountdown(btn);
         } catch (err) {
             console.error(err);
-            alert("❌ 写入数据库失败，请检查 Supabase 中是否存在名为 email_codes 的表以及 RLS 策略！");
+            alert("❌ 写入数据库失败，请检查 Supabase 中是否存在名为 email_codes 的表！");
             btn.disabled = false;
             btn.innerText = "获取验证码";
         }
@@ -623,7 +540,7 @@ textarea::placeholder{
 
         if (email) {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseApp
                     .from('email_codes')
                     .select('*')
                     .eq('email', email)
@@ -637,7 +554,7 @@ textarea::placeholder{
                     return;
                 }
 
-                await supabase
+                await supabaseApp
                     .from('email_codes')
                     .update({ is_used: true })
                     .eq('id', data[0].id);
@@ -670,7 +587,6 @@ textarea::placeholder{
         const recognition = new SpeechRecognition();
         recognition.lang = 'en-US';
         recognition.interimResults = false;
-
         let isHolding = false;
 
         const startRec = (e) => {
