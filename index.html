@@ -2,324 +2,181 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Easy English</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-<!-- 引入 Supabase JS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root{
-    --paper:#FFF9F0;
-    --ink:#403C3A;
-    --blue:#8CAFFF;
-    --pink:#F3A9BF;
-    --yellow:#FFE5A6;
-    --gray:#8E8986;
-}
-
-*{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-}
-
+*{box-sizing:border-box}
 body{
-    margin:0;
-    background:#FFF9F0;
-    font-family:"Quicksand","Microsoft YaHei",sans-serif;
-    color:var(--ink);
+margin:0;
+background:#FFF9F0;
+font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+color:#403C3A
 }
-
 .app{
-    max-width:430px;
-    margin:auto;
-    min-height:100vh;
-    padding:25px 22px;
+max-width:430px;
+margin:auto;
+padding:24px
 }
-
 .header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+display:flex;
+justify-content:space-between;
+align-items:center
 }
-
 .logo{
-    font-size:38px;
-    font-weight:700;
-    letter-spacing:-1px;
+font-size:34px;
+font-weight:900
 }
-
-.logo .blue{
-    color:var(--blue);
+.logo span{
+color:#8CAFFF
 }
-
-.logo:after{
-    content:"✦";
-    color:var(--pink);
-    font-size:26px;
-}
-
-.header-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-}
-
 .status{
-    background:#fff;
-    border:2px solid var(--ink);
-    border-radius:18px;
-    padding:8px 12px;
-    font-size:13px;
-    line-height:20px;
-    box-shadow:2px 3px 0 var(--ink);
-    text-align: right;
+background:#fff;
+border:2px solid #403C3A;
+border-radius:18px;
+padding:10px;
+font-size:13px;
+box-shadow:3px 3px 0 #403C3A
 }
-
-.install-badge {
-    background: var(--yellow);
-    border: 2px solid var(--ink);
-    border-radius: 12px;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 2px 2px 0 var(--ink);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+.install{
+margin-top:8px;
+background:#FFE5A6;
+border:2px solid #403C3A;
+border-radius:15px;
+padding:6px;
+font-size:13px;
+text-align:center
 }
-
-.study-card{
-    margin-top:25px;
-    background:#fff;
-    border:2px solid var(--ink);
-    border-radius:32px;
-    padding:25px;
-    position:relative;
-    box-shadow:5px 6px 0 var(--ink);
+.card{
+margin-top:25px;
+background:#fff;
+border:2px solid #403C3A;
+border-radius:30px;
+padding:25px;
+box-shadow:5px 5px 0 #403C3A
 }
-
-.study-card:before{
-    content:"";
-    position:absolute;
-    top:-15px;
-    left:45px;
-    width:90px;
-    height:25px;
-    background:var(--yellow);
-    transform:rotate(-5deg);
-    opacity:.8;
+.title{
+text-align:center;
+color:#777;
+margin-bottom:20px
 }
-
-.subtitle{
-    text-align:center;
-    color:#999;
-    font-size:16px;
-    margin-bottom:22px;
-}
-
 .tabs{
-    display:flex;
-    border:2px solid var(--ink);
-    border-radius:18px;
-    overflow:hidden;
-    margin-bottom:20px;
+display:flex;
+border:2px solid #403C3A;
+border-radius:18px;
+overflow:hidden
 }
-
-.tab{
-    flex:1;
-    border:0;
-    background:#FFF;
-    padding:13px;
-    font-size:15px;
-    font-weight:bold;
-    color:#999;
-    cursor: pointer;
+.tabs button{
+flex:1;
+padding:12px;
+border:0;
+background:#fff;
+font-weight:bold
 }
-
-.tab.active{
-    background:#EEF4FF;
-    color:#668FEA;
+.tabs .active{
+background:#EEF4FF;
+color:#668FEA
 }
-
-.category-badge {
-    display: inline-block;
-    background: var(--yellow);
-    border: 1.5px solid var(--ink);
-    border-radius: 10px;
-    padding: 2px 10px;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    box-shadow: 1px 1px 0 var(--ink);
+.category{
+margin:20px auto;
+width:max-content;
+background:#FFE5A6;
+border:2px solid #403C3A;
+border-radius:15px;
+padding:6px 14px;
+font-size:13px
 }
-
-.word-area{
-    text-align:center;
-    padding: 2px 0 10px 0;
+.question{
+text-align:center;
+font-size:28px;
+font-weight:bold;
+color:#8CAFFF;
+margin:25px 0 10px
 }
-
-.word{
-    margin:4px 0;
-    font-size:19px;
-    color:var(--blue);
-    font-weight:bold;
-    word-break: break-all;
-    line-height: 1.4;
+.synonyms{
+text-align:center;
+font-size:13px;
+color:#999;
+margin-bottom:25px
 }
-
-.hint{
-    margin-top:6px;
-    color:#999;
-    font-size:13px;
-}
-
-.input-wrap{
-    margin-top:14px;
-    position:relative;
-}
-
 textarea{
-    width:100%;
-    height:90px;
-    border:2px solid var(--ink);
-    border-radius:22px;
-    padding:14px 50px 14px 14px;
-    font-size:16px;
-    font-family:"Quicksand", sans-serif;
-    resize:none;
-    outline:none;
-    user-select: text;
+width:100%;
+height:90px;
+border:2px solid #403C3A;
+border-radius:20px;
+padding:15px;
+font-size:16px
 }
-
-textarea::placeholder{
-    color:#AAA;
+.buttons{
+display:flex;
+gap:10px;
+margin-top:15px
 }
-
-.voice{
-    position:absolute;
-    right:12px;
-    bottom:12px;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#FFEAF1;
-    border:2px solid var(--ink);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.1rem;
-    box-shadow: 1.5px 1.5px 0 var(--ink);
+.buttons button{
+flex:1;
+padding:12px;
+border-radius:18px;
+border:2px solid #403C3A;
+font-weight:bold;
+box-shadow:3px 3px 0 #403C3A
 }
-
-.voice.recording {
-    background: #F7B0C6;
-}
-
-.voice-tip {
-    font-size: 12px;
-    color: #999;
-    text-align: center;
-    margin-top: 6px;
-}
-
-.actions{
-    display:flex;
-    gap:12px;
-    margin-top:16px;
-}
-
-.btn{
-    border:2px solid var(--ink);
-    border-radius:20px;
-    padding:14px;
-    font-size:16px;
-    font-weight:bold;
-    box-shadow:3px 4px 0 var(--ink);
-    cursor: pointer;
-    font-family: inherit;
-}
-
-.submit{ flex:1; background:#F7B0C6; }
-.next{ background:#FFF1C9; }
-.answer{ background:#EEF4FF; }
-
-.bottom{
-    margin-top:25px;
-    background:white;
-    border:2px solid var(--ink);
-    border-radius:25px;
-    padding:16px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items: center;
-    box-shadow:3px 4px 0 var(--ink);
-}
-
-.bottom span { cursor: pointer; }
-
+.submit{background:#F3A9BF}
+.next{background:#FFE5A6}
+.answer{background:#EEF4FF}
 .result{
-    margin-top:14px;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    text-align:center;
-    font-size: 14px;
-    border-radius: 16px;
-    padding: 10px 12px;
+display:none;
+margin-top:20px;
+background:#EAF6EA;
+padding:15px;
+border-radius:18px;
+text-align:center
 }
-
-.feedback-success { background: #E8F5E9; color: #2E7D32; border: 1.5px solid var(--ink); display: flex; }
-.feedback-error { background: #FFEBEE; color: #C62828; border: 1.5px solid var(--ink); display: flex; }
-
-.answer-audio-btn {
-    background: #FFF;
-    border: 1.5px solid var(--ink);
-    border-radius: 8px;
-    padding: 2px 8px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-left: 8px;
-    box-shadow: 1px 1px 0 var(--ink);
+.audio{
+border:0;
+background:none;
+font-size:18px;
+cursor:pointer
 }
-
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(64, 60, 58, 0.6);
-    backdrop-filter: blur(3px);
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+footer{
+margin-top:25px;
+display:flex;
+justify-content:space-between
 }
-
-.modal-card {
-    background: #FFF9F0;
-    border: 2.5px solid var(--ink);
-    border-radius: 24px;
-    padding: 20px;
-    width: 88%;
-    max-width: 330px;
-    box-shadow: 5px 6px 0 var(--ink);
-    font-family: inherit;
+footer button{
+background:#fff;
+border:2px solid #403C3A;
+border-radius:18px;
+padding:12px
 }
-
-.modal-card h3 { margin: 0 0 10px 0; font-size: 1.4rem; text-align: center; }
-.modal-card label { display: block; font-size: 0.9rem; color: var(--gray); margin-top: 8px; }
-.modal-card input {
-    width: 100%;
-    padding: 9px 12px;
-    margin-top: 4px;
-    border: 2px solid var(--ink);
-    border-radius: 12px;
-    font-size: 0.95rem;
-    outline: none;
-    background: #FFF;
+.surprise{
+background:#FFF1C9
+}
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.4);
+justify-content:center;
+align-items:center
+}
+.modal-box{
+width:85%;
+background:#FFF9F0;
+border:2px solid #403C3A;
+border-radius:28px;
+padding:30px;
+text-align:center
+}
+.wechat{
+color:#07C160;
+font-size:22px;
+font-weight:bold
+}
+.modal-box button{
+width:100%;
+padding:14px;
+border-radius:18px;
+border:2px solid #403C3A;
+background:#F3A9BF
 }
 </style>
 </head>
@@ -327,354 +184,273 @@ textarea::placeholder{
 <body>
 
 <div class="app">
-    <div class="header">
-        <div class="logo">Easy <span class="blue">English</span></div>
-        <div class="header-right">
-            <div class="status">
-                🔥 连续<span id="streak">1</span>天 | ⭐ <span id="score">10</span>分
-            </div>
-            <div class="install-badge" onclick="openPwaModal()">📲 下载 App</div>
-        </div>
-    </div>
 
-    <div class="study-card">
-        <div class="subtitle">今天也学习一点点英语吧 ♡</div>
-
-        <div class="tabs">
-            <button class="tab active" id="tab-word" onclick="switchMode('word')">🔤 高频单词</button>
-            <button class="tab" id="tab-phrase" onclick="switchMode('phrase')">💬 常用短语</button>
-        </div>
-
-        <div class="word-area">
-            <div id="category-tag" class="category-badge">类别</div>
-            <div class="word" id="chinese-text">加载中...</div>
-            <div class="hint" id="hint-text">Hint: --</div>
-        </div>
-
-        <div class="input-wrap">
-            <textarea id="user-input" placeholder="请在此输入英文..." autocomplete="off"></textarea>
-            <button class="voice" id="voice-btn" title="长按说话">🎤</button>
-        </div>
-        <div class="voice-tip" id="voice-tip">长按麦克风可语音输入英文</div>
-
-        <div class="actions">
-            <button class="btn submit" onclick="checkAnswer()">✍️ 提交答案</button>
-            <button class="btn next" onclick="nextQuestion()">🍃 换题</button>
-            <button class="btn answer" onclick="showAnswer()">👀 答案</button>
-        </div>
-
-        <div class="result" id="result-box"></div>
-    </div>
-
-    <div class="bottom">
-        <span onclick="openSurpriseModal()">✨ 点击有惊喜</span>
-        <span onclick="openLoginModal()" id="user-display-tag">👤 flower</span>
-    </div>
+<div class="header">
+<div class="logo">Easy <span>English</span></div>
+<div>
+<div class="status">🔥 连续打卡<br>⭐120</div>
+<div class="install">📲 下载App</div>
+</div>
 </div>
 
-<!-- PWA 下载引导弹窗 -->
-<div id="pwa-modal" class="modal-overlay">
-    <div class="modal-card" style="text-align: center;">
-        <h3>📲 添加到手机桌面</h3>
-        <p style="font-size: 0.95rem; color: var(--ink); line-height: 1.6; margin: 10px 0;">
-            为了获得更好的沉浸式学习体验，建议将本应用下载/添加到手机桌面作为 App 使用！
-        </p>
-        <div style="background: #FFF; border: 2px solid var(--ink); border-radius: 14px; padding: 10px; font-size: 0.85rem; color: var(--gray); margin-bottom: 15px; text-align: left;">
-            💡 <b>操作方法：</b><br>
-            • <b>iPhone (Safari)</b>：点击下方“分享”按钮，选择 <b>“添加到主屏幕”</b>。<br>
-            • <b>安卓 (Chrome)</b>：点击右上角菜单，选择 <b>“安装应用”</b> 或 <b>“添加到主屏幕”</b>。
-        </div>
-        <button class="btn submit" style="width: 100%; padding: 10px;" onclick="closePwaModal()">我知道啦</button>
-    </div>
+
+<div class="card">
+
+<div class="title">
+每天3分钟，让英语偷偷长出来 🌱
 </div>
 
-<!-- 登录/绑定弹窗 -->
-<div id="login-modal" class="modal-overlay">
-    <div class="modal-card">
-        <h3>修改账号与邮箱</h3>
-        <label>专属昵称</label>
-        <input type="text" id="reg-nickname" placeholder="例如：flower">
-        <label>绑定邮箱</label>
-        <input type="email" id="reg-email" placeholder="例如：your_email@domain.com">
-        <div style="margin-top: 14px;">
-            <button class="btn submit" id="send-link-btn" style="width: 100%; padding: 10px;" onclick="sendLoginLink()">发送登录邮件</button>
-        </div>
-        <div style="margin-top: 10px;">
-            <button class="btn next" style="width: 100%; padding: 10px;" onclick="closeLoginModal()">关闭</button>
-        </div>
-    </div>
+<div class="tabs">
+<button id="wordTab" class="active">🔤 单词</button>
+<button id="phraseTab">💬 短语</button>
 </div>
 
-<!-- 惊喜弹窗 -->
-<div id="surprise-modal" class="modal-overlay">
-    <div class="modal-card">
-        <div style="background: #FFF; border: 2.5px solid var(--ink); border-radius: 16px; padding: 14px; text-align: center; margin-top: 5px; box-shadow: 2px 2px 0 var(--ink);">
-            <div style="font-weight: 700; color: #F7B0C6; margin-bottom: 6px; font-size: 1.05rem;">联系美丽且智慧的开发者</div>
-            <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 4px;">微信：</div>
-            <span style="color: #2E7D32; font-size: 1.05rem; word-break: break-all; font-weight: 700;">vildbloom</span>
-        </div>
-        <button class="btn submit" style="width: 100%; margin-top: 16px; padding: 10px;" onclick="closeSurpriseModal()">我倒是要看看</button>
-    </div>
+<div id="category" class="category"></div>
+
+<div id="question" class="question"></div>
+
+<div id="synonyms" class="synonyms"></div>
+
+<textarea id="input" placeholder="输入英文..."></textarea>
+
+<div class="buttons">
+<button class="submit" onclick="check()">✍️提交</button>
+<button class="next" onclick="next()">🍃换题</button>
+<button class="answer" onclick="answer()">👀答案</button>
 </div>
+
+<div id="result" class="result"></div>
+
+</div>
+
+
+<footer>
+<button class="surprise" onclick="openPop()">✨ 点击有惊喜</button>
+<button>👤 我的</button>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal">
+<div class="modal-box">
+<p>👀 偷偷认识美丽且智慧的开发者</p>
+<p>她正在努力让英语有趣一点儿 🤣</p>
+<p>
+🌱 微信：
+<br>
+<span class="wechat">vildbloom</span>
+</p>
+<button onclick="closePop()">我倒是要看看</button>
+</div>
+</div>
+
 
 <script>
-    const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
-    const supabaseApp = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let score = localStorage.getItem('ee_score') ? parseInt(localStorage.getItem('ee_score')) : 10;
-    let streak = localStorage.getItem('ee_streak') ? parseInt(localStorage.getItem('ee_streak')) : 1;
-    let currentMode = 'word';
-    let currentItem = null;
+const words=[
+{
+id:1,
+category:"✈️旅行",
+question:"登机口",
+answer:"boarding gate",
+phonetic:"/ˈbɔːrdɪŋ ɡeɪt/",
+synonyms:["gate","boarding area"]
+},
+{
+id:2,
+category:"💼商务工作",
+question:"截止日期",
+answer:"deadline",
+phonetic:"/ˈdedlaɪn/",
+synonyms:["due date","time limit"]
+},
+{
+id:3,
+category:"🎵音乐文化",
+question:"歌词",
+answer:"lyrics",
+phonetic:"/ˈlɪrɪks/",
+synonyms:["words","text"]
+},
+{
+id:4,
+category:"☕日常口语",
+question:"尴尬的",
+answer:"awkward",
+phonetic:"/ˈɔːkwərd/",
+synonyms:["embarrassing","uncomfortable"]
+}
+];
 
-    // 核心题库：全面覆盖高频单词与多场景实用整句（口语、商务、旅行、日常）
-    const questionBanks = {
-        word: [
-            { category: "💼 职场商务", chinese: "获得、取得；获得声誉", english: "acquire", hint: "Hint: a _ _ _ _ _ e" },
-            { category: "🧠 认知思维", chinese: "适应、改编", english: "adapt", hint: "Hint: a _ _ _ t" },
-            { category: "🛋️ 日常生活", chinese: "充足的、足够的", english: "adequate", hint: "Hint: a _ _ q _ _ _ e" },
-            { category: "💭 情感心理", chinese: "焦虑的、渴望的", english: "anxious", hint: "Hint: a _ _ _ o _ s" },
-            { category: "💻 科技创新", chinese: "人工的、人造的", english: "artificial", hint: "Hint: a _ _ _ f _ _ _ a l" },
-            { category: "📚 学术研究", chinese: "评估、评价", english: "assess", hint: "Hint: a _ _ _ s s" },
-            { category: "📊 社会经济", chinese: "假设、前提", english: "assumption", hint: "Hint: a _ _ _ m p t _ _ n" },
-            { category: "🎯 职场竞争", chinese: "获得、达到（目标）", english: "attain", hint: "Hint: a _ _ _ i n" },
-            { category: "🛒 日常生活", chinese: "可获得的、能买到的", english: "available", hint: "Hint: a _ _ i l _ _ l e" },
-            { category: "⚖️ 行为动词", chinese: "受益于、对...有益", english: "benefit", hint: "Hint: b _ _ e _ i t" }
-        ],
-        phrase: [
-            { category: "☕ 日常社交", chinese: "你觉得今天的午餐怎么样？", english: "What do you think of today's lunch?", hint: "Hint: What do you think of today's lunch?" },
-            { category: "✈️ 机场旅行", chinese: "请问去登机口怎么走？", english: "Excuse me, how can I get to the boarding gate?", hint: "Hint: Excuse me, how can I get to ..." },
-            { category: "💼 商务办公", chinese: "我们能把会议推迟到明天下午吗？", english: "Could we reschedule the meeting to tomorrow afternoon?", hint: "Hint: Could we reschedule the meeting ..." },
-            { category: "🏨 酒店入住", chinese: "我想办理入住，这是我的预订信息。", english: "I'd like to check in, and here is my reservation.", hint: "Hint: I'd like to check in, and here is ..." },
-            { category: "☕ 日常闲聊", chinese: "最近有什么新鲜事吗？", english: "Is there anything new recently?", hint: "Hint: Is there anything new ..." },
-            { category: "🛒 购物消费", chinese: "请问这件衣服有打折吗？", english: "Is this item on sale?", hint: "Hint: Is this item on sale?" },
-            { category: "💼 商务沟通", chinese: "期待与您的进一步合作。", english: "Looking forward to further cooperation with you.", hint: "Hint: Looking forward to further cooperation ..." },
-            { category: "🗺️ 问路出行", chinese: "请问附近哪里有便利店？", english: "Where is the nearest convenience store?", hint: "Hint: Where is the nearest convenience store?" },
-            { category: "💬 日常表达", chinese: "这完全取决于你的决定。", english: "It totally depends on you.", hint: "Hint: It totally depends on you." },
-            { category: "✈️ 旅行求助", chinese: "能帮我拍张照片吗？", english: "Could you please take a picture for me?", hint: "Hint: Could you please take a picture ..." }
-        ]
-    };
 
-    document.getElementById('score').innerText = score;
-    document.getElementById('streak').innerText = streak;
+const phrases=[
+{
+id:101,
+category:"✈️旅行",
+question:"请问去机场怎么走？",
+answer:"How can I get to the airport?"
+},
+{
+id:102,
+category:"💼商务工作",
+question:"我们之后同步一下",
+answer:"Let's sync up later."
+},
+{
+id:103,
+category:"❤️社交",
+question:"最近怎么样？",
+answer:"How have you been lately?"
+}
+];
 
-    const localName = localStorage.getItem('ee_nickname');
-    if (localName) {
-        document.getElementById('user-display-tag').innerText = `👤 ${localName}`;
-    }
 
-    checkDailyPwaPrompt();
-    checkAuthSession();
-    loadQuestion();
-    initSpeechRecognition();
+let type="word";
+let current;
+let used=JSON.parse(localStorage.used||"[]");
 
-    function checkDailyPwaPrompt() {
-        const today = new Date().toDateString();
-        const lastPromptDate = localStorage.getItem('ee_last_pwa_prompt');
-        
-        if (lastPromptDate !== today) {
-            setTimeout(() => {
-                openPwaModal();
-            }, 600);
-            localStorage.setItem('ee_last_pwa_prompt', today);
-        }
-    }
 
-    function openPwaModal() { document.getElementById('pwa-modal').style.display = 'flex'; }
-    function closePwaModal() { document.getElementById('pwa-modal').style.display = 'none'; }
+function pool(){
+return type==="word"?words:phrases
+}
 
-    async function checkAuthSession() {
-        const { data: { session } } = await supabaseApp.auth.getSession();
-        if (session && session.user) {
-            const email = session.user.email;
-            localStorage.setItem('ee_email', email);
-            const savedNickname = localStorage.getItem('ee_nickname') || email.split('@')[0];
-            document.getElementById('user-display-tag').innerText = `👤 ${savedNickname}`;
-        }
-    }
 
-    function switchMode(mode) {
-        currentMode = mode;
-        document.getElementById('tab-word').className = mode === 'word' ? 'tab active' : 'tab';
-        document.getElementById('tab-phrase').className = mode === 'phrase' ? 'tab active' : 'tab';
-        loadQuestion();
-    }
+function next(){
 
-    function loadQuestion() {
-        const list = questionBanks[currentMode];
-        if (!list || list.length === 0) return;
-        
-        let randomIndex;
-        do {
-            randomIndex = Math.floor(Math.random() * list.length);
-        } while (list.length > 1 && currentItem && list[randomIndex].english === currentItem.english);
+let list=pool().filter(x=>!used.includes(x.id));
 
-        currentItem = list[randomIndex];
-        
-        document.getElementById("category-tag").innerText = currentItem.category;
-        document.getElementById("chinese-text").innerText = currentItem.chinese;
-        document.getElementById("hint-text").innerText = currentItem.hint;
-        document.getElementById("user-input").value = "";
-        
-        const resultBox = document.getElementById("result-box");
-        resultBox.innerHTML = "";
-        resultBox.className = "result";
-    }
+if(!list.length){
+used=[];
+list=pool()
+}
 
-    function checkAnswer() {
-        if (!currentItem) return;
-        const userVal = document.getElementById("user-input").value.trim().toLowerCase();
-        const cleanUser = userVal.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").replace(/\s+/g," ");
-        const target = currentItem.english.toLowerCase();
-        const cleanTarget = target.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g,"").replace(/\s+/g," ");
-        const resultBox = document.getElementById("result-box");
+current=list[Math.floor(Math.random()*list.length)];
 
-        if (!cleanUser) {
-            resultBox.className = "result feedback-error";
-            resultBox.innerHTML = `⚠️ 请先输入或说出英文翻译`;
-            return;
-        }
+used.push(current.id);
 
-        if (cleanUser === cleanTarget || (cleanUser.length >= Math.floor(cleanTarget.length * 0.7) && cleanTarget.includes(cleanUser))) {
-            score += 10;
-            resultBox.className = "result feedback-success";
-            resultBox.innerHTML = `✨ 翻译完美！积分 +10`;
-            document.getElementById('score').innerText = score;
-            localStorage.setItem('ee_score', score);
-            setTimeout(nextQuestion, 1800);
-        } else {
-            resultBox.className = "result feedback-error";
-            resultBox.innerHTML = `💡 参考译文: ${currentItem.english} <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(currentItem.english)}')">🔊 朗读</button>`;
-        }
-    }
+localStorage.used=JSON.stringify(used);
 
-    function showAnswer() {
-        if (!currentItem) return;
-        const resultBox = document.getElementById("result-box");
-        resultBox.className = "result feedback-error";
-        resultBox.innerHTML = `💡 参考译文: ${currentItem.english} <button class="answer-audio-btn" onclick="playAudio('${encodeURIComponent(currentItem.english)}')">🔊 朗读</button>`;
-    }
+render();
 
-    function nextQuestion() {
-        loadQuestion();
-    }
+}
 
-    function playAudio(text) {
-        if (!('speechSynthesis' in window)) return;
-        window.speechSynthesis.cancel();
-        const decodedText = decodeURIComponent(text);
-        const utterance = new SpeechSynthesisUtterance(decodedText);
-        utterance.lang = 'en-US';
-        window.speechSynthesis.speak(utterance);
-    }
 
-    function openLoginModal() {
-        const currentName = document.getElementById('user-display-tag').innerText.replace('👤 ', '');
-        if (currentName !== 'flower') {
-            document.getElementById('reg-nickname').value = currentName;
-        }
-        const currentEmail = localStorage.getItem('ee_email');
-        if (currentEmail) {
-            document.getElementById('reg-email').value = currentEmail;
-        }
-        document.getElementById('login-modal').style.display = 'flex';
-    }
-    function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
-    function openSurpriseModal() { document.getElementById('surprise-modal').style.display = 'flex'; }
-    function closeSurpriseModal() { document.getElementById('surprise-modal').style.display = 'none'; }
+function render(){
 
-    async function sendLoginLink() {
-        const nickname = document.getElementById('reg-nickname').value.trim() || "flower";
-        const email = document.getElementById('reg-email').value.trim();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
-        if (!emailRegex.test(email)) {
-            alert("⚠️ 请输入正确的邮箱地址！");
-            return;
-        }
+category.innerHTML=current.category;
 
-        localStorage.setItem('ee_nickname', nickname);
-        document.getElementById('user-display-tag').innerText = `👤 ${nickname}`;
+question.innerHTML=current.question;
 
-        const btn = document.getElementById('send-link-btn');
-        btn.disabled = true;
-        btn.innerText = "发送中...";
+synonyms.innerHTML=
+type==="word"
+?"近义词："+current.synonyms.join(" · ")
+:"";
 
-        try {
-            const { error } = await supabaseApp.auth.signInWithOtp({
-                email: email,
-                options: {
-                    emailRedirectTo: window.location.origin
-                }
-            });
+input.value="";
 
-            if (error) throw error;
-            alert("✨ 登录邮件已发送！请前往您的邮箱查收，并点击邮件中的链接完成绑定与登录。");
-            closeLoginModal();
-        } catch (err) {
-            console.error(err);
-            alert("❌ 发送失败：" + (err.message || "请检查网络或配置"));
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "发送登录邮件";
-        }
-    }
+result.style.display="none";
 
-    function initSpeechRecognition() {
-        const btn = document.getElementById('voice-btn');
-        const tip = document.getElementById('voice-tip');
-        const inputArea = document.getElementById('user-input');
+}
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            tip.innerText = "当前浏览器暂不支持语音识别";
-            return;
-        }
 
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.interimResults = false;
-        let isHolding = false;
+wordTab.onclick=()=>{
 
-        const startRec = (e) => {
-            e.preventDefault();
-            if (isHolding) return;
-            isHolding = true;
-            btn.classList.add('recording');
-            tip.innerText = "正在聆听，请说英文...";
-            try { recognition.start(); } catch(err) {}
-        };
+type="word";
 
-        const stopRec = (e) => {
-            e.preventDefault();
-            if (!isHolding) return;
-            isHolding = false;
-            btn.classList.remove('recording');
-            tip.innerText = "识别中...";
-            try { recognition.stop(); } catch(err) {}
-        };
+wordTab.classList.add("active");
 
-        btn.addEventListener('touchstart', startRec, {passive: false});
-        btn.addEventListener('touchend', stopRec, {passive: false});
-        btn.addEventListener('mousedown', startRec);
-        btn.addEventListener('mouseup', stopRec);
+phraseTab.classList.remove("active");
 
-        recognition.onresult = (event) => {
-            inputArea.value = event.results[0][0].transcript;
-            tip.innerText = "识别成功！点击提交查看";
-        };
+next();
 
-        recognition.onerror = () => {
-            tip.innerText = "未识别到语音或麦克风未授权";
-            btn.classList.remove('recording');
-            isHolding = false;
-        };
+}
 
-        recognition.onend = () => {
-            btn.classList.remove('recording');
-            isHolding = false;
-        };
-    }
+
+phraseTab.onclick=()=>{
+
+type="phrase";
+
+phraseTab.classList.add("active");
+
+wordTab.classList.remove("active");
+
+next();
+
+}
+
+
+
+function answer(){
+
+result.style.display="block";
+
+if(type==="word"){
+
+result.innerHTML=
+`
+<b>${current.answer}</b>
+&nbsp;
+${current.phonetic}
+<button class="audio" onclick="speak('${current.answer}')">🔊</button>
+`;
+
+}else{
+
+result.innerHTML=
+`<b>${current.answer}</b>`;
+
+}
+
+}
+
+
+
+function check(){
+
+let v=input.value.toLowerCase();
+
+result.style.display="block";
+
+result.innerHTML=
+current.answer.toLowerCase().includes(v)
+?"✨ Nice！"
+:"💡 再试试看";
+
+}
+
+
+
+function speak(t){
+
+let u=new SpeechSynthesisUtterance(t);
+
+u.lang="en-US";
+
+u.rate=.85;
+
+speechSynthesis.speak(u);
+
+}
+
+
+
+function openPop(){
+
+modal.style.display="flex";
+
+}
+
+
+function closePop(){
+
+modal.style.display="none";
+
+}
+
+
+next();
+
 </script>
 
 </body>
