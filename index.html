@@ -330,8 +330,6 @@ window.onload = function() {
 
 let type = "word"; // 'word' 或 'phrase'
 let questionPool = []; 
-let shuffledIndices = []; // 洗牌后的索引数组
-let pointer = 0;          // 当前指针
 let current = null;
 
 async function initQuestionPool() {
@@ -354,8 +352,6 @@ async function initQuestionPool() {
             return;
         }
 
-        // 核心：彻底抛弃旧缓存，每次进来直接全新纯随机洗牌！
-        shuffleAndReset();
         next();
     } catch (err) {
         console.error(err);
@@ -364,27 +360,35 @@ async function initQuestionPool() {
     }
 }
 
-// Fisher-Yates 完美洗牌算法
-function shuffleAndReset() {
-    shuffledIndices = questionPool.map((_, i) => i);
-    for (let i = shuffledIndices.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
-    }
-    pointer = 0;
-}
-
+// 核心升级：基于 LocalStorage 记录已做过的题目 ID，确保整轮 100% 不重复！
 function next(){
     if (questionPool.length === 0) return;
 
-    // 如果指针走完了整轮，自动重新洗牌，绝不卡死也不重复
-    if (pointer >= shuffledIndices.length) {
-        shuffleAndReset();
+    let historyKey = `ee_done_ids_${type}`;
+    let doneIds = [];
+    try {
+        doneIds = JSON.parse(localStorage.getItem(historyKey)) || [];
+    } catch(e) {
+        doneIds = [];
     }
 
-    let targetIdx = shuffledIndices[pointer];
-    current = questionPool[targetIdx];
-    pointer++;
+    // 筛选出还没做过的题目
+    let available = questionPool.filter(q => !doneIds.includes(q.id));
+
+    // 如果全部做完了，给个温馨提示并清空历史重新开始新一轮循环
+    if (available.length === 0) {
+        localStorage.removeItem(historyKey);
+        available = questionPool;
+        // 可以加句提示或者直接进入下一轮
+    }
+
+    // 在剩余没做过的题目里随机抽一个
+    let randomIndex = Math.floor(Math.random() * available.length);
+    current = available[randomIndex];
+
+    // 把当前题目 ID 记入已做历史
+    doneIds.push(current.id);
+    localStorage.setItem(historyKey, JSON.stringify(doneIds));
 
     render();
 }
