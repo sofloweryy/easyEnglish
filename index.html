@@ -246,9 +246,9 @@ text-align:left;
 <button id="phraseTab">💬 短语库</button>
 </div>
 
-<div id="category" class="category">加载中...</div>
+<div id="category" class="category">✨ 准备中</div>
 
-<div id="question" class="question">正在从云端同步海量题库...</div>
+<div id="question" class="question">正在把好玩的题目打包装箱... 🎁</div>
 
 <div id="synonyms" class="synonyms"></div>
 
@@ -270,7 +270,7 @@ text-align:left;
 
 <footer>
 <button class="surprise" onclick="openPop()">✨ 点击有惊喜</button>
-<button onclick="openMyPop()" id="myBtn">👤 我的</button>
+<button onclick="openMyPop()" id="myBtn">👤 flower</button>
 </footer>
 
 </div>
@@ -325,7 +325,6 @@ window.onload = function() {
     if(savedName){
         document.getElementById('myBtn').innerText = `👤 ${savedName}`;
     }
-    // 初始化加载云端海量题库
     initQuestionPool();
 }
 
@@ -335,9 +334,9 @@ let currentQueue = [];
 let currentIndex = 0;
 let current = null;
 
-// 异步加载 Supabase 题库
 async function initQuestionPool() {
-    document.getElementById('question').innerHTML = "正在同步云端海量题库...";
+    document.getElementById('category').innerHTML = "✨ 准备中";
+    document.getElementById('question').innerHTML = "正在把好玩的题目打包装箱... 🎁";
     
     try {
         const { data, error } = await supabaseApp
@@ -350,7 +349,8 @@ async function initQuestionPool() {
         questionPool = data || [];
         
         if (questionPool.length === 0) {
-            document.getElementById('question').innerHTML = "⚠️ 数据库暂无数据，请先执行 SQL 初始化脚本";
+            document.getElementById('category').innerHTML = "💡 提示";
+            document.getElementById('question').innerHTML = "题库正在赶来的路上，请稍候... 🌱";
             return;
         }
 
@@ -358,11 +358,11 @@ async function initQuestionPool() {
         next();
     } catch (err) {
         console.error(err);
-        document.getElementById('question').innerHTML = "❌ 题库加载失败，请检查网络连接";
+        document.getElementById('category').innerHTML = "⚠️ 网络开小差了";
+        document.getElementById('question').innerHTML = "刷新一下页面重新连接试试看 🍃";
     }
 }
 
-// 🛡️ 洗牌引擎：全量数据打乱并持久化，保证一轮内绝对不重复
 function initQueue() {
     let storageKey = (type === "word") ? "ee_cloud_queue_word" : "ee_cloud_queue_phrase";
     
@@ -413,7 +413,7 @@ function next(){
     let storageKey = (type === "word") ? "ee_cloud_queue_word" : "ee_cloud_queue_phrase";
     
     if (currentIndex >= currentQueue.length) {
-        initQueue(); // 几万道题全部刷完一轮后自动重新洗牌循环
+        initQueue();
     } else {
         localStorage.setItem(storageKey, JSON.stringify({
             queue: currentQueue,
@@ -531,7 +531,6 @@ async function sendSignInEmail(){
     }
 }
 
-// 长按语音输入逻辑
 const voiceBtn = document.getElementById('voiceBtn');
 let recognition = null;
 if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
