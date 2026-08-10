@@ -246,9 +246,9 @@ text-align:left;
 <button id="phraseTab">💬 短语库</button>
 </div>
 
-<div id="category" class="category"></div>
+<div id="category" class="category">加载中...</div>
 
-<div id="question" class="question"></div>
+<div id="question" class="question">正在从云端同步海量题库...</div>
 
 <div id="synonyms" class="synonyms"></div>
 
@@ -325,109 +325,48 @@ window.onload = function() {
     if(savedName){
         document.getElementById('myBtn').innerText = `👤 ${savedName}`;
     }
+    // 初始化加载云端海量题库
+    initQuestionPool();
 }
 
-// -------------------------------------------------------------
-// 🚀 核心根治方案：构建包含数百个高频母题、通过多维矩阵衍生出上千条题目的超大题库
-// -------------------------------------------------------------
-function buildHugePool(type) {
-    let list = [];
-    const categories = ["✈️旅行", "💼商务工作", "🎵音乐文化", "☕️日常口语", "❤️社交", "💡科技生活", "🎨艺术美学"];
-    
-    if (type === "word") {
-        const rawWords = [
-            {q: "登机口", a: "boarding gate", p: "/ˈbɔːrdɪŋ ɡeɪt/", s: ["gate", "boarding area"]},
-            {q: "截止日期", a: "deadline", p: "/ˈdedlaɪn/", s: ["due date", "time limit"]},
-            {q: "歌词", a: "lyrics", p: "/ˈlɪrɪks/", s: ["words", "text"]},
-            {q: "尴尬的", a: "awkward", p: "/ˈɔːkwərd/", s: ["embarrassing", "uncomfortable"]},
-            {q: "咖啡因", a: "caffeine", p: "/ˈkæfiːn/", s: ["coffee essence"]},
-            {q: "行李提取处", a: "baggage claim", p: "/ˈbæɡɪdʒ kleɪm/", s: ["luggage pickup"]},
-            {q: "头脑风暴", a: "brainstorming", p: "/ˈbreɪnˌstɔːrmɪŋ/", s: ["idea generation"]},
-            {q: "流媒体", a: "streaming media", p: "/ˈstriːmɪŋ ˈmiːdiə/", s: ["digital broadcast"]},
-            {q: "灵魂伴侣", a: "soulmate", p: "/ˈsəʊlmeɪt/", s: ["kindred spirit"]},
-            {q: "拖延症", a: "procrastination", p: "/prəˌkræstɪˈneɪʃn/", s: ["delaying tactics"]},
-            {q: "人工智能", a: "artificial intelligence", p: "/ˌɑːrtɪfɪʃl ɪnˈtelɪdʒəns/", s: ["AI"]},
-            {q: "创新", a: "innovation", p: "/ˌɪnəˈveɪʃn/", s: ["novelty", "creativity"]},
-            {q: "灵感", a: "inspiration", p: "/ˌɪnspəˈreɪʃn/", s: ["flash", "muse"]},
-            {q: "专注", a: "concentration", p: "/ˌkɒnsnˈtreɪʃn/", s: ["focus", "attention"]},
-            {q: "和谐", a: "harmony", p: "/ˈhɑːməni/", s: ["balance", "accord"]},
-            {q: "独立音乐", a: "indie music", p: "/ˈɪndi ˈmjuːzɪk/", s: ["alternative music"]},
-            {q: "黑胶唱片", a: "vinyl record", p: "/ˈvaɪnl ˈrekərd/", s: ["LP"]}
-        ];
-
-        let id = 1;
-        const prefixes = ["", "高级", "核心", "现代", "专业", "热门", "经典", "日常"];
-        const preEn = ["", "advanced ", "core ", "modern ", "pro ", "popular ", "classic ", "daily "];
-
-        prefixes.forEach((pref, pIdx) => {
-            rawWords.forEach((item, wIdx) => {
-                list.push({
-                    id: id++,
-                    category: categories[(pIdx + wIdx) % categories.length],
-                    question: pref + item.q,
-                    answer: preEn[pIdx] + item.a,
-                    phonetic: item.p,
-                    synonyms: item.s
-                });
-            });
-        });
-    } else {
-        const rawPhrases = [
-            {q: "请问去机场怎么走？", a: "How can I get to the airport?"},
-            {q: "我们之后同步一下进展。", a: "Let's sync up later."},
-            {q: "你最近过得怎么样？", a: "How have you been lately?"},
-            {q: "今天天气真不错。", a: "The weather is really nice today."},
-            {q: "我们能把会议推迟到明天吗？", a: "Could we reschedule the meeting to tomorrow?"},
-            {q: "这首歌太洗脑了。", a: "This song is so catchy."},
-            {q: "我有点累了想休息。", a: "I'm kind of tired and want to rest."},
-            {q: "有什么我可以帮您的吗？", a: "Is there anything I can help you with?"},
-            {q: "让我们开始吧！", a: "Let's get started!"},
-            {q: "保持联系。", a: "Keep in touch."},
-            {q: "这太不可思议了！", a: "This is unbelievable!"},
-            {q: "我想预定一张票。", a: "I would like to book a ticket."},
-            {q: "很高兴认识你。", a: "Nice to meet you."},
-            {q: "周末过得怎么样？", a: "How was your weekend?"}
-        ];
-
-        let id = 10001;
-        const contexts = ["（职场版）", "（日常版）", "（商务版）", "（轻松版）", "（交流版）"];
-        const suffixes = ["", " please.", " right now.", " indeed.", " for sure."];
-
-        contexts.forEach((ctx, cIdx) => {
-            rawPhrases.forEach((item, pIdx) => {
-                let suf = suffixes[(cIdx + pIdx) % suffixes.length];
-                let cleanA = item.a.replace(/[?!.]/g, '');
-                list.push({
-                    id: id++,
-                    category: categories[(cIdx + pIdx) % categories.length],
-                    question: item.q.replace(/[？!.]/g, '') + ctx + "？",
-                    answer: cleanA + suf
-                });
-            });
-        });
-    }
-    return list;
-}
-
-const words = buildHugePool("word");
-const phrases = buildHugePool("phrase");
-
-let type = "word";
-let current = null;
-let currentQueue = [];
+let type = "word"; // 'word' 或 'phrase'
+let questionPool = []; 
+let currentQueue = []; 
 let currentIndex = 0;
+let current = null;
 
-function pool(){
-    return type === "word" ? words : phrases;
+// 异步加载 Supabase 题库
+async function initQuestionPool() {
+    document.getElementById('question').innerHTML = "正在同步云端海量题库...";
+    
+    try {
+        const { data, error } = await supabaseApp
+            .from('questions')
+            .select('*')
+            .eq('type', type);
+
+        if (error) throw error;
+
+        questionPool = data || [];
+        
+        if (questionPool.length === 0) {
+            document.getElementById('question').innerHTML = "⚠️ 数据库暂无数据，请先执行 SQL 初始化脚本";
+            return;
+        }
+
+        initQueue();
+        next();
+    } catch (err) {
+        console.error(err);
+        document.getElementById('question').innerHTML = "❌ 题库加载失败，请检查网络连接";
+    }
 }
 
-// 🛡️ 核心洗牌与防重复引擎：使用 Fisher-Yates 算法对整副题库进行洗牌
+// 🛡️ 洗牌引擎：全量数据打乱并持久化，保证一轮内绝对不重复
 function initQueue() {
-    let currentPool = pool();
-    let storageKey = (type === "word") ? "ee_queue_v4_word" : "ee_queue_v4_phrase";
+    let storageKey = (type === "word") ? "ee_cloud_queue_word" : "ee_cloud_queue_phrase";
     
-    // 生成索引数组并彻底打乱
-    let indices = currentPool.map((_, i) => i);
+    let indices = questionPool.map((_, i) => i);
     for (let i = indices.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [indices[i], indices[j]] = [indices[j], indices[i]];
@@ -436,7 +375,6 @@ function initQueue() {
     currentQueue = indices;
     currentIndex = 0;
     
-    // 持久化保存洗牌后的队列和当前进度
     localStorage.setItem(storageKey, JSON.stringify({
         queue: currentQueue,
         index: currentIndex
@@ -444,7 +382,7 @@ function initQueue() {
 }
 
 function loadSavedQueue() {
-    let storageKey = (type === "word") ? "ee_queue_v4_word" : "ee_queue_v4_phrase";
+    let storageKey = (type === "word") ? "ee_cloud_queue_word" : "ee_cloud_queue_phrase";
     let saved = localStorage.getItem(storageKey);
     
     if (saved) {
@@ -453,7 +391,6 @@ function loadSavedQueue() {
             currentQueue = data.queue;
             currentIndex = data.index;
             
-            // 如果队列损坏或者已经全部刷完，则重新洗牌
             if (!currentQueue || !Array.isArray(currentQueue) || currentIndex >= currentQueue.length) {
                 initQueue();
             }
@@ -466,19 +403,17 @@ function loadSavedQueue() {
 }
 
 function next(){
+    if (questionPool.length === 0) return;
     loadSavedQueue();
     
-    let currentPool = pool();
     let targetIdx = currentQueue[currentIndex];
-    current = currentPool[targetIdx];
+    current = questionPool[targetIdx];
 
-    // 指针自增并保存
     currentIndex++;
-    let storageKey = (type === "word") ? "ee_queue_v4_word" : "ee_queue_v4_phrase";
+    let storageKey = (type === "word") ? "ee_cloud_queue_word" : "ee_cloud_queue_phrase";
     
     if (currentIndex >= currentQueue.length) {
-        // 整轮几千道题全部刷完一轮后，自动无感重新洗牌，开启新的一轮循环！
-        initQueue();
+        initQueue(); // 几万道题全部刷完一轮后自动重新洗牌循环
     } else {
         localStorage.setItem(storageKey, JSON.stringify({
             queue: currentQueue,
@@ -491,30 +426,36 @@ function next(){
 
 function render(){
     if (!current) return;
-    category.innerHTML = current.category;
-    question.innerHTML = current.question;
-    synonyms.innerHTML = (type === "word" && current.synonyms ? "近义词：" + current.synonyms.join(" · ") : "");
-    input.value = "";
-    result.style.display = "none";
+    document.getElementById('category').innerHTML = current.category;
+    document.getElementById('question').innerHTML = current.question;
+    
+    let synHtml = "";
+    if (type === "word" && current.synonyms && current.synonyms.length > 0) {
+        synHtml = "近义词：" + current.synonyms.join(" · ");
+    }
+    document.getElementById('synonyms').innerHTML = synHtml;
+    document.getElementById('input').value = "";
+    document.getElementById('result').style.display = "none";
 }
 
-wordTab.onclick = () => {
+wordTab.onclick = async () => {
     if(type === "word") return;
     type = "word";
     wordTab.classList.add("active");
     phraseTab.classList.remove("active");
-    next();
+    await initQuestionPool();
 }
 
-phraseTab.onclick = () => {
+phraseTab.onclick = async () => {
     if(type === "phrase") return;
     type = "phrase";
     phraseTab.classList.add("active");
     wordTab.classList.remove("active");
-    next();
+    await initQuestionPool();
 }
 
 function answer(){
+    let result = document.getElementById('result');
     result.style.display = "block";
     if(type === "word"){
         result.innerHTML = `<b>${current.answer}</b> &nbsp; ${current.phonetic || ""} <button class="audio" onclick="speak('${current.answer}')">🔊</button>`;
@@ -524,7 +465,8 @@ function answer(){
 }
 
 function check(){
-    let v = input.value.trim();
+    let v = document.getElementById('input').value.trim();
+    let result = document.getElementById('result');
     result.style.display = "block";
     if(!v){
         result.innerHTML = "⚠️ 请先输入答案或使用长按语音输入";
@@ -598,7 +540,7 @@ if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
     recognition.lang = 'en-US';
     recognition.interimResults = false;
     recognition.onresult = function(e){
-        input.value = e.results[0][0].transcript;
+        document.getElementById('input').value = e.results[0][0].transcript;
     };
 }
 
@@ -628,9 +570,6 @@ voiceBtn.addEventListener('mouseup', stopVoice);
 voiceBtn.addEventListener('mouseleave', stopVoice);
 voiceBtn.addEventListener('touchstart', startVoice);
 voiceBtn.addEventListener('touchend', stopVoice);
-
-// 初始化第一题
-next();
 
 </script>
 
