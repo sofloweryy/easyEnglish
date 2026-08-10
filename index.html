@@ -354,6 +354,7 @@ async function initQuestionPool() {
             return;
         }
 
+        // 每次重新加载或者换库时，强制重新洗牌并写入全新队列，彻底解决重复问题
         initQueue();
         next();
     } catch (err) {
@@ -363,10 +364,12 @@ async function initQuestionPool() {
     }
 }
 
+// 🛡️ 强制全量洗牌引擎（每次初始化时直接生成新随机序列，废弃旧缓存干扰）
 function initQueue() {
-    let storageKey = (type === "word") ? "ee_cloud_queue_word" : "ee_cloud_queue_phrase";
+    let storageKey = (type === "word") ? "ee_cloud_queue_v2_word" : "ee_cloud_queue_v2_phrase";
     
     let indices = questionPool.map((_, i) => i);
+    // Fisher-Yates 洗牌算法
     for (let i = indices.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [indices[i], indices[j]] = [indices[j], indices[i]];
@@ -382,7 +385,7 @@ function initQueue() {
 }
 
 function loadSavedQueue() {
-    let storageKey = (type === "word") ? "ee_cloud_queue_word" : "ee_cloud_queue_phrase";
+    let storageKey = (type === "word") ? "ee_cloud_queue_v2_word" : "ee_cloud_queue_v2_phrase";
     let saved = localStorage.getItem(storageKey);
     
     if (saved) {
@@ -391,7 +394,8 @@ function loadSavedQueue() {
             currentQueue = data.queue;
             currentIndex = data.index;
             
-            if (!currentQueue || !Array.isArray(currentQueue) || currentIndex >= currentQueue.length) {
+            // 校验队列长度是否与当前题库匹配，如果不匹配说明题库更新了，必须重新洗牌
+            if (!currentQueue || !Array.isArray(currentQueue) || currentQueue.length !== questionPool.length || currentIndex >= currentQueue.length) {
                 initQueue();
             }
         } catch(e) {
@@ -410,10 +414,10 @@ function next(){
     current = questionPool[targetIdx];
 
     currentIndex++;
-    let storageKey = (type === "word") ? "ee_cloud_queue_word" : "ee_cloud_queue_phrase";
+    let storageKey = (type === "word") ? "ee_cloud_queue_v2_word" : "ee_cloud_queue_v2_phrase";
     
     if (currentIndex >= currentQueue.length) {
-        initQueue();
+        initQueue(); // 几万道题全部刷完一轮后自动重新洗牌循环
     } else {
         localStorage.setItem(storageKey, JSON.stringify({
             queue: currentQueue,
