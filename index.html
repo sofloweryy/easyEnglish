@@ -226,7 +226,6 @@ text-align:left;
 
 <div class="app">
 
-<!-- 完全恢复你最开始的代码结构：header 左右并排 -->
 <div class="header">
 <div class="logo">Easy <span>English</span></div>
 <div>
@@ -331,8 +330,8 @@ window.onload = function() {
 
 let type = "word"; // 'word' 或 'phrase'
 let questionPool = []; 
-let currentQueue = []; 
-let currentIndex = 0;
+let shuffledIndices = []; // 洗牌后的索引数组
+let pointer = 0;          // 当前指针
 let current = null;
 
 async function initQuestionPool() {
@@ -355,7 +354,8 @@ async function initQuestionPool() {
             return;
         }
 
-        initQueue();
+        // 核心：彻底抛弃旧缓存，每次进来直接全新纯随机洗牌！
+        shuffleAndReset();
         next();
     } catch (err) {
         console.error(err);
@@ -364,63 +364,27 @@ async function initQuestionPool() {
     }
 }
 
-function initQueue() {
-    let storageKey = (type === "word") ? "ee_cloud_queue_v4_word" : "ee_cloud_queue_v4_phrase";
-    
-    let indices = questionPool.map((_, i) => i);
-    for (let i = indices.length - 1; i > 0; i--) {
+// Fisher-Yates 完美洗牌算法
+function shuffleAndReset() {
+    shuffledIndices = questionPool.map((_, i) => i);
+    for (let i = shuffledIndices.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
-        [indices[i], indices[j]] = [indices[j], indices[i]];
+        [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
     }
-    
-    currentQueue = indices;
-    currentIndex = 0;
-    
-    localStorage.setItem(storageKey, JSON.stringify({
-        queue: currentQueue,
-        index: currentIndex
-    }));
-}
-
-function loadSavedQueue() {
-    let storageKey = (type === "word") ? "ee_cloud_queue_v4_word" : "ee_cloud_queue_v4_phrase";
-    let saved = localStorage.getItem(storageKey);
-    
-    if (saved) {
-        try {
-            let data = JSON.parse(saved);
-            currentQueue = data.queue;
-            currentIndex = data.index;
-            
-            if (!currentQueue || !Array.isArray(currentQueue) || currentQueue.length !== questionPool.length || currentIndex >= currentQueue.length) {
-                initQueue();
-            }
-        } catch(e) {
-            initQueue();
-        }
-    } else {
-        initQueue();
-    }
+    pointer = 0;
 }
 
 function next(){
     if (questionPool.length === 0) return;
-    loadSavedQueue();
-    
-    let targetIdx = currentQueue[currentIndex];
-    current = questionPool[targetIdx];
 
-    currentIndex++;
-    let storageKey = (type === "word") ? "ee_cloud_queue_v4_word" : "ee_cloud_queue_v4_phrase";
-    
-    if (currentIndex >= currentQueue.length) {
-        initQueue();
-    } else {
-        localStorage.setItem(storageKey, JSON.stringify({
-            queue: currentQueue,
-            index: currentIndex
-        }));
+    // 如果指针走完了整轮，自动重新洗牌，绝不卡死也不重复
+    if (pointer >= shuffledIndices.length) {
+        shuffleAndReset();
     }
+
+    let targetIdx = shuffledIndices[pointer];
+    current = questionPool[targetIdx];
+    pointer++;
 
     render();
 }
