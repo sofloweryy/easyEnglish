@@ -31,31 +31,23 @@ font-weight:900
 .logo span{
 color:#8CAFFF
 }
-.status-wrap{
-display:flex;
-gap:8px;
-align-items:center;
-}
 .status{
 background:#fff;
 border:2px solid #403C3A;
 border-radius:18px;
-padding:8px 12px;
+padding:10px;
 font-size:13px;
-box-shadow:3px 3px 0 #403C3A;
-text-align:center;
-line-height: 1.3;
+box-shadow:3px 3px 0 #403C3A
 }
 .install{
+margin-top:8px;
 background:#FFE5A6;
 border:2px solid #403C3A;
-border-radius:18px;
-padding:12px 14px;
+border-radius:15px;
+padding:6px;
 font-size:13px;
 text-align:center;
-cursor:pointer;
-box-shadow:3px 3px 0 #403C3A;
-font-weight: bold;
+cursor:pointer
 }
 .card{
 margin-top:25px;
@@ -68,8 +60,7 @@ box-shadow:5px 5px 0 #403C3A
 .title{
 text-align:center;
 color:#777;
-margin-bottom:20px;
-font-size: 15px;
+margin-bottom:20px
 }
 .tabs{
 display:flex;
@@ -83,8 +74,7 @@ padding:12px;
 border:0;
 background:#fff;
 font-weight:bold;
-cursor:pointer;
-font-size: 15px;
+cursor:pointer
 }
 .tabs .active{
 background:#EEF4FF;
@@ -97,8 +87,7 @@ background:#FFE5A6;
 border:2px solid #403C3A;
 border-radius:15px;
 padding:6px 14px;
-font-size:13px;
-font-weight: bold;
+font-size:13px
 }
 .question{
 text-align:center;
@@ -154,8 +143,7 @@ border-radius:18px;
 border:2px solid #403C3A;
 font-weight:bold;
 box-shadow:3px 3px 0 #403C3A;
-cursor:pointer;
-font-size: 15px;
+cursor:pointer
 }
 .submit{background:#F3A9BF}
 .next{background:#FFE5A6}
@@ -166,9 +154,7 @@ margin-top:20px;
 background:#EAF6EA;
 padding:15px;
 border-radius:18px;
-text-align:center;
-border: 2px solid #403C3A;
-font-weight: bold;
+text-align:center
 }
 .audio{
 border:0;
@@ -185,10 +171,8 @@ footer button{
 background:#fff;
 border:2px solid #403C3A;
 border-radius:18px;
-padding:12px 18px;
-cursor:pointer;
-font-weight: bold;
-box-shadow: 3px 3px 0 #403C3A;
+padding:12px;
+cursor:pointer
 }
 .surprise{
 background:#FFF1C9
@@ -208,8 +192,7 @@ background:#FFF9F0;
 border:2px solid #403C3A;
 border-radius:28px;
 padding:30px;
-text-align:center;
-box-shadow: 5px 5px 0 #403C3A;
+text-align:center
 }
 .wechat{
 color:#07C160;
@@ -223,9 +206,7 @@ border-radius:18px;
 border:2px solid #403C3A;
 background:#F3A9BF;
 cursor:pointer;
-margin-top:15px;
-font-weight: bold;
-box-shadow: 3px 3px 0 #403C3A;
+margin-top:15px
 }
 .modal-box input {
 width:100%;
@@ -245,10 +226,10 @@ text-align:left;
 
 <div class="app">
 
-<!-- 完美恢复：顶部 Logo 与 状态/下载App 左右平铺 -->
+<!-- 完全恢复你最开始的代码结构：header 左右并排 -->
 <div class="header">
 <div class="logo">Easy <span>English</span></div>
-<div class="status-wrap">
+<div>
 <div class="status">🔥 连续打卡<br>⭐120</div>
 <div class="install" onclick="openAppPop()">📲 下载App</div>
 </div>
@@ -278,9 +259,9 @@ text-align:left;
 </div>
 
 <div class="buttons">
-<button class="submit" onclick="check()">✍️ 提交</button>
-<button class="next" onclick="next()">🍃 换题</button>
-<button class="answer" onclick="answer()">👀 答案</button>
+<button class="submit" onclick="check()">✍️提交</button>
+<button class="next" onclick="next()">🍃换题</button>
+<button class="answer" onclick="answer()">👀答案</button>
 </div>
 
 <div id="result" class="result"></div>
@@ -326,7 +307,7 @@ text-align:left;
 <label style="font-size: 13px; font-weight: bold;">专属昵称：</label>
 <input type="text" id="regName" placeholder="例如：flower">
 <label style="font-size: 13px; font-weight: bold; display: block; margin-top: 10px;">绑定邮箱：</label>
-<input type="email" id="regEmail" placeholder="zhaihuahua1701@gmail.com">
+<input type="email" id="regEmail" placeholder="your_email@domain.com">
 <button id="sendEmailBtn" onclick="sendSignInEmail()" style="background:#F3A9BF;">发送邮件并绑定</button>
 <button onclick="closeMyPop()" style="background:#FFE5A6; margin-top: 8px;">关闭</button>
 </div>
@@ -384,7 +365,7 @@ async function initQuestionPool() {
 }
 
 function initQueue() {
-    let storageKey = (type === "word") ? "ee_cloud_queue_v3_word" : "ee_cloud_queue_v3_phrase";
+    let storageKey = (type === "word") ? "ee_cloud_queue_v4_word" : "ee_cloud_queue_v4_phrase";
     
     let indices = questionPool.map((_, i) => i);
     for (let i = indices.length - 1; i > 0; i--) {
@@ -402,7 +383,7 @@ function initQueue() {
 }
 
 function loadSavedQueue() {
-    let storageKey = (type === "word") ? "ee_cloud_queue_v3_word" : "ee_cloud_queue_v3_phrase";
+    let storageKey = (type === "word") ? "ee_cloud_queue_v4_word" : "ee_cloud_queue_v4_phrase";
     let saved = localStorage.getItem(storageKey);
     
     if (saved) {
@@ -430,7 +411,7 @@ function next(){
     current = questionPool[targetIdx];
 
     currentIndex++;
-    let storageKey = (type === "word") ? "ee_cloud_queue_v3_word" : "ee_cloud_queue_v3_phrase";
+    let storageKey = (type === "word") ? "ee_cloud_queue_v4_word" : "ee_cloud_queue_v4_phrase";
     
     if (currentIndex >= currentQueue.length) {
         initQueue();
@@ -506,8 +487,8 @@ function speak(t){
     speechSynthesis.speak(u);
 }
 
-function openPop(){ document.getElementById('modal').style.display = "flex"; }
-function closePop(){ document.getElementById('modal').style.display = "none"; }
+function openPop(){ modal.style.display = "flex"; }
+function closePop(){ modal.style.display = "none"; }
 function openAppPop(){ document.getElementById('appModal').style.display = "flex"; }
 function closeAppPop(){ document.getElementById('appModal').style.display = "none"; }
 function openMyPop(){
