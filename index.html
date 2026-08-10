@@ -1,397 +1,599 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easy English - 每天3分钟，让英语悄悄长出来</title>
-    <!-- 引入 Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: #fdfbf7;
-            color: #2c3e50;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 440px;
-            background: #ffffff;
-            border: 3px solid #2c3e50;
-            border-radius: 24px;
-            box-shadow: 6px 6px 0px #2c3e50;
-            padding: 30px 24px;
-            position: relative;
-        }
-
-        /* 顶部状态栏 */
-        .top-bar {
-            position: absolute;
-            top: -55px;
-            right: 0;
-            display: flex;
-            gap: 10px;
-        }
-
-        .badge-btn {
-            background: #ffffff;
-            border: 2px solid #2c3e50;
-            padding: 6px 12px;
-            border-radius: 14px;
-            font-size: 13px;
-            font-weight: bold;
-            box-shadow: 3px 3px 0px #2c3e50;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            text-decoration: none;
-            color: #2c3e50;
-        }
-
-        .logo-area {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
-
-        .logo-area span {
-            color: #3b82f6;
-        }
-
-        .slogan {
-            text-align: center;
-            font-size: 15px;
-            color: #64748b;
-            margin-bottom: 20px;
-        }
-
-        /* 标签页切换 */
-        .tabs {
-            display: flex;
-            border: 2px solid #2c3e50;
-            border-radius: 14px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            background: #f1f5f9;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            transition: all 0.2s;
-        }
-
-        .tab.active {
-            background: #ffffff;
-            color: #2563eb;
-            box-shadow: 0 2px 0 rgba(0,0,0,0.05);
-        }
-
-        /* 分类标签显示 */
-        .category-tag {
-            display: inline-block;
-            background: #fef08a;
-            border: 2px solid #2c3e50;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            box-shadow: 2px 2px 0px #2c3e50;
-        }
-
-        /* 题目展示区 */
-        .question-box {
-            font-size: 22px;
-            font-weight: bold;
-            color: #1e293b;
-            margin-bottom: 25px;
-            min-height: 70px;
-            display: flex;
-            align-items: center;
-        }
-
-        /* 输入框区域 */
-        .input-container {
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 90px;
-            border: 2px solid #2c3e50;
-            border-radius: 14px;
-            padding: 14px;
-            font-size: 15px;
-            resize: none;
-            outline: none;
-            background: #fafaf9;
-            box-shadow: inset 2px 2px 0px rgba(0,0,0,0.03);
-        }
-
-        textarea:focus {
-            border-color: #3b82f6;
-            background: #ffffff;
-        }
-
-        .mic-btn {
-            position: absolute;
-            right: 12px;
-            bottom: 15px;
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        /* 底部操作按钮 */
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px 0;
-            border: 2px solid #2c3e50;
-            border-radius: 14px;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            box-shadow: 3px 3px 0px #2c3e50;
-            transition: transform 0.1s, box-shadow 0.1s;
-        }
-
-        .btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #2c3e50;
-        }
-
-        .btn-submit { background: #fbcfe8; color: #9d174d; }
-        .btn-next { background: #fef08a; color: #854d0e; }
-        .btn-answer { background: #e0f2fe; color: #0369a1; }
-
-        /* 反馈与答案弹层样式 */
-        .feedback {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            display: none;
-        }
-        .feedback.success { background: #dcfce7; color: #166534; border: 2px solid #2c3e50; }
-        .feedback.error { background: #fee2e2; color: #991b1b; border: 2px solid #2c3e50; }
-
-        /* 底部辅助栏 */
-        .footer-nav {
-            width: 100%;
-            max-width: 440px;
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Easy English</title>
+<!-- 引入 Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+background:#FFF9F0;
+font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+color:#403C3A
+}
+.app{
+max-width:430px;
+margin:auto;
+padding:24px
+}
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center
+}
+.logo{
+font-size:34px;
+font-weight:900
+}
+.logo span{
+color:#8CAFFF
+}
+.status-wrap{
+display:flex;
+gap:8px;
+align-items:center;
+}
+.status{
+background:#fff;
+border:2px solid #403C3A;
+border-radius:18px;
+padding:8px 12px;
+font-size:13px;
+box-shadow:3px 3px 0 #403C3A;
+text-align:center;
+line-height: 1.3;
+}
+.install{
+background:#FFE5A6;
+border:2px solid #403C3A;
+border-radius:18px;
+padding:12px 14px;
+font-size:13px;
+text-align:center;
+cursor:pointer;
+box-shadow:3px 3px 0 #403C3A;
+font-weight: bold;
+}
+.card{
+margin-top:25px;
+background:#fff;
+border:2px solid #403C3A;
+border-radius:30px;
+padding:25px;
+box-shadow:5px 5px 0 #403C3A
+}
+.title{
+text-align:center;
+color:#777;
+margin-bottom:20px;
+font-size: 15px;
+}
+.tabs{
+display:flex;
+border:2px solid #403C3A;
+border-radius:18px;
+overflow:hidden
+}
+.tabs button{
+flex:1;
+padding:12px;
+border:0;
+background:#fff;
+font-weight:bold;
+cursor:pointer;
+font-size: 15px;
+}
+.tabs .active{
+background:#EEF4FF;
+color:#668FEA
+}
+.category{
+margin:20px auto;
+width:max-content;
+background:#FFE5A6;
+border:2px solid #403C3A;
+border-radius:15px;
+padding:6px 14px;
+font-size:13px;
+font-weight: bold;
+}
+.question{
+text-align:center;
+font-size:24px;
+font-weight:bold;
+color:#8CAFFF;
+margin:25px 0 10px;
+line-height: 1.4;
+}
+.synonyms{
+text-align:center;
+font-size:13px;
+color:#999;
+margin-bottom:25px
+}
+.input-wrap{
+position:relative
+}
+textarea{
+width:100%;
+height:90px;
+border:2px solid #403C3A;
+border-radius:20px;
+padding:15px;
+font-size:16px;
+outline:none;
+resize:none
+}
+.voice-btn{
+position:absolute;
+right:12px;
+bottom:15px;
+background:none;
+border:0;
+font-size:22px;
+cursor:pointer;
+padding:4px;
+border-radius:10px;
+transition:transform 0.1s
+}
+.voice-btn:active{
+transform:scale(0.9)
+}
+.buttons{
+display:flex;
+gap:10px;
+margin-top:15px
+}
+.buttons button{
+flex:1;
+padding:12px;
+border-radius:18px;
+border:2px solid #403C3A;
+font-weight:bold;
+box-shadow:3px 3px 0 #403C3A;
+cursor:pointer;
+font-size: 15px;
+}
+.submit{background:#F3A9BF}
+.next{background:#FFE5A6}
+.answer{background:#EEF4FF}
+.result{
+display:none;
+margin-top:20px;
+background:#EAF6EA;
+padding:15px;
+border-radius:18px;
+text-align:center;
+border: 2px solid #403C3A;
+font-weight: bold;
+}
+.audio{
+border:0;
+background:none;
+font-size:18px;
+cursor:pointer
+}
+footer{
+margin-top:25px;
+display:flex;
+justify-content:space-between
+}
+footer button{
+background:#fff;
+border:2px solid #403C3A;
+border-radius:18px;
+padding:12px 18px;
+cursor:pointer;
+font-weight: bold;
+box-shadow: 3px 3px 0 #403C3A;
+}
+.surprise{
+background:#FFF1C9
+}
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.4);
+justify-content:center;
+align-items:center;
+z-index:999
+}
+.modal-box{
+width:85%;
+background:#FFF9F0;
+border:2px solid #403C3A;
+border-radius:28px;
+padding:30px;
+text-align:center;
+box-shadow: 5px 5px 0 #403C3A;
+}
+.wechat{
+color:#07C160;
+font-size:22px;
+font-weight:bold
+}
+.modal-box button{
+width:100%;
+padding:14px;
+border-radius:18px;
+border:2px solid #403C3A;
+background:#F3A9BF;
+cursor:pointer;
+margin-top:15px;
+font-weight: bold;
+box-shadow: 3px 3px 0 #403C3A;
+}
+.modal-box input {
+width:100%;
+padding:10px 12px;
+margin-top:8px;
+border:2px solid #403C3A;
+border-radius:12px;
+font-size:15px;
+outline:none;
+background:#FFF;
+text-align:left;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="container">
-        <!-- 顶部状态栏 -->
-        <div class="top-bar">
-            <div class="badge-btn" id="streakBadge">🔥 连续打卡 <span id="streakCount">120</span></div>
-            <button class="badge-btn" onclick="alert('请在浏览器菜单中选择「添加到主屏幕」')">📱 下载App</button>
-        </div>
+<div class="app">
 
-        <!-- Logo -->
-        <div class="logo-area">
-            Easy <span>English</span>
-        </div>
+<!-- 完美恢复：顶部 Logo 与 状态/下载App 左右平铺 -->
+<div class="header">
+<div class="logo">Easy <span>English</span></div>
+<div class="status-wrap">
+<div class="status">🔥 连续打卡<br>⭐120</div>
+<div class="install" onclick="openAppPop()">📲 下载App</div>
+</div>
+</div>
 
-        <div class="slogan">每天3分钟，让英语悄悄长出来 🌱</div>
 
-        <!-- 词库切换标签 -->
-        <div class="tabs">
-            <button class="tab active" id="tabWord" onclick="switchType('word')">🔤 单词库</button>
-            <button class="tab" id="tabPhrase" onclick="switchType('phrase')">💬 短语库</button>
-        </div>
+<div class="card">
 
-        <!-- 分类显示 -->
-        <div class="category-tag" id="categoryLabel">✈️加载中...</div>
+<div class="title">
+每天3分钟，让英语偷偷长出来 🌱
+</div>
 
-        <!-- 题目区域 -->
-        <div class="question-box" id="questionText">正在连接题库...</div>
+<div class="tabs">
+<button id="wordTab" class="active">🔤 单词库</button>
+<button id="phraseTab">💬 短语库</button>
+</div>
 
-        <!-- 输入框 -->
-        <div class="input-container">
-            <textarea id="userInput" placeholder="输入英文..."></textarea>
-            <button class="mic-btn" id="micBtn" title="语音输入">🎤</button>
-        </div>
+<div id="category" class="category">✨ 准备中</div>
 
-        <!-- 按钮组 -->
-        <div class="actions">
-            <button class="btn btn-submit" onclick="checkAnswer()">✍️提交</button>
-            <button class="btn btn-next" onclick="next()">🌿换题</button>
-            <button class="btn btn-answer" onclick="showAnswer()">👀答案</button>
-        </div>
+<div id="question" class="question">正在把好玩的题目打包装箱... 🎁</div>
 
-        <!-- 结果反馈 -->
-        <div id="feedbackBox" class="feedback"></div>
-    </div>
+<div id="synonyms" class="synonyms"></div>
 
-    <!-- 底部功能区 -->
-    <div class="footer-nav">
-        <button class="badge-btn" onclick="alert('✨ 提示：输入时支持直接联想或语音输入，坚持每天打卡哦！')">✨ 点击有惊喜</button>
-        <button class="badge-btn" onclick="alert('当前用户: flower (zhaihuahua1701@gmail.com)')">👤 flower</button>
-    </div>
+<div class="input-wrap">
+<textarea id="input" placeholder="输入英文..."></textarea>
+<button id="voiceBtn" class="voice-btn" title="长按说英文">🎤</button>
+</div>
 
-    <script>
-        // ==========================
-        // 1. Supabase 配置 (已自动填入)
-        // ==========================
-        const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co'; 
-        const SUPABASE_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
+<div class="buttons">
+<button class="submit" onclick="check()">✍️ 提交</button>
+<button class="next" onclick="next()">🍃 换题</button>
+<button class="answer" onclick="answer()">👀 答案</button>
+</div>
+
+<div id="result" class="result"></div>
+
+</div>
+
+
+<footer>
+<button class="surprise" onclick="openPop()">✨ 点击有惊喜</button>
+<button onclick="openMyPop()" id="myBtn">👤 flower</button>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal">
+<div class="modal-box">
+<p>👀 偷偷认识美丽且智慧的开发者</p>
+<p>她正在努力让英语有趣一点儿 🤣</p>
+<p>
+🌱 微信：
+<br>
+<span class="wechat">vildbloom</span>
+</p>
+<button onclick="closePop()">我倒是要看看</button>
+</div>
+</div>
+
+<div id="appModal" class="modal">
+<div class="modal-box" style="text-align: left;">
+<p style="text-align: center; font-weight: bold; font-size: 18px; margin-top:0;">📲 添加到手机桌面</p>
+<p style="font-size: 14px; line-height: 1.6; color: #555;">
+• <b>iOS (Safari 浏览器)</b>：<br>点击下方工具栏的“分享”按钮，然后选择 <b>“添加到主屏幕”</b>。<br><br>
+• <b>Android (Chrome 浏览器)</b>：<br>点击右上角菜单按钮，选择 <b>“安装应用”</b> 或 <b>“添加到主屏幕”</b>。
+</p>
+<button onclick="closeAppPop()" style="margin-top: 10px;">我知道啦</button>
+</div>
+</div>
+
+<div id="myModal" class="modal">
+<div class="modal-box" style="text-align: left;">
+<p style="text-align: center; font-weight: bold; font-size: 18px; margin-top:0;">👤 个人中心绑定</p>
+<label style="font-size: 13px; font-weight: bold;">专属昵称：</label>
+<input type="text" id="regName" placeholder="例如：flower">
+<label style="font-size: 13px; font-weight: bold; display: block; margin-top: 10px;">绑定邮箱：</label>
+<input type="email" id="regEmail" placeholder="zhaihuahua1701@gmail.com">
+<button id="sendEmailBtn" onclick="sendSignInEmail()" style="background:#F3A9BF;">发送邮件并绑定</button>
+<button onclick="closeMyPop()" style="background:#FFE5A6; margin-top: 8px;">关闭</button>
+</div>
+</div>
+
+
+<script>
+
+// 初始化 Supabase 客户端
+const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
+const supabaseApp = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+window.onload = function() {
+    const savedName = localStorage.getItem('ee_nickname');
+    if(savedName){
+        document.getElementById('myBtn').innerText = `👤 ${savedName}`;
+    }
+    initQuestionPool();
+}
+
+let type = "word"; // 'word' 或 'phrase'
+let questionPool = []; 
+let currentQueue = []; 
+let currentIndex = 0;
+let current = null;
+
+async function initQuestionPool() {
+    document.getElementById('category').innerHTML = "✨ 准备中";
+    document.getElementById('question').innerHTML = "正在把好玩的题目打包装箱... 🎁";
+    
+    try {
+        const { data, error } = await supabaseApp
+            .from('questions')
+            .select('*')
+            .eq('type', type);
+
+        if (error) throw error;
+
+        questionPool = data || [];
         
-        const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        let currentType = 'word'; // 'word' 或 'phrase'
-        let questionPool = [];    // 当前题库数据
-        let current = null;       // 当前题目对象
-        let lastQuestionId = null;// 上一题ID，避免连续重复
-
-        // 初始化加载
-        window.onload = async function() {
-            await loadQuestions();
-        };
-
-        // 切换单词/短语标签
-        async function switchType(type) {
-            currentType = type;
-            document.getElementById('tabWord').classList.toggle('active', type === 'word');
-            document.getElementById('tabPhrase').classList.toggle('active', type === 'phrase');
-            await loadQuestions();
+        if (questionPool.length === 0) {
+            document.getElementById('category').innerHTML = "💡 提示";
+            document.getElementById('question').innerHTML = "题库正在赶来的路上，请稍候... 🌱";
+            return;
         }
 
-        // 从 Supabase 加载对应分类的所有题目
-        async function loadQuestions() {
-            document.getElementById('questionText').innerText = '加载中...';
-            const { data, error } = await _supabase
-                .from('questions')
-                .select('*')
-                .eq('type', currentType);
+        initQueue();
+        next();
+    } catch (err) {
+        console.error(err);
+        document.getElementById('category').innerHTML = "⚠️ 网络开小差了";
+        document.getElementById('question').innerHTML = "刷新一下页面重新连接试试看 🍃";
+    }
+}
 
-            if (error) {
-                console.error('加载失败:', error);
-                document.getElementById('questionText').innerText = '加载失败，请检查Supabase连接配置';
-                return;
-            }
+function initQueue() {
+    let storageKey = (type === "word") ? "ee_cloud_queue_v3_word" : "ee_cloud_queue_v3_phrase";
+    
+    let indices = questionPool.map((_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    
+    currentQueue = indices;
+    currentIndex = 0;
+    
+    localStorage.setItem(storageKey, JSON.stringify({
+        queue: currentQueue,
+        index: currentIndex
+    }));
+}
 
-            questionPool = data || [];
-            if (questionPool.length > 0) {
-                next();
-            } else {
-                document.getElementById('questionText').innerText = '当前题库暂无题目';
-                document.getElementById('categoryLabel').innerText = '提示';
-            }
-        }
-
-        // 🎯 核心：纯随机抽题引擎（确保连续两道题不重复，且无任何奇怪修饰词）
-        function next() {
-            if (questionPool.length === 0) return;
-
-            let availablePool = questionPool;
-            if (lastQuestionId !== null && questionPool.length > 1) {
-                availablePool = questionPool.filter(q => q.id !== lastQuestionId);
-            }
-
-            let randomIndex = Math.floor(Math.random() * availablePool.length);
-            current = availablePool[randomIndex];
-            lastQuestionId = current.id;
-
-            render();
-        }
-
-        // 渲染当前题目到页面
-        function render() {
-            document.getElementById('categoryLabel').innerText = current.category;
-            document.getElementById('questionText').innerText = current.question;
-            document.getElementById('userInput').value = '';
-            document.getElementById('feedbackBox').style.display = 'none';
-        }
-
-        // 检查答案
-        function checkAnswer() {
-            if (!current) return;
-            const userVal = document.getElementById('userInput').value.trim().toLowerCase();
-            const correctVal = current.answer.trim().toLowerCase();
+function loadSavedQueue() {
+    let storageKey = (type === "word") ? "ee_cloud_queue_v3_word" : "ee_cloud_queue_v3_phrase";
+    let saved = localStorage.getItem(storageKey);
+    
+    if (saved) {
+        try {
+            let data = JSON.parse(saved);
+            currentQueue = data.queue;
+            currentIndex = data.index;
             
-            const feedbackBox = document.getElementById('feedbackBox');
-            feedbackBox.style.display = 'block';
-
-            // 简单模糊匹配（忽略标点和大小写差异）
-            const cleanUser = userVal.replace(/[^a-z0-9]/g, '');
-            const cleanCorrect = correctVal.replace(/[^a-z0-9]/g, '');
-
-            if (cleanUser === cleanCorrect || cleanUser.includes(cleanCorrect)) {
-                feedbackBox.className = 'feedback success';
-                feedbackBox.innerHTML = '🎉 回答正确！太棒了！';
-            } else {
-                feedbackBox.className = 'feedback error';
-                feedbackBox.innerHTML = `❌ 再想想哦~ 正确答案是: <b>${current.answer}</b>`;
+            if (!currentQueue || !Array.isArray(currentQueue) || currentQueue.length !== questionPool.length || currentIndex >= currentQueue.length) {
+                initQueue();
             }
+        } catch(e) {
+            initQueue();
         }
+    } else {
+        initQueue();
+    }
+}
 
-        // 查看答案
-        function showAnswer() {
-            if (!current) return;
-            const feedbackBox = document.getElementById('feedbackBox');
-            feedbackBox.style.display = 'block';
-            feedbackBox.className = 'feedback error';
-            feedbackBox.innerHTML = `💡 正确答案: <b>${current.answer}</b> ${current.phonetic ? '(' + current.phonetic + ')' : ''}`;
-        }
+function next(){
+    if (questionPool.length === 0) return;
+    loadSavedQueue();
+    
+    let targetIdx = currentQueue[currentIndex];
+    current = questionPool[targetIdx];
 
-        // 语音输入模拟（浏览器原生 Web Speech API）
-        const micBtn = document.getElementById('micBtn');
-        micBtn.onclick = function() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert('您的浏览器不支持语音识别功能，请直接手动输入。');
-                return;
-            }
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.onstart = function() { micBtn.style.color = '#3b82f6'; };
-            recognition.onresult = function(event) {
-                document.getElementById('userInput').value = event.results[0][0].transcript;
-                micBtn.style.color = '#2c3e50';
-            };
-            recognition.onerror = function() { micBtn.style.color = '#2c3e50'; };
-            recognition.onend = function() { micBtn.style.color = '#2c3e50'; };
-            recognition.start();
-        };
-    </script>
+    currentIndex++;
+    let storageKey = (type === "word") ? "ee_cloud_queue_v3_word" : "ee_cloud_queue_v3_phrase";
+    
+    if (currentIndex >= currentQueue.length) {
+        initQueue();
+    } else {
+        localStorage.setItem(storageKey, JSON.stringify({
+            queue: currentQueue,
+            index: currentIndex
+        }));
+    }
+
+    render();
+}
+
+function render(){
+    if (!current) return;
+    document.getElementById('category').innerHTML = current.category;
+    document.getElementById('question').innerHTML = current.question;
+    
+    let synHtml = "";
+    if (type === "word" && current.synonyms && current.synonyms.length > 0) {
+        synHtml = "近义词：" + current.synonyms.join(" · ");
+    }
+    document.getElementById('synonyms').innerHTML = synHtml;
+    document.getElementById('input').value = "";
+    document.getElementById('result').style.display = "none";
+}
+
+const wordTab = document.getElementById('wordTab');
+const phraseTab = document.getElementById('phraseTab');
+
+wordTab.onclick = async () => {
+    if(type === "word") return;
+    type = "word";
+    wordTab.classList.add("active");
+    phraseTab.classList.remove("active");
+    await initQuestionPool();
+}
+
+phraseTab.onclick = async () => {
+    if(type === "phrase") return;
+    type = "phrase";
+    phraseTab.classList.add("active");
+    wordTab.classList.remove("active");
+    await initQuestionPool();
+}
+
+function answer(){
+    let result = document.getElementById('result');
+    result.style.display = "block";
+    if(type === "word"){
+        result.innerHTML = `<b>${current.answer}</b> &nbsp; ${current.phonetic || ""} <button class="audio" onclick="speak('${current.answer}')">🔊</button>`;
+    } else {
+        result.innerHTML = `<b>${current.answer}</b>`;
+    }
+}
+
+function check(){
+    let v = document.getElementById('input').value.trim();
+    let result = document.getElementById('result');
+    result.style.display = "block";
+    if(!v){
+        result.innerHTML = "⚠️ 请先输入答案或使用长按语音输入";
+        return;
+    }
+    let lv = v.toLowerCase();
+    result.innerHTML = current.answer.toLowerCase().includes(lv) ? "✨ Nice！" : "💡 再试试看";
+}
+
+function speak(t){
+    let u = new SpeechSynthesisUtterance(t);
+    u.lang = "en-US";
+    u.rate = .85;
+    speechSynthesis.speak(u);
+}
+
+function openPop(){ document.getElementById('modal').style.display = "flex"; }
+function closePop(){ document.getElementById('modal').style.display = "none"; }
+function openAppPop(){ document.getElementById('appModal').style.display = "flex"; }
+function closeAppPop(){ document.getElementById('appModal').style.display = "none"; }
+function openMyPop(){
+    const savedName = localStorage.getItem('ee_nickname');
+    if(savedName) document.getElementById('regName').value = savedName;
+    const savedEmail = localStorage.getItem('ee_email');
+    if(savedEmail) document.getElementById('regEmail').value = savedEmail;
+    document.getElementById('myModal').style.display = "flex";
+}
+function closeMyPop(){ document.getElementById('myModal').style.display = "none"; }
+
+async function sendSignInEmail(){
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const btn = document.getElementById('sendEmailBtn');
+
+    if(!name || !email){
+        alert("⚠️ 请填写完整的昵称和邮箱！");
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = "发送中...";
+
+    try {
+        const { error } = await supabaseApp.auth.signInWithOtp({
+            email: email,
+            options: { emailRedirectTo: window.location.origin }
+        });
+
+        if(error) throw error;
+
+        localStorage.setItem('ee_nickname', name);
+        localStorage.setItem('ee_email', email);
+        document.getElementById('myBtn').innerText = `👤 ${name}`;
+
+        alert("✨ 验证邮件已发送！请前往您的邮箱查收，并点击邮件中的 Sign In 链接完成绑定。");
+        closeMyPop();
+    } catch (err) {
+        alert("❌ 发送失败：" + (err.message || "请检查邮箱或网络配置"));
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "发送邮件并绑定";
+    }
+}
+
+const voiceBtn = document.getElementById('voiceBtn');
+let recognition = null;
+if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+    let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.onresult = function(e){
+        document.getElementById('input').value = e.results[0][0].transcript;
+    };
+}
+
+let isRecording = false;
+const startVoice = (e) => {
+    e.preventDefault();
+    if(!recognition){
+        alert("当前浏览器暂不支持语音识别功能");
+        return;
+    }
+    if(isRecording) return;
+    isRecording = true;
+    voiceBtn.style.transform = "scale(0.85)";
+    try{ recognition.start(); }catch(err){}
+};
+
+const stopVoice = (e) => {
+    e.preventDefault();
+    if(!isRecording) return;
+    isRecording = false;
+    voiceBtn.style.transform = "scale(1)";
+    try{ recognition.stop(); }catch(err){}
+};
+
+voiceBtn.addEventListener('mousedown', startVoice);
+voiceBtn.addEventListener('mouseup', stopVoice);
+voiceBtn.addEventListener('mouseleave', stopVoice);
+voiceBtn.addEventListener('touchstart', startVoice);
+voiceBtn.addEventListener('touchend', stopVoice);
+
+</script>
+
 </body>
 </html>
