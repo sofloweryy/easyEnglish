@@ -242,8 +242,8 @@ text-align:left;
 </div>
 
 <div class="tabs">
-<button id="wordTab" class="active">🔤 单词</button>
-<button id="phraseTab">💬 短语</button>
+<button id="wordTab" class="active">🔤 单词库</button>
+<button id="phraseTab">💬 短语库</button>
 </div>
 
 <div id="category" class="category"></div>
@@ -328,7 +328,7 @@ window.onload = function() {
 }
 
 // -------------------------------------------------------------
-// 🚀 核心矩阵生成器：自动衍生海量且严谨的单词与短语题库
+// 🚀 核心根治方案：构建包含数百个高频母题、通过多维矩阵衍生出上千条题目的超大题库
 // -------------------------------------------------------------
 function buildHugePool(type) {
     let list = [];
@@ -350,7 +350,9 @@ function buildHugePool(type) {
             {q: "创新", a: "innovation", p: "/ˌɪnəˈveɪʃn/", s: ["novelty", "creativity"]},
             {q: "灵感", a: "inspiration", p: "/ˌɪnspəˈreɪʃn/", s: ["flash", "muse"]},
             {q: "专注", a: "concentration", p: "/ˌkɒnsnˈtreɪʃn/", s: ["focus", "attention"]},
-            {q: "和谐", a: "harmony", p: "/ˈhɑːməni/", s: ["balance", "accord"]}
+            {q: "和谐", a: "harmony", p: "/ˈhɑːməni/", s: ["balance", "accord"]},
+            {q: "独立音乐", a: "indie music", p: "/ˈɪndi ˈmjuːzɪk/", s: ["alternative music"]},
+            {q: "黑胶唱片", a: "vinyl record", p: "/ˈvaɪnl ˈrekərd/", s: ["LP"]}
         ];
 
         let id = 1;
@@ -382,7 +384,9 @@ function buildHugePool(type) {
             {q: "让我们开始吧！", a: "Let's get started!"},
             {q: "保持联系。", a: "Keep in touch."},
             {q: "这太不可思议了！", a: "This is unbelievable!"},
-            {q: "我想预定一张票。", a: "I would like to book a ticket."}
+            {q: "我想预定一张票。", a: "I would like to book a ticket."},
+            {q: "很高兴认识你。", a: "Nice to meet you."},
+            {q: "周末过得怎么样？", a: "How was your weekend?"}
         ];
 
         let id = 10001;
@@ -409,7 +413,7 @@ const words = buildHugePool("word");
 const phrases = buildHugePool("phrase");
 
 let type = "word";
-let current;
+let current = null;
 let currentQueue = [];
 let currentIndex = 0;
 
@@ -417,23 +421,30 @@ function pool(){
     return type === "word" ? words : phrases;
 }
 
-// Fisher-Yates 洗牌算法核心：保证整轮几千道题不重样播完
+// 🛡️ 核心洗牌与防重复引擎：使用 Fisher-Yates 算法对整副题库进行洗牌
 function initQueue() {
     let currentPool = pool();
-    let storageKey = (type === "word") ? "ee_queue_idx_w_v3" : "ee_queue_idx_p_v3";
+    let storageKey = (type === "word") ? "ee_queue_v4_word" : "ee_queue_v4_phrase";
     
+    // 生成索引数组并彻底打乱
     let indices = currentPool.map((_, i) => i);
     for (let i = indices.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [indices[i], indices[j]] = [indices[j], indices[i]];
     }
+    
     currentQueue = indices;
     currentIndex = 0;
-    localStorage.setItem(storageKey, JSON.stringify({queue: currentQueue, index: 0}));
+    
+    // 持久化保存洗牌后的队列和当前进度
+    localStorage.setItem(storageKey, JSON.stringify({
+        queue: currentQueue,
+        index: currentIndex
+    }));
 }
 
-function next(){
-    let storageKey = (type === "word") ? "ee_queue_idx_w_v3" : "ee_queue_idx_p_v3";
+function loadSavedQueue() {
+    let storageKey = (type === "word") ? "ee_queue_v4_word" : "ee_queue_v4_phrase";
     let saved = localStorage.getItem(storageKey);
     
     if (saved) {
@@ -441,7 +452,9 @@ function next(){
             let data = JSON.parse(saved);
             currentQueue = data.queue;
             currentIndex = data.index;
-            if (!currentQueue || currentIndex >= currentQueue.length) {
+            
+            // 如果队列损坏或者已经全部刷完，则重新洗牌
+            if (!currentQueue || !Array.isArray(currentQueue) || currentIndex >= currentQueue.length) {
                 initQueue();
             }
         } catch(e) {
@@ -450,23 +463,34 @@ function next(){
     } else {
         initQueue();
     }
+}
 
+function next(){
+    loadSavedQueue();
+    
     let currentPool = pool();
     let targetIdx = currentQueue[currentIndex];
     current = currentPool[targetIdx];
 
-    // 指针往后移并持久化保存当前进度
+    // 指针自增并保存
     currentIndex++;
+    let storageKey = (type === "word") ? "ee_queue_v4_word" : "ee_queue_v4_phrase";
+    
     if (currentIndex >= currentQueue.length) {
-        initQueue(); // 本轮刷完自动开启下一轮全新洗牌
+        // 整轮几千道题全部刷完一轮后，自动无感重新洗牌，开启新的一轮循环！
+        initQueue();
     } else {
-        localStorage.setItem(storageKey, JSON.stringify({queue: currentQueue, index: currentIndex}));
+        localStorage.setItem(storageKey, JSON.stringify({
+            queue: currentQueue,
+            index: currentIndex
+        }));
     }
 
     render();
 }
 
 function render(){
+    if (!current) return;
     category.innerHTML = current.category;
     question.innerHTML = current.question;
     synonyms.innerHTML = (type === "word" && current.synonyms ? "近义词：" + current.synonyms.join(" · ") : "");
@@ -475,6 +499,7 @@ function render(){
 }
 
 wordTab.onclick = () => {
+    if(type === "word") return;
     type = "word";
     wordTab.classList.add("active");
     phraseTab.classList.remove("active");
@@ -482,6 +507,7 @@ wordTab.onclick = () => {
 }
 
 phraseTab.onclick = () => {
+    if(type === "phrase") return;
     type = "phrase";
     phraseTab.classList.add("active");
     wordTab.classList.remove("active");
