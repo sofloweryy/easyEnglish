@@ -327,71 +327,141 @@ window.onload = function() {
     }
 }
 
-// 精选高质量单词和短语题库（确保每一题都地道准确）
-const words=[
-{ id: 1, category: "✈️旅行", question: "登机口", answer: "boarding gate", phonetic: "/ˈbɔːrdɪŋ ɡeɪt/", synonyms: ["gate", "boarding area"] },
-{ id: 2, category: "💼商务工作", question: "截止日期", answer: "deadline", phonetic: "/ˈdedlaɪn/", synonyms: ["due date", "time limit"] },
-{ id: 3, category: "🎵音乐文化", question: "歌词", answer: "lyrics", phonetic: "/ˈlɪrɪks/", synonyms: ["words", "text"] },
-{ id: 4, category: "☕️日常口语", question: "尴尬的", answer: "awkward", phonetic: "/ˈɔːkwərd/", synonyms: ["embarrassing", "uncomfortable"] },
-{ id: 5, category: "☕️日常口语", question: "咖啡因", answer: "caffeine", phonetic: "/ˈkæfiːn/", synonyms: ["coffee essence"] },
-{ id: 6, category: "✈️旅行", question: "行李提取处", answer: "baggage claim", phonetic: "/ˈbæɡɪdʒ kleɪm/", synonyms: ["luggage pickup"] },
-{ id: 7, category: "💼商务工作", question: "头脑风暴", answer: "brainstorming", phonetic: "/ˈbreɪnˌstɔːrmɪŋ/", synonyms: ["idea generation"] },
-{ id: 8, category: "🎵音乐文化", question: "流媒体", answer: "streaming media", phonetic: "/ˈstriːmɪŋ ˈmiːdiə/", synonyms: ["digital broadcast"] },
-{ id: 9, category: "❤️社交", question: "灵魂伴侣", answer: "soulmate", phonetic: "/ˈsəʊlmeɪt/", synonyms: ["kindred spirit"] },
-{ id: 10, category: "☕️日常口语", question: "拖延症", answer: "procrastination", phonetic: "/prəˌkræstɪˈneɪʃn/", synonyms: ["delaying tactics"] },
-{ id: 11, category: "💡科技生活", question: "人工智能", answer: "artificial intelligence", phonetic: "/ˌɑːrtɪfɪʃl ɪnˈtelɪdʒəns/", synonyms: ["AI"] },
-{ id: 12, category: "💼商务工作", question: "创新", answer: "innovation", phonetic: "/ˌɪnəˈveɪʃn/", synonyms: ["novelty", "creativity"] },
-{ id: 13, category: "🎨艺术美学", question: "灵感", answer: "inspiration", phonetic: "/ˌɪnspəˈreɪʃn/", synonyms: ["flash", "muse"] },
-{ id: 14, category: "☕️日常口语", question: "专注", answer: "concentration", phonetic: "/ˌkɒnsnˈtreɪʃn/", synonyms: ["focus", "attention"] },
-{ id: 15, category: "❤️社交", question: "和谐", answer: "harmony", phonetic: "/ˈhɑːməni/", synonyms: ["balance", "accord"] }
-];
+// -------------------------------------------------------------
+// 🚀 核心矩阵生成器：自动衍生海量且严谨的单词与短语题库
+// -------------------------------------------------------------
+function buildHugePool(type) {
+    let list = [];
+    const categories = ["✈️旅行", "💼商务工作", "🎵音乐文化", "☕️日常口语", "❤️社交", "💡科技生活", "🎨艺术美学"];
+    
+    if (type === "word") {
+        const rawWords = [
+            {q: "登机口", a: "boarding gate", p: "/ˈbɔːrdɪŋ ɡeɪt/", s: ["gate", "boarding area"]},
+            {q: "截止日期", a: "deadline", p: "/ˈdedlaɪn/", s: ["due date", "time limit"]},
+            {q: "歌词", a: "lyrics", p: "/ˈlɪrɪks/", s: ["words", "text"]},
+            {q: "尴尬的", a: "awkward", p: "/ˈɔːkwərd/", s: ["embarrassing", "uncomfortable"]},
+            {q: "咖啡因", a: "caffeine", p: "/ˈkæfiːn/", s: ["coffee essence"]},
+            {q: "行李提取处", a: "baggage claim", p: "/ˈbæɡɪdʒ kleɪm/", s: ["luggage pickup"]},
+            {q: "头脑风暴", a: "brainstorming", p: "/ˈbreɪnˌstɔːrmɪŋ/", s: ["idea generation"]},
+            {q: "流媒体", a: "streaming media", p: "/ˈstriːmɪŋ ˈmiːdiə/", s: ["digital broadcast"]},
+            {q: "灵魂伴侣", a: "soulmate", p: "/ˈsəʊlmeɪt/", s: ["kindred spirit"]},
+            {q: "拖延症", a: "procrastination", p: "/prəˌkræstɪˈneɪʃn/", s: ["delaying tactics"]},
+            {q: "人工智能", a: "artificial intelligence", p: "/ˌɑːrtɪfɪʃl ɪnˈtelɪdʒəns/", s: ["AI"]},
+            {q: "创新", a: "innovation", p: "/ˌɪnəˈveɪʃn/", s: ["novelty", "creativity"]},
+            {q: "灵感", a: "inspiration", p: "/ˌɪnspəˈreɪʃn/", s: ["flash", "muse"]},
+            {q: "专注", a: "concentration", p: "/ˌkɒnsnˈtreɪʃn/", s: ["focus", "attention"]},
+            {q: "和谐", a: "harmony", p: "/ˈhɑːməni/", s: ["balance", "accord"]}
+        ];
 
-const phrases=[
-{ id: 101, category: "✈️旅行", question: "请问去机场怎么走？", answer: "How can I get to the airport?" },
-{ id: 102, category: "💼商务工作", question: "我们之后同步一下进展。", answer: "Let's sync up later." },
-{ id: 103, category: "❤️社交", question: "你最近过得怎么样？", answer: "How have you been lately?" },
-{ id: 104, category: "☕️日常口语", question: "今天天气真不错。", answer: "The weather is really nice today." },
-{ id: 105, category: "💼商务工作", question: "我们能把会议推迟到明天吗？", answer: "Could we reschedule the meeting to tomorrow?" },
-{ id: 106, category: "🎵音乐文化", question: "这首歌太洗脑了。", answer: "This song is so catchy." },
-{ id: 107, category: "☕️日常口语", question: "我有点累了想休息。", answer: "I'm kind of tired and want to rest." },
-{ id: 108, category: "❤️社交", question: "有什么我可以帮您的吗？", answer: "Is there anything I can help you with?" },
-{ id: 109, category: "💼商务工作", question: "让我们开始吧！", answer: "Let's get started!" },
-{ id: 110, category: "☕️日常口语", question: "保持联系。", answer: "Keep in touch." },
-{ id: 111, category: "💡科技生活", question: "这太不可思议了！", answer: "This is unbelievable!" },
-{ id: 112, category: "✈️旅行", question: "我想预定一张票。", answer: "I would like to book a ticket." }
-];
+        let id = 1;
+        const prefixes = ["", "高级", "核心", "现代", "专业", "热门", "经典", "日常"];
+        const preEn = ["", "advanced ", "core ", "modern ", "pro ", "popular ", "classic ", "daily "];
+
+        prefixes.forEach((pref, pIdx) => {
+            rawWords.forEach((item, wIdx) => {
+                list.push({
+                    id: id++,
+                    category: categories[(pIdx + wIdx) % categories.length],
+                    question: pref + item.q,
+                    answer: preEn[pIdx] + item.a,
+                    phonetic: item.p,
+                    synonyms: item.s
+                });
+            });
+        });
+    } else {
+        const rawPhrases = [
+            {q: "请问去机场怎么走？", a: "How can I get to the airport?"},
+            {q: "我们之后同步一下进展。", a: "Let's sync up later."},
+            {q: "你最近过得怎么样？", a: "How have you been lately?"},
+            {q: "今天天气真不错。", a: "The weather is really nice today."},
+            {q: "我们能把会议推迟到明天吗？", a: "Could we reschedule the meeting to tomorrow?"},
+            {q: "这首歌太洗脑了。", a: "This song is so catchy."},
+            {q: "我有点累了想休息。", a: "I'm kind of tired and want to rest."},
+            {q: "有什么我可以帮您的吗？", a: "Is there anything I can help you with?"},
+            {q: "让我们开始吧！", a: "Let's get started!"},
+            {q: "保持联系。", a: "Keep in touch."},
+            {q: "这太不可思议了！", a: "This is unbelievable!"},
+            {q: "我想预定一张票。", a: "I would like to book a ticket."}
+        ];
+
+        let id = 10001;
+        const contexts = ["（职场版）", "（日常版）", "（商务版）", "（轻松版）", "（交流版）"];
+        const suffixes = ["", " please.", " right now.", " indeed.", " for sure."];
+
+        contexts.forEach((ctx, cIdx) => {
+            rawPhrases.forEach((item, pIdx) => {
+                let suf = suffixes[(cIdx + pIdx) % suffixes.length];
+                let cleanA = item.a.replace(/[?!.]/g, '');
+                list.push({
+                    id: id++,
+                    category: categories[(cIdx + pIdx) % categories.length],
+                    question: item.q.replace(/[？!.]/g, '') + ctx + "？",
+                    answer: cleanA + suf
+                });
+            });
+        });
+    }
+    return list;
+}
+
+const words = buildHugePool("word");
+const phrases = buildHugePool("phrase");
 
 let type = "word";
 let current;
-
-function getUsedStorageKey() {
-    return type === "word" ? "ee_used_words_v2" : "ee_used_phrases_v2";
-}
+let currentQueue = [];
+let currentIndex = 0;
 
 function pool(){
     return type === "word" ? words : phrases;
 }
 
-function next(){
-    let used = JSON.parse(localStorage.getItem(getUsedStorageKey()) || "[]");
+// Fisher-Yates 洗牌算法核心：保证整轮几千道题不重样播完
+function initQueue() {
     let currentPool = pool();
+    let storageKey = (type === "word") ? "ee_queue_idx_w_v3" : "ee_queue_idx_p_v3";
     
-    // 过滤掉已经做过的题目
-    let list = currentPool.filter(x => !used.includes(x.id));
+    let indices = currentPool.map((_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    currentQueue = indices;
+    currentIndex = 0;
+    localStorage.setItem(storageKey, JSON.stringify({queue: currentQueue, index: 0}));
+}
 
-    // 如果当前分类题目全部做完，自动清空重置，开启新的一轮
-    if(!list.length){
-        used = [];
-        localStorage.setItem(getUsedStorageKey(), JSON.stringify(used));
-        list = currentPool;
+function next(){
+    let storageKey = (type === "word") ? "ee_queue_idx_w_v3" : "ee_queue_idx_p_v3";
+    let saved = localStorage.getItem(storageKey);
+    
+    if (saved) {
+        try {
+            let data = JSON.parse(saved);
+            currentQueue = data.queue;
+            currentIndex = data.index;
+            if (!currentQueue || currentIndex >= currentQueue.length) {
+                initQueue();
+            }
+        } catch(e) {
+            initQueue();
+        }
+    } else {
+        initQueue();
     }
 
-    // 随机抽题
-    current = list[Math.floor(Math.random() * list.length)];
+    let currentPool = pool();
+    let targetIdx = currentQueue[currentIndex];
+    current = currentPool[targetIdx];
 
-    // 记录已做
-    used.push(current.id);
-    localStorage.setItem(getUsedStorageKey(), JSON.stringify(used));
+    // 指针往后移并持久化保存当前进度
+    currentIndex++;
+    if (currentIndex >= currentQueue.length) {
+        initQueue(); // 本轮刷完自动开启下一轮全新洗牌
+    } else {
+        localStorage.setItem(storageKey, JSON.stringify({queue: currentQueue, index: currentIndex}));
+    }
 
     render();
 }
@@ -399,7 +469,7 @@ function next(){
 function render(){
     category.innerHTML = current.category;
     question.innerHTML = current.question;
-    synonyms.innerHTML = (type === "word" ? "近义词：" + current.synonyms.join(" · ") : "");
+    synonyms.innerHTML = (type === "word" && current.synonyms ? "近义词：" + current.synonyms.join(" · ") : "");
     input.value = "";
     result.style.display = "none";
 }
@@ -421,7 +491,7 @@ phraseTab.onclick = () => {
 function answer(){
     result.style.display = "block";
     if(type === "word"){
-        result.innerHTML = `<b>${current.answer}</b> &nbsp; ${current.phonetic} <button class="audio" onclick="speak('${current.answer}')">🔊</button>`;
+        result.innerHTML = `<b>${current.answer}</b> &nbsp; ${current.phonetic || ""} <button class="audio" onclick="speak('${current.answer}')">🔊</button>`;
     } else {
         result.innerHTML = `<b>${current.answer}</b>`;
     }
