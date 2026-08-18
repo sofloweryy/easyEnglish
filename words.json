@@ -1,52 +1,802 @@
 [
   {
-    "chinese": "前天",
-    "english": "the day before yesterday",
-    "alternatives": ["two days ago"]
+    "id": "w1",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "苹果",
+    "english": "apple",
+    "alternatives": []
   },
   {
-    "chinese": "我在路上",
-    "english": "I'm on my way",
-    "alternatives": ["I am on the way", "I'm coming"]
+    "id": "w2",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "香蕉",
+    "english": "banana",
+    "alternatives": []
   },
   {
+    "id": "w3",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "计算机",
+    "english": "computer",
+    "alternatives": ["pc"]
+  },
+  {
+    "id": "w4",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "朋友",
+    "english": "friend",
+    "alternatives": []
+  },
+  {
+    "id": "w5",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "学校",
+    "english": "school",
+    "alternatives": []
+  },
+  {
+    "id": "w6",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "书",
+    "english": "book",
+    "alternatives": []
+  },
+  {
+    "id": "w7",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "水",
+    "english": "water",
+    "alternatives": []
+  },
+  {
+    "id": "w8",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "时间",
+    "english": "time",
+    "alternatives": []
+  },
+  {
+    "id": "w9",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "钱",
+    "english": "money",
+    "alternatives": ["cash"]
+  },
+  {
+    "id": "w10",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "工作",
+    "english": "work",
+    "alternatives": ["job"]
+  },
+  {
+    "id": "w11",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "家庭",
+    "english": "family",
+    "alternatives": []
+  },
+  {
+    "id": "w12",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "城市",
+    "english": "city",
+    "alternatives": ["town"]
+  },
+  {
+    "id": "w13",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "国家",
+    "english": "country",
+    "alternatives": []
+  },
+  {
+    "id": "w14",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "音乐",
+    "english": "music",
+    "alternatives": []
+  },
+  {
+    "id": "w15",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "电影",
+    "english": "movie",
+    "alternatives": ["film"]
+  },
+  {
+    "id": "w16",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "食物",
+    "english": "food",
+    "alternatives": []
+  },
+  {
+    "id": "w17",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "衣服",
+    "english": "clothes",
+    "alternatives": []
+  },
+  {
+    "id": "w18",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "车",
+    "english": "car",
+    "alternatives": ["automobile"]
+  },
+  {
+    "id": "w19",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "电话",
+    "english": "phone",
+    "alternatives": ["telephone"]
+  },
+  {
+    "id": "w20",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "门",
+    "english": "door",
+    "alternatives": []
+  },
+  {
+    "id": "w21",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "窗户",
+    "english": "window",
+    "alternatives": []
+  },
+  {
+    "id": "w22",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "桌子",
+    "english": "desk",
+    "alternatives": ["table"]
+  },
+  {
+    "id": "w23",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "椅子",
+    "english": "chair",
+    "alternatives": []
+  },
+  {
+    "id": "w24",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "笔",
+    "english": "pen",
+    "alternatives": []
+  },
+  {
+    "id": "w25",
+    "type": "word",
+    "category": "核心单词",
+    "chinese": "纸",
+    "english": "paper",
+    "alternatives": []
+  },
+  {
+    "id": "w26",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "改变",
+    "english": "change",
+    "alternatives": []
+  },
+  {
+    "id": "w27",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "创造",
+    "english": "create",
+    "alternatives": []
+  },
+  {
+    "id": "w28",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "决定",
+    "english": "decide",
+    "alternatives": []
+  },
+  {
+    "id": "w29",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "发展",
+    "english": "develop",
+    "alternatives": []
+  },
+  {
+    "id": "w30",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "发现",
+    "english": "discover",
+    "alternatives": ["find"]
+  },
+  {
+    "id": "w31",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "解释",
+    "english": "explain",
+    "alternatives": []
+  },
+  {
+    "id": "w32",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "想象",
+    "english": "imagine",
+    "alternatives": []
+  },
+  {
+    "id": "w33",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "提高",
+    "english": "improve",
+    "alternatives": ["enhance"]
+  },
+  {
+    "id": "w34",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "保护",
+    "english": "protect",
+    "alternatives": []
+  },
+  {
+    "id": "w35",
+    "type": "word",
+    "category": "动词专区",
+    "chinese": "记住",
+    "english": "remember",
+    "alternatives": []
+  },
+  {
+    "id": "w36",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "美丽的",
+    "english": "beautiful",
+    "alternatives": ["pretty", "lovely"]
+  },
+  {
+    "id": "w37",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "聪明的",
+    "english": "clever",
+    "alternatives": ["smart", "intelligent"]
+  },
+  {
+    "id": "w38",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "危险的",
+    "english": "dangerous",
+    "alternatives": []
+  },
+  {
+    "id": "w39",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "兴奋的",
+    "english": "excited",
+    "alternatives": []
+  },
+  {
+    "id": "w40",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "著名的",
+    "english": "famous",
+    "alternatives": []
+  },
+  {
+    "id": "w41",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "健康的",
+    "english": "healthy",
+    "alternatives": []
+  },
+  {
+    "id": "w42",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "重要的",
+    "english": "important",
+    "alternatives": []
+  },
+  {
+    "id": "w43",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "幸运的",
+    "english": "lucky",
+    "alternatives": ["fortunate"]
+  },
+  {
+    "id": "w44",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "现代的",
+    "english": "modern",
+    "alternatives": []
+  },
+  {
+    "id": "w45",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "自然的",
+    "english": "natural",
+    "alternatives": []
+  },
+  {
+    "id": "w46",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "民用的/公众的",
+    "english": "public",
+    "alternatives": []
+  },
+  {
+    "id": "w47",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "安静的",
+    "english": "quiet",
+    "alternatives": ["silent"]
+  },
+  {
+    "id": "w48",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "成功的",
+    "english": "successful",
+    "alternatives": []
+  },
+  {
+    "id": "w49",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "传统的",
+    "english": "traditional",
+    "alternatives": []
+  },
+  {
+    "id": "w50",
+    "type": "word",
+    "category": "形容词专区",
+    "chinese": "有用的",
+    "english": "useful",
+    "alternatives": ["helpful"]
+  },
+  {
+    "id": "p1",
+    "type": "phrase",
+    "category": "日常短语",
     "chinese": "稍等一下",
     "english": "Just a second",
     "alternatives": ["Wait a second", "Just a moment", "Hold on"]
   },
   {
+    "id": "p2",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "我在路上",
+    "english": "I'm on my way",
+    "alternatives": ["I am on the way", "I'm coming"]
+  },
+  {
+    "id": "p3",
+    "type": "phrase",
+    "category": "日常短语",
     "chinese": "这怎么可能？",
     "english": "How is that possible?",
     "alternatives": ["How can that be?", "Is that possible?"]
   },
   {
+    "id": "p4",
+    "type": "phrase",
+    "category": "日常短语",
     "chinese": "随便你",
     "english": "It's up to you",
     "alternatives": ["You decide", "Whatever you want"]
   },
   {
-    "chinese": "真不敢相信",
-    "english": "I can't believe it",
-    "alternatives": ["Unbelievable"]
+    "id": "p5",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "前天",
+    "english": "the day before yesterday",
+    "alternatives": ["two days ago"]
   },
   {
-    "chinese": "下周三",
-    "english": "Next Wednesday",
-    "alternatives": []
+    "id": "p6",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "好久不见",
+    "english": "Long time no see",
+    "alternatives": ["It's been a long time"]
   },
   {
-    "chinese": "你说了算",
-    "english": "You're the boss",
-    "alternatives": ["It's your call"]
+    "id": "p7",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "祝你好运",
+    "english": "Good luck",
+    "alternatives": ["Best of luck"]
   },
   {
-    "chinese": "我无所谓",
-    "english": "I don't care",
-    "alternatives": ["It doesn't matter to me"]
+    "id": "p8",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "别担心",
+    "english": "Don't worry",
+    "alternatives": ["No worries"]
   },
   {
-    "chinese": "帮个忙呗",
-    "english": "Do me a favor",
-    "alternatives": ["Can you help me"]
+    "id": "p9",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "没问题",
+    "english": "No problem",
+    "alternatives": ["Not a problem", "Sure"]
+  },
+  {
+    "id": "p10",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "当心，小心",
+    "english": "Be careful",
+    "alternatives": ["Watch out", "Take care"]
+  },
+  {
+    "id": "p11",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "听起来不错",
+    "english": "Sounds good",
+    "alternatives": ["That sounds good"]
+  },
+  {
+    "id": "p12",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "随便吃/请自便",
+    "english": "Help yourself",
+    "alternatives": ["Make yourself at home"]
+  },
+  {
+    "id": "p13",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "太荒谬了",
+    "english": "That's ridiculous",
+    "alternatives": ["That's absurd"]
+  },
+  {
+    "id": "p14",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "真的假的？",
+    "english": "Are you kidding me?",
+    "alternatives": ["Really?", "Is that true?"]
+  },
+  {
+    "id": "p15",
+    "type": "phrase",
+    "category": "日常短语",
+    "chinese": "我明白了",
+    "english": "I see",
+    "alternatives": ["I understand", "Got it"]
+  },
+  {
+    "id": "p16",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "我来处理这件事",
+    "english": "I will handle it",
+    "alternatives": ["I'll take care of it", "Leave it to me"]
+  },
+  {
+    "id": "p17",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "让我查一下",
+    "english": "Let me check",
+    "alternatives": ["Let me look into it"]
+  },
+  {
+    "id": "p18",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "稍后给你答复",
+    "english": "I'll get back to you later",
+    "alternatives": ["I will reply later"]
+  },
+  {
+    "id": "p19",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "保持联系",
+    "english": "Keep in touch",
+    "alternatives": ["Stay in touch"]
+  },
+  {
+    "id": "p20",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "下周见",
+    "english": "See you next week",
+    "alternatives": ["Catch you next week"]
+  },
+  {
+    "id": "p21",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "开个玩笑",
+    "english": "Just kidding",
+    "alternatives": ["Only joking"]
+  },
+  {
+    "id": "p22",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "按计划进行",
+    "english": "As planned",
+    "alternatives": ["According to plan"]
+  },
+  {
+    "id": "p23",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "尽我最大努力",
+    "english": "Do my best",
+    "alternatives": ["Do my utmost"]
+  },
+  {
+    "id": "p24",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "没关系",
+    "english": "It doesn't matter",
+    "alternatives": ["Never mind", "That's fine"]
+  },
+  {
+    "id": "p25",
+    "type": "phrase",
+    "category": "职场商务",
+    "chinese": "毫无疑问",
+    "english": "Without a doubt",
+    "alternatives": ["No doubt"]
+  },
+  {
+    "id": "p26",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "我很高兴",
+    "english": "I am so happy",
+    "alternatives": ["I'm very glad"]
+  },
+  {
+    "id": "p27",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "我累了",
+    "english": "I am tired",
+    "alternatives": ["I'm exhausted"]
+  },
+  {
+    "id": "p28",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "太棒了",
+    "english": "That's awesome",
+    "alternatives": ["That's great", "Wonderful"]
+  },
+  {
+    "id": "p29",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "真遗憾",
+    "english": "What a pity",
+    "alternatives": ["It's a shame"]
+  },
+  {
+    "id": "p30",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "我相信你",
+    "english": "I believe you",
+    "alternatives": ["I trust you"]
+  },
+  {
+    "id": "p31",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "我不确定",
+    "english": "I'm not sure",
+    "alternatives": ["I don't know for sure"]
+  },
+  {
+    "id": "p32",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "我同意",
+    "english": "I agree with you",
+    "alternatives": ["I agree"]
+  },
+  {
+    "id": "p33",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "我不同意",
+    "english": "I disagree",
+    "alternatives": ["I don't agree"]
+  },
+  {
+    "id": "p34",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "这取决于...",
+    "english": "It depends on...",
+    "alternatives": ["That depends"]
+  },
+  {
+    "id": "p35",
+    "type": "phrase",
+    "category": "情感表达",
+    "chinese": "太感谢了",
+    "english": "Thank you so much",
+    "alternatives": ["Many thanks", "Thanks a lot"]
+  },
+  {
+    "id": "p36",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "多少钱？",
+    "english": "How much is it?",
+    "alternatives": ["How much does this cost?"]
+  },
+  {
+    "id": "p37",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "太贵了",
+    "english": "Too expensive",
+    "alternatives": ["That's too costly"]
+  },
+  {
+    "id": "p38",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "打扰一下",
+    "english": "Excuse me",
+    "alternatives": ["Pardon me"]
+  },
+  {
+    "id": "p39",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "对不起",
+    "english": "I'm sorry",
+    "alternatives": ["Forgive me"]
+  },
+  {
+    "id": "p40",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "洗手间在哪里？",
+    "english": "Where is the restroom?",
+    "alternatives": ["Where is the toilet?", "Where is the washroom?"]
+  },
+  {
+    "id": "p41",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "你会说中文吗？",
+    "english": "Do you speak Chinese?",
+    "alternatives": ["Can you speak Chinese?"]
+  },
+  {
+    "id": "p42",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "我听不懂",
+    "english": "I don't understand",
+    "alternatives": ["I can't understand"]
+  },
+  {
+    "id": "p43",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "请再说一遍",
+    "english": "Say it again, please",
+    "alternatives": ["Could you repeat that?"]
+  },
+  {
+    "id": "p44",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "请慢一点说",
+    "english": "Speak more slowly, please",
+    "alternatives": ["Could you speak slower?"]
+  },
+  {
+    "id": "p45",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "一路顺风",
+    "english": "Have a nice trip",
+    "alternatives": ["Safe journey", "Bon voyage"]
+  },
+  {
+    "id": "p46",
+    "type": "phrase",
+    "category": "行动建议",
+    "chinese": "我们走吧",
+    "english": "Let's go",
+    "alternatives": ["Let us leave"]
+  },
+  {
+    "id": "p47",
+    "type": "phrase",
+    "category": "行动建议",
+    "chinese": "跟我来",
+    "english": "Follow me",
+    "alternatives": ["Come with me"]
+  },
+  {
+    "id": "p48",
+    "type": "phrase",
+    "category": "行动建议",
+    "chinese": "别放弃",
+    "english": "Don't give up",
+    "alternatives": ["Keep going"]
+  },
+  {
+    "id": "p49",
+    "type": "phrase",
+    "category": "行动建议",
+    "chinese": "试一试",
+    "english": "Give it a try",
+    "alternatives": ["Have a try", "Try it out"]
+  },
+  {
+    "id": "p50",
+    "type": "phrase",
+    "category": "行动建议",
+    "chinese": "走着瞧",
+    "english": "Wait and see",
+    "alternatives": ["Time will tell"]
   }
 ]
