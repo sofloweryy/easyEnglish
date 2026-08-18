@@ -1,0 +1,122 @@
+[
+  {
+    "id": "p1",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "稍等一下",
+    "english": "Just a second",
+    "alternatives": ["Wait a second", "Hold on"]
+  },
+  {
+    "id": "p2",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "我在路上",
+    "english": "I am on my way",
+    "alternatives": ["I'm on my way"]
+  },
+  {
+    "id": "p3",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "这怎么可能？",
+    "english": "How is that possible?",
+    "alternatives": ["How can that be?"]
+  },
+  {
+    "id": "p4",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "随便你",
+    "english": "It is up to you",
+    "alternatives": ["It's up to you"]
+  },
+  {
+    "id": "p5",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "好久不见",
+    "english": "Long time no see",
+    "alternatives": ["It's been a long time"]
+  },
+  {
+    "id": "p6",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "祝你好运",
+    "english": "Good luck",
+    "alternatives": ["Best of luck"]
+  },
+  {
+    "id": "p7",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "别担心",
+    "english": "Don't worry",
+    "alternatives": ["No worries"]
+  },
+  {
+    "id": "p8",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "没问题",
+    "english": "No problem",
+    "alternatives": ["Not a problem"]
+  },
+  {
+    "id": "p9",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "小心点",
+    "english": "Be careful",
+    "alternatives": ["Watch out"]
+  },
+  {
+    "id": "p10",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "听起来不错",
+    "english": "Sounds good",
+    "alternatives": ["That sounds good"]
+  },
+  {
+    "id": "p11",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "请自便",
+    "english": "Help yourself",
+    "alternatives": ["Make yourself at home"]
+  },
+  {
+    "id": "p12",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "我明白了",
+    "english": "I see",
+    "alternatives": ["I understand", "Got it"]
+  },
+  {
+    "id": "p13",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "多少钱？",
+    "english": "How much is it?",
+    "alternatives": ["How much does this cost?"]
+  },
+  {
+    "id": "p14",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "太贵了",
+    "english": "Too expensive",
+    "alternatives": ["That's too costly"]
+  },
+  {
+    "id": "p15",
+    "type": "phrase",
+    "category": "生活旅游",
+    "chinese": "洗手间在哪里？",
+    "english": "Where is the restroom?",
+    "alternatives": ["Where is the toilet?"]
+  }
+]
