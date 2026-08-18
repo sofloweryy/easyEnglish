@@ -140,7 +140,7 @@ margin-top:15px
 flex:1;
 padding:12px;
 border-radius:18px;
-border:2px solid #403C3A;
+border:22 solid #403C3A;
 font-weight:bold;
 box-shadow:3px 3px 0 #403C3A;
 cursor:pointer
@@ -151,11 +151,12 @@ cursor:pointer
 .result{
 display:none;
 margin-top:20px;
-background:#EAF6EA;
 padding:15px;
 border-radius:18px;
 text-align:center
 }
+.result-correct{background:#EAF6EA}
+.result-wrong{background:#FDEAEA}
 .audio{
 border:0;
 background:none;
@@ -165,18 +166,18 @@ cursor:pointer
 footer{
 margin-top:25px;
 display:flex;
-justify-content:space-between
+justify-content:space-between;
+gap:10px
 }
 footer button{
 background:#fff;
 border:2px solid #403C3A;
 border-radius:18px;
 padding:12px;
-cursor:pointer
+cursor:pointer;
+flex:1
 }
-.surprise{
-background:#FFF1C9
-}
+.surprise{background:#FFF1C9}
 .modal{
 display:none;
 position:fixed;
@@ -219,6 +220,29 @@ outline:none;
 background:#FFF;
 text-align:left;
 }
+.progress-bar{
+margin-top:12px;
+height:8px;
+background:#eee;
+border-radius:4px;
+overflow:hidden
+}
+.progress-fill{
+height:100%;
+background:linear-gradient(90deg,#8CAFFF,#F3A9BF);
+border-radius:4px;
+transition:width 0.3s
+}
+.mode-tag{
+display:inline-block;
+background:#F3A9BF;
+color:#fff;
+font-size:11px;
+padding:2px 8px;
+border-radius:10px;
+margin-left:6px;
+vertical-align:middle
+}
 </style>
 </head>
 
@@ -229,7 +253,10 @@ text-align:left;
 <div class="header">
 <div class="logo">Easy <span>English</span></div>
 <div>
-<div class="status">🔥 连续打卡<br>⭐120</div>
+<div class="status">
+<div id="streakInfo">🔥 连续打卡 0 天</div>
+<div id="starInfo">⭐ 0</div>
+</div>
 <div class="install" onclick="openAppPop()">📲 下载App</div>
 </div>
 </div>
@@ -246,7 +273,10 @@ text-align:left;
 <button id="phraseTab">💬 短语库</button>
 </div>
 
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
 <div id="category" class="category">✨ 准备中</div>
+<div id="modeTag" style="display:none;" class="mode-tag"></div>
+</div>
 
 <div id="question" class="question">正在把好玩的题目打包装箱... 🎁</div>
 
@@ -264,6 +294,13 @@ text-align:left;
 </div>
 
 <div id="result" class="result"></div>
+
+<div class="progress-bar">
+<div id="progressFill" class="progress-fill" style="width:0%"></div>
+</div>
+<div style="text-align:center;font-size:12px;color:#999;margin-top:4px;">
+本轮进度：<span id="progressText">0 / 0</span>
+</div>
 
 </div>
 
@@ -293,8 +330,8 @@ text-align:left;
 <div class="modal-box" style="text-align: left;">
 <p style="text-align: center; font-weight: bold; font-size: 18px; margin-top:0;">📲 添加到手机桌面</p>
 <p style="font-size: 14px; line-height: 1.6; color: #555;">
-• <b>iOS (Safari 浏览器)</b>：<br>点击下方工具栏的“分享”按钮，然后选择 <b>“添加到主屏幕”</b>。<br><br>
-• <b>Android (Chrome 浏览器)</b>：<br>点击右上角菜单按钮，选择 <b>“安装应用”</b> 或 <b>“添加到主屏幕”</b>。
+• <b>iOS (Safari 浏览器)</b>：<br>点击下方工具栏的"分享"按钮，然后选择 <b>"添加到主屏幕"</b>。<br><br>
+• <b>Android (Chrome 浏览器)</b>：<br>点击右上角菜单按钮，选择 <b>"安装应用"</b> 或 <b>"添加到主屏幕"</b>。
 </p>
 <button onclick="closeAppPop()" style="margin-top: 10px;">我知道啦</button>
 </div>
@@ -302,7 +339,7 @@ text-align:left;
 
 <div id="myModal" class="modal">
 <div class="modal-box" style="text-align: left;">
-<p style="text-align: center; font-weight: bold; font-size: 18px; margin-top:0;">👤 个人中心绑定</p>
+<p style="text-align: center; font-weight: bold; font-size: 18px; margin-top:0;">👤 个 人中心绑定</p>
 <label style="font-size: 13px; font-weight: bold;">专属昵称：</label>
 <input type="text" id="regName" placeholder="例如：flower">
 <label style="font-size: 13px; font-weight: bold; display: block; margin-top: 10px;">绑定邮箱：</label>
@@ -315,89 +352,254 @@ text-align:left;
 
 <script>
 
-// 初始化 Supabase 客户端
+// ========== 1. Supabase 配置 ==========
 const SUPABASE_URL = 'https://hrgzmwtgpacdxifcevwy.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_4XcXlLh77BtvmIajOGbpPA_T7d6b9fu';
 const supabaseApp = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ========== 2. 内置本地备用词库（解决题库少） ==========
+// 当 Supabase 数据不足时自动启用，包含常用单词和短语
+const LOCAL_BACKUP_WORDS = [
+  // === 高频单词 (type: word) ===
+  {id:'L1',type:'word',category:'基础',question:'hello',answer:'hello',phonetic:'/həˈləʊ/',synonyms:['hi','hey']},
+  {id:'L2',type:'word',category:'基础',question:'goodbye',answer:'goodbye',phonetic:'/ɡʊdˈbaɪ/',synonyms:['bye','see you']},
+  {id:'L3',type:'word',category:'基础',question:'please',answer:'please',phonetic:'/pliːz/',synonyms:['kindly']},
+  {id:'L4',type:'word',category:'基础',question:'thank',answer:'thank',phonetic:'/θæŋk/',synonyms:['thanks','appreciate']},
+  {id:'L5',type:'word',category:'基础',question:'sorry',answer:'sorry',phonetic:'/ˈsɒri/',synonyms:['apologize']},
+  {id:'L6',type:'word',category:'基础',question:'friend',answer:'friend',phonetic:'/frend/',synonyms:['pal','companion']},
+  {id:'L7',type:'word',category:'基础',question:'happy',answer:'happy',phonetic:'/ˈhæpi/',synonyms:['glad','joyful']},
+  {id:'L8',type:'word',category:'基础',question:'sad',answer:'sad',phonetic:'/sæd/',synonyms:['unhappy','sorrowful']},
+  {id:'L9',type:'word',category:'基础',question:'big',answer:'big',phonetic:'/bɪɡ/',synonyms:['large','huge']},
+  {id:'L10',type:'word',category:'基础',question:'small',answer:'small',phonetic:'/smɔːl/',synonyms:['tiny','little']},
+  {id:'L11',type:'word',category:'日常',question:'water',answer:'water',phonetic:'/ˈwɔːtər/',synonyms:['H2O']},
+  {id:'L12',type:'word',category:'日常',question:'food',answer:'food',phonetic:'/fuːd/',synonyms:['meal','eat']},
+  {id:'L13',type:'word',category:'日常',question:'house',answer:'house',phonetic:'/haʊs/',synonyms:['home','house']},
+  {id:'L14',type:'word',category:'日常',question:'book',answer:'book',phonetic:'/bʊk/',synonyms:['novel','read']},
+  {id:'L15',type:'word',category:'日常',question:'school',answer:'school',phonetic:'/skuːl/',synonyms:['university','college']},
+  {id:'L16',type:'word',category:'日常',question:'time',answer:'time',phonetic:'/taɪm/',synonyms:['moment','period']},
+  {id:'L17',type:'word',category:'日常',question:'work',answer:'work',phonetic:'/wɜːk/',synonyms:['job','labor']},
+  {id:'L18',type:'word',category:'日常',question:'family',answer:'family',phonetic:'/ˈfæməli/',synonyms:['relatives','household']},
+  {id:'L19',type:'word',category:'日常',question:'money',answer:'money',phonetic:'/ˈmʌni/',synonyms:['cash','fund']},
+  {id:'L20',type:'word',category:'日常',question:'life',answer:'life',phonetic:'/laɪf/',synonyms:['existence','living']},
+  {id:'L21',type:'word',category:'学习',question:'learn',answer:'learn',phonetic:'/lɜːn/',synonyms:['study','master']},
+  {id:'L22',type:'word',category:'学习',question:'read',answer:'read',phonetic:'/riːd/',synonyms:['browse','skim']},
+  {id:'L23',type:'word',category:'学习',question:'write',answer:'write',phonetic:'/raɪt/',synonyms:['compose','pen']},
+  {id:'L24',type:'word',category:'学习',question:'think',answer:'think',phonetic:'/θɪŋk/',synonyms:['consider','believe']},
+  {id:'L25',type:'word',category:'学习',question:'know',answer:'know',phonetic:'/nəʊ/',synonyms:['understand','realize']},
+  {id:'L26',type:'word',category:'学习',question:'tell',answer:'tell',phonetic:'/tel/',synonyms:['say','inform']},
+  {id:'L27',type:'word',category:'学习',question:'make',answer:'make',phonetic:'/meɪk/',synonyms:['create','build']},
+  {id:'L28',type:'word',category:'学习',question:'get',answer:'get',phonetic:'/ɡet/',synonyms:['obtain','acquire']},
+  {id:'L29',type:'word',category:'学习',question:'give',answer:'give',phonetic:'/ɡɪv/',synonyms:['offer','donate']},
+  {id:'L30',type:'word',category:'学习',question:'use',answer:'use',phonetic:'/juːz/',synonyms:['utilize','employ']},
+  {id:'L31',type:'word',category:'旅行',question:'travel',answer:'travel',phonetic:'/ˈtrævl/',synonyms:['journey','trip']},
+  {id:'L32',type:'word',category:'旅行',question:'hotel',answer:'hotel',phonetic:'/həʊˈtel/',synonyms:['motel','inn']},
+  {id:'L33',type:'word',category:'旅行',question:'ticket',answer:'ticket',phonetic:'/ˈtɪkɪt/',synonyms:['pass','admit']},
+  {id:'L34',type:'word',category:'旅行',question:'airport',answer:'airport',phonetic:'/ˈeəpɔːt/',synonyms:['aerodrome']},
+  {id:'L35',type:'word',category:'旅行',question:'passport',answer:'passport',phonetic:'/ˈpɑːspɔːt/',synonyms:['ID','document']},
+  {id:'L36',type:'word',category:'职场',question:'meeting',answer:'meeting',phonetic:'/ˈmiːtɪŋ/',synonyms:['gathering','conference']},
+  {id:'L37',type:'word',category:'职场',question:'office',answer:'office',phonetic:'/ˈɒfɪs/',synonyms:['workplace','desk']},
+  {id:'L38',type:'word',category:'职场',question:'project',answer:'project',phonetic:'/ˈprɒdʒekt/',synonyms:['task','assignment']},
+  {id:'L39',type:'word',category:'职场',question:'deadline',answer:'deadline',phonetic:'/ˈdedlaɪn/',synonyms:['due date','limit']},
+  {id:'L40',type:'word',category:'职场',question:'salary',answer:'salary',phonetic:'/ˈsæləri/',synonyms:['wage','pay']},
+  // === 高频短语 (type: phrase) ===
+  {id:'P1',type:'phrase',category:'日常',question:'How are you?',answer:'I am fine, thank you'},
+  {id:'P2',type:'phrase',category:'日常',question:'Nice to meet you',answer:'Nice to meet you too'},
+  {id:'P3',type:'phrase',category:'日常',question:'What do you think?',answer:'I think so'},
+  {id:'P4',type:'phrase',category:'日常',question:'Can you help me?',answer:'Sure, no problem'},
+  {id:'P5',type:'phrase',category:'日常',question:'Where is the bathroom?',answer:'It is over there'},
+  {id:'P6',type:'phrase',category:'旅行',question:'How much is this?',answer:'It is ten dollars'},
+  {id:'P7',type:'phrase',category:'旅行',question:'Where is the station?',answer:'It is next to the park'},
+  {id:'P8',type:'phrase',category:'旅行',question:'I would like to book a room',answer:'Sure, for how many nights'},
+  {id:'P9',type:'phrase',category:'职场',question:'Let me check my schedule',answer:'Okay, take your time'},
+  {id:'P10',type:'phrase',category:'职场',question:'Could you send me the file?',answer:'Yes, I will send it now'},
+  {id:'P11',type:'phrase',category:'职场',question:'We need to discuss this',answer:'When are you free?'},
+  {id:'P12',type:'phrase',category:'日常',question:'What time is it?',answer:'It is three o\'clock'},
+  {id:'P13',type:'phrase',category:'日常',question:'Do you speak English?',answer:'A little bit'},
+  {id:'P14',type:'phrase',category:'日常',question:'I do not understand',answer:'Let me explain again'},
+  {id:'P15',type:'phrase',category:'日常',question:'See you later',answer:'See you later, goodbye'},
+  {id:'P16',type:'phrase',category:'日常',question:'Have a nice day!',answer:'Thank you, you too!'},
+  {id:'P17',type:'phrase',category:'日常',question:'What is your name?',answer:'My name is...'},
+  {id:'P18',type:'phrase',category:'日常',question:'Where are you from?',answer:'I am from China'},
+  {id:'P19',type:'phrase',category:'日常',question:'How old are you?',answer:'I am twenty years old'},
+  {id:'P20',type:'phrase',category:'日常',question:'What do you do?',answer:'I am a student'},
+  {id:'P21',type:'phrase',category:'日常',question:'Would you like something to drink?',answer:'Yes, a cup of coffee please'},
+  {id:'P22',type:'phrase',category:'日常',question:'It is my pleasure',answer:'You are very welcome'},
+  {id:'P23',type:'phrase',category:'日常',question:'No worries',answer:'That is very kind of you'},
+  {id:'P24',type:'phrase',category:'日常',question:'By the way',answer:'Oh, I forgot to tell you'},
+  {id:'P25',type:'phrase',category:'日常',question:'Long time no see',answer:'Yes, how have you been?'},
+];
+
+// ========== 3. 全局变量 ==========
+let type = "word"; // 'word' 或 'phrase'
+let cloudPool = []; // Supabase 题库
+let localPool = []; // 本地备用词库
+let questionPool = []; // 合并后的完整题库
+let current = null;
+let isWrongBookMode = false; // 是否处于错题本模式
+
+// ========== 4. 本地存储工具函数 ==========
+function getDoneIds(type) {
+    try {
+        return JSON.parse(localStorage.getItem(`ee_done_${type}`)) || [];
+    } catch(e) { return []; }
+}
+function saveDoneIds(type, ids) {
+    localStorage.setItem(`ee_done_${type}`, JSON.stringify(ids));
+}
+function getWrongBookIds(type) {
+    try {
+        return JSON.parse(localStorage.getItem(`ee_wrong_${type}`)) || [];
+    } catch(e) { return []; }
+}
+function addWrongId(type, id) {
+    const ids = getWrongBookIds(type);
+    if (!ids.includes(id)) {
+        ids.push(id);
+        saveWrongIds(type, ids);
+    }
+}
+function saveWrongIds(type, ids) {
+    localStorage.setItem(`ee_wrong_${type}`, JSON.stringify(ids));
+}
+function getStreak() {
+    try {
+        const s = JSON.parse(localStorage.getItem('ee_streak')) || { count: 0, lastDate: null };
+        const today = new Date().toDateString();
+        if (s.lastDate !== today) {
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            if (s.lastDate === yesterday) {
+                s.count += 1;
+            } else if (s.lastDate !== today) {
+                s.count = 1;
+            }
+            s.lastDate = today;
+            localStorage.setItem('ee_streak', JSON.stringify(s));
+        }
+        return s.count;
+    } catch(e) { return 0; }
+}
+function addStar() {
+    let stars = parseInt(localStorage.getItem('ee_stars') || '0');
+    stars += 1;
+    localStorage.setItem('ee_stars', String(stars));
+    return stars;
+}
+
+function updateStats() {
+    document.getElementById('streakInfo').innerHTML = `🔥 连续打卡 ${getStreak()} 天`;
+    document.getElementById('starInfo').innerHTML = `⭐ ${localStorage.getItem('ee_stars') || '0'}`;
+}
+
+// ========== 5. 初始化 ==========
 window.onload = function() {
     const savedName = localStorage.getItem('ee_nickname');
-    if(savedName){
+    if(savedName) {
         document.getElementById('myBtn').innerText = `👤 ${savedName}`;
     }
+    updateStats();
     initQuestionPool();
 }
 
-let type = "word"; // 'word' 或 'phrase'
-let questionPool = []; 
-let current = null;
-
+// ========== 6. 核心：混合数据源初始化（解决题库少） ==========
 async function initQuestionPool() {
     document.getElementById('category').innerHTML = "✨ 准备中";
     document.getElementById('question').innerHTML = "正在把好玩的题目打包装箱... 🎁";
-    
+    document.getElementById('modeTag').style.display = 'none';
+    isWrongBookMode = false;
+
+    // 1. 从 Supabase 获取云端数据
     try {
         const { data, error } = await supabaseApp
             .from('questions')
             .select('*')
             .eq('type', type);
-
-        if (error) throw error;
-
-        questionPool = data || [];
-        
-        if (questionPool.length === 0) {
-            document.getElementById('category').innerHTML = "💡 提示";
-            document.getElementById('question').innerHTML = "题库正在赶来的路上，请稍候... 🌱";
-            return;
+        if (!error && data) {
+            cloudPool = data;
         }
-
-        next();
     } catch (err) {
-        console.error(err);
-        document.getElementById('category').innerHTML = "⚠️ 网络开小差了";
-        document.getElementById('question').innerHTML = "刷新一下页面重新连接试试看 🍃";
+        console.warn("Supabase 获取失败，将使用本地词库", err);
+        cloudPool = [];
     }
+
+    // 2. 从本地词库中筛选同类型的
+    localPool = LOCAL_BACKUP_WORDS.filter(w => w.type === type);
+
+    // 3. 合并题库：云端优先 + 本地兜底
+    // 去重：如果云端和本地有相同 id，以云端为准
+    const cloudIds = new Set((cloudPool || []).map(q => String(q.id)));
+    const localOnly = localPool.filter(w => !cloudIds.has(String(w.id)));
+
+    // 最终题库 = 云端数据 + 本地独有数据
+    questionPool = [...(cloudPool || []), ...localOnly];
+
+    if (questionPool.length === 0) {
+        document.getElementById('category').innerHTML = "⚠️ 暂无题目";
+        document.getElementById('question').innerHTML = "请检查网络连接或联系管理员添加题目 📮";
+        return;
+    }
+
+    // 显示数据源信息
+    const sourceInfo = [];
+    if (cloudPool.length > 0) sourceInfo.push(`云端${cloudPool.length}题`);
+    if (localOnly.length > 0) sourceInfo.push(`本地${localOnly.length}题`);
+    document.getElementById('category').innerHTML = `📚 题库 (${sourceInfo.join(' + ')})`;
+
+    next();
 }
 
-// 核心升级：基于 LocalStorage 记录已做过的题目 ID，确保整轮 100% 不重复！
+// ========== 7. 核心：智能抽题函数（解决重复刷题） ==========
 function next(){
     if (questionPool.length === 0) return;
 
-    let historyKey = `ee_done_ids_${type}`;
-    let doneIds = [];
-    try {
-        doneIds = JSON.parse(localStorage.getItem(historyKey)) || [];
-    } catch(e) {
-        doneIds = [];
+    const doneIds = getDoneIds(type);
+    const wrongIds = getWrongBookIds(type);
+
+    let available = [];
+
+    if (isWrongBookMode) {
+        // 错题本模式：只从错题中选
+        available = questionPool.filter(q => wrongIds.includes(String(q.id)) && !doneIds.includes(String(q.id)));
+    } else {
+        // 普通模式：优先从未做过的题中选
+        available = questionPool.filter(q => !doneIds.includes(String(q.id)));
+
+        // 如果未做题没了，但错题本里有题，优先刷错题
+        if (available.length === 0 && wrongIds.length > 0) {
+            available = questionPool.filter(q => wrongIds.includes(String(q.id)));
+            if (available.length > 0) {
+                document.getElementById('modeTag').style.display = 'inline-block';
+                document.getElementById('modeTag').innerText = '🔥 错题复习';
+            }
+        }
     }
 
-    // 筛选出还没做过的题目
-    let available = questionPool.filter(q => !doneIds.includes(q.id));
-
-    // 如果全部做完了，给个温馨提示并清空历史重新开始新一轮循环
+    // 如果全部做完了，清空记录重新开始
     if (available.length === 0) {
-        localStorage.removeItem(historyKey);
-        available = questionPool;
-        // 可以加句提示或者直接进入下一轮
+        localStorage.removeItem(`ee_done_${type}`);
+        available = [...questionPool];
+        if (isWrongBookMode) {
+            // 错题本空了，说明都学会了
+            document.getElementById('modeTag').style.display = 'inline-block';
+            document.getElementById('modeTag').innerText = '🎉 错题已清空';
+            isWrongBookMode = false;
+        }
     }
 
-    // 在剩余没做过的题目里随机抽一个
+    // 随机抽题
     let randomIndex = Math.floor(Math.random() * available.length);
     current = available[randomIndex];
 
-    // 把当前题目 ID 记入已做历史
-    doneIds.push(current.id);
-    localStorage.setItem(historyKey, JSON.stringify(doneIds));
-
+    // 渲染
     render();
+    updateProgress();
 }
 
+// ========== 8. 渲染题目 ==========
 function render(){
     if (!current) return;
     document.getElementById('category').innerHTML = current.category;
     document.getElementById('question').innerHTML = current.question;
-    
+
     let synHtml = "";
     if (type === "word" && current.synonyms && current.synonyms.length > 0) {
         synHtml = "近义词：" + current.synonyms.join(" · ");
@@ -405,27 +607,74 @@ function render(){
     document.getElementById('synonyms').innerHTML = synHtml;
     document.getElementById('input').value = "";
     document.getElementById('result').style.display = "none";
+    document.getElementById('result').className = "result";
 }
 
-const wordTab = document.getElementById('wordTab');
-const phraseTab = document.getElementById('phraseTab');
+// ========== 9. 提交答案（改进匹配逻辑 + 错题记录） ==========
+function check(){
+    let v = document.getElementById('input').value.trim();
+    let result = document.getElementById('result');
+    result.style.display = "block";
 
-wordTab.onclick = async () => {
-    if(type === "word") return;
-    type = "word";
-    wordTab.classList.add("active");
-    phraseTab.classList.remove("active");
-    await initQuestionPool();
+    if(!v){
+        result.innerHTML = "⚠️ 请先输入答案或使用长按语音输入";
+        result.className = "result result-wrong";
+        return;
+    }
+
+    let lv = v.toLowerCase();
+    let correct = false;
+
+    // 改进的答案匹配：多答案支持 + 严格匹配
+    let answers = Array.isArray(current.answer) ? current.answer : [current.answer];
+    let answersLower = answers.map(a => a.toLowerCase().trim());
+
+    // 1. 精确匹配
+    if (answersLower.includes(lv)) {
+        correct = true;
+    }
+    // 2. 去除标点/多余空格后匹配
+    else {
+        let cleanInput = lv.replace(/[^\w\s]/g, '').replace(/\s+/g, ' ');
+        correct = answersLower.some(a => {
+            let cleanAnswer = a.replace(/[^\w\s]/g, '').replace(/\s+/g, ' ');
+            return cleanInput === cleanAnswer || cleanAnswer.includes(cleanInput) || cleanInput.includes(cleanAnswer);
+        });
+    }
+
+    if (correct) {
+        // 答对了
+        addStar();
+        updateStats();
+        result.innerHTML = "✨ <b>Nice！</b> 回答正确！";
+        result.className = "result result-correct";
+
+        // 答对才标记为已完成（不再在显示时标记）
+        const doneIds = getDoneIds(type);
+        if (!doneIds.includes(String(current.id))) {
+            doneIds.push(String(current.id));
+            saveDoneIds(type, doneIds);
+        }
+        // 从错题本移除
+        const wrongIds = getWrongBookIds(type);
+        const wrongIdx = wrongIds.indexOf(String(current.id));
+        if (wrongIdx > -1) {
+            wrongIds.splice(wrongIdx, 1);
+            saveWrongIds(type, wrongIds);
+        }
+    } else {
+        // 答错了
+        result.innerHTML = `💪 再试试看！正确答案是：<b>${current.answer}</b>`;
+        result.className = "result result-wrong";
+
+        // 答错加入错题本
+        addWrongId(type, current.id);
+    }
+
+    updateProgress();
 }
 
-phraseTab.onclick = async () => {
-    if(type === "phrase") return;
-    type = "phrase";
-    phraseTab.classList.add("active");
-    wordTab.classList.remove("active");
-    await initQuestionPool();
-}
-
+// ========== 10. 查看答案 ==========
 function answer(){
     let result = document.getElementById('result');
     result.style.display = "block";
@@ -434,20 +683,41 @@ function answer(){
     } else {
         result.innerHTML = `<b>${current.answer}</b>`;
     }
+    result.className = "result";
 }
 
-function check(){
-    let v = document.getElementById('input').value.trim();
-    let result = document.getElementById('result');
-    result.style.display = "block";
-    if(!v){
-        result.innerHTML = "⚠️ 请先输入答案或使用长按语音输入";
-        return;
-    }
-    let lv = v.toLowerCase();
-    result.innerHTML = current.answer.toLowerCase().includes(lv) ? "✨ Nice！" : "💡 再试试看";
+// ========== 11. 进度更新 ==========
+function updateProgress() {
+    const doneIds = getDoneIds(type);
+    const total = questionPool.length;
+    const done = doneIds.length;
+    document.getElementById('progressText').innerText = `${Math.min(done, total)} / ${total}`;
+    document.getElementById('progressFill').style.width = `${(Math.min(done, total) / total * 100).toFixed(0)}%`;
 }
 
+// ========== 12. Tab 切换 ==========
+const wordTab = document.getElementById('wordTab');
+const phraseTab = document.getElementById('phraseTab');
+
+wordTab.onclick = async () => {
+    if(type === "word") return;
+    type = "word";
+    wordTab.classList.add("active");
+    phraseTab.classList.remove("active");
+    updateStats();
+    await initQuestionPool();
+}
+
+phraseTab.onclick = async () => {
+    if(type === "phrase") return;
+    type = "phrase";
+    phraseTab.classList.add("active");
+    wordTab.classList.remove("active");
+    updateStats();
+    await initQuestionPool();
+}
+
+// ========== 13. 语音朗读 ==========
 function speak(t){
     let u = new SpeechSynthesisUtterance(t);
     u.lang = "en-US";
@@ -455,6 +725,7 @@ function speak(t){
     speechSynthesis.speak(u);
 }
 
+// ========== 14. 弹窗控制 ==========
 function openPop(){ modal.style.display = "flex"; }
 function closePop(){ modal.style.display = "none"; }
 function openAppPop(){ document.getElementById('appModal').style.display = "flex"; }
@@ -468,6 +739,7 @@ function openMyPop(){
 }
 function closeMyPop(){ document.getElementById('myModal').style.display = "none"; }
 
+// ========== 15. Supabase 登录 ==========
 async function sendSignInEmail(){
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
@@ -503,6 +775,7 @@ async function sendSignInEmail(){
     }
 }
 
+// ========== 16. 语音输入 ==========
 const voiceBtn = document.getElementById('voiceBtn');
 let recognition = null;
 if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
@@ -543,6 +816,5 @@ voiceBtn.addEventListener('touchstart', startVoice);
 voiceBtn.addEventListener('touchend', stopVoice);
 
 </script>
-
 </body>
 </html>
