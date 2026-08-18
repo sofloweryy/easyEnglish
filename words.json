@@ -1,0 +1,52 @@
+[
+  {
+    "chinese": "前天",
+    "english": "the day before yesterday",
+    "alternatives": ["two days ago"]
+  },
+  {
+    "chinese": "我在路上",
+    "english": "I'm on my way",
+    "alternatives": ["I am on the way", "I'm coming"]
+  },
+  {
+    "chinese": "稍等一下",
+    "english": "Just a second",
+    "alternatives": ["Wait a second", "Just a moment", "Hold on"]
+  },
+  {
+    "chinese": "这怎么可能？",
+    "english": "How is that possible?",
+    "alternatives": ["How can that be?", "Is that possible?"]
+  },
+  {
+    "chinese": "随便你",
+    "english": "It's up to you",
+    "alternatives": ["You decide", "Whatever you want"]
+  },
+  {
+    "chinese": "真不敢相信",
+    "english": "I can't believe it",
+    "alternatives": ["Unbelievable"]
+  },
+  {
+    "chinese": "下周三",
+    "english": "Next Wednesday",
+    "alternatives": []
+  },
+  {
+    "chinese": "你说了算",
+    "english": "You're the boss",
+    "alternatives": ["It's your call"]
+  },
+  {
+    "chinese": "我无所谓",
+    "english": "I don't care",
+    "alternatives": ["It doesn't matter to me"]
+  },
+  {
+    "chinese": "帮个忙呗",
+    "english": "Do me a favor",
+    "alternatives": ["Can you help me"]
+  }
+]
