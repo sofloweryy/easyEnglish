@@ -227,7 +227,7 @@
             <button id="phraseTab" class="tab" onclick="switchTab('phrase')">💬 短语库</button>
         </div>
 
-        <div id="category" class="category-tag">加载中</div>
+        <div id="category" class="category-tag">基础单词</div>
         <div id="questionChinese" class="question-title">加载中...</div>
         <div id="altText" class="alt-text">近义表达：</div>
 
@@ -260,23 +260,17 @@
 
         function switchTab(type) {
             currentType = type;
-            // 切换高亮样式
             document.getElementById('wordTab').classList.toggle('active', type === 'word');
             document.getElementById('phraseTab').classList.toggle('active', type === 'phrase');
-            
-            // 立即重新加载对应数据
             loadData();
         }
 
         function loadData() {
-            // 根据当前状态决定读取哪个文件，加入时间戳防止浏览器强缓存
             const fileName = currentType === 'word' ? 'words.json' : 'phrases.json';
             
             fetch(fileName + '?t=' + new Date().getTime())
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`文件请求失败: ${fileName} (状态码: ${response.status})`);
-                    }
+                    if (!response.ok) throw new Error("无法加载文件：" + fileName);
                     return response.json();
                 })
                 .then(data => {
@@ -285,10 +279,8 @@
                     renderQuestion();
                 })
                 .catch(error => {
-                    console.error("加载出错:", error);
-                    document.getElementById('category').innerText = "错误";
+                    console.error(error);
                     document.getElementById('questionChinese').innerText = "加载失败";
-                    document.getElementById('altText').innerText = error.message;
                 });
         }
 
@@ -296,13 +288,13 @@
             if (!currentList || currentList.length === 0) return;
             const item = currentList[currentIndex];
 
-            document.getElementById('category').innerText = item.category || '精选';
+            document.getElementById('category').innerText = item.category || '基础单词';
             document.getElementById('questionChinese').innerText = item.chinese; 
             
             if (item.alternatives && item.alternatives.length > 0) {
                 document.getElementById('altText').innerText = `近义表达：${item.alternatives.join(', ')}`;
             } else {
-                document.getElementById('altText').innerText = `近义表达：暂无`;
+                document.getElementById('altText').innerText = `近义表达：`;
             }
 
             document.getElementById('userInput').value = "";
@@ -347,10 +339,9 @@
         function showAnswer() {
             if (currentList.length === 0) return;
             const currentItem = currentList[currentIndex];
-            alert(`正确答案是: ${currentItem.english}`);
+            document.getElementById('altText').innerText = `近义表达：${currentItem.english}`;
         }
 
-        // 初始加载
         loadData();
     </script>
 </body>
