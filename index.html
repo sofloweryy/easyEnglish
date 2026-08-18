@@ -16,7 +16,6 @@
             margin: 0;
         }
 
-        /* 顶部打卡与下载App */
         .top-header {
             width: 440px;
             display: flex;
@@ -52,7 +51,6 @@
             gap: 4px;
         }
 
-        /* 主面板 */
         .container {
             width: 440px;
             background: #ffffff;
@@ -71,7 +69,6 @@
             font-weight: 500;
         }
 
-        /* 单词库 / 短语库 切换栏 */
         .tabs {
             display: flex;
             background: #ffffff;
@@ -79,7 +76,6 @@
             padding: 3px;
             margin-bottom: 20px;
             border: 2px solid #222;
-            position: relative;
         }
         .tab {
             flex: 1;
@@ -91,8 +87,7 @@
             font-weight: bold;
             cursor: pointer;
             color: #666;
-            z-index: 1;
-            transition: color 0.2s;
+            transition: all 0.2s;
         }
         .tab.active {
             background: #e0f2fe;
@@ -101,7 +96,6 @@
             box-shadow: 2px 2px 0px #222;
         }
 
-        /* 分类标签 */
         .category-tag {
             display: inline-block;
             background: #fef08a;
@@ -114,7 +108,6 @@
             box-shadow: 2px 2px 0px #222;
         }
 
-        /* 题目中文大字 */
         .question-title {
             font-size: 32px;
             font-weight: bold;
@@ -122,7 +115,6 @@
             margin: 5px 0 8px 0;
         }
 
-        /* 近义表达提示 */
         .alt-text {
             font-size: 14px;
             color: #777;
@@ -130,7 +122,6 @@
             min-height: 20px;
         }
 
-        /* 输入框区域 */
         .input-wrapper {
             position: relative;
             margin-bottom: 20px;
@@ -146,7 +137,6 @@
             resize: none;
             outline: none;
             background: #fff;
-            box-shadow: inset 2px 2px 0px rgba(0,0,0,0.05);
         }
         .mic-icon {
             position: absolute;
@@ -156,7 +146,6 @@
             cursor: pointer;
         }
 
-        /* 按钮组 */
         .btn-group {
             display: flex;
             gap: 12px;
@@ -172,10 +161,6 @@
             cursor: pointer;
             box-shadow: 3px 3px 0px #222;
             transition: transform 0.1s, box-shadow 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
         }
         .action-btn:active {
             transform: translate(2px, 2px);
@@ -185,7 +170,6 @@
         .btn-next { background: #fef08a; }
         .btn-answer { background: #e0f2fe; }
 
-        /* 进度条 */
         .progress-container {
             width: 100%;
             background: #e5e7eb;
@@ -207,7 +191,6 @@
             font-weight: 600;
         }
 
-        /* 底部双按钮 */
         .footer-actions {
             width: 440px;
             display: flex;
@@ -226,86 +209,74 @@
             font-size: 14px;
             box-shadow: 3px 3px 0px #222;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
         }
     </style>
 </head>
 <body>
 
-    <!-- 顶部打卡和下载App栏 -->
     <div class="top-header">
         <div class="badge-card">🔥 连续打卡 1 天<br>⭐ 0</div>
         <a href="#" class="app-btn">📱 下载App</a>
     </div>
 
-    <!-- 主面板容器 -->
     <div class="container">
         <div class="slogan">每天3分钟，让英语偷偷长出来 🌱</div>
 
-        <!-- 单词库 / 短语库 切换按钮 -->
         <div class="tabs">
             <button id="wordTab" class="tab active" onclick="switchTab('word')">🔤 单词库</button>
             <button id="phraseTab" class="tab" onclick="switchTab('phrase')">💬 短语库</button>
         </div>
 
-        <!-- 题目分类标签 -->
-        <div id="category" class="category-tag">基础单词</div>
-
-        <!-- 中文题目大字 -->
+        <div id="category" class="category-tag">加载中</div>
         <div id="questionChinese" class="question-title">加载中...</div>
-
-        <!-- 近义表达提示 -->
         <div id="altText" class="alt-text">近义表达：</div>
 
-        <!-- 输入框与麦克风 -->
         <div class="input-wrapper">
             <textarea id="userInput" class="input-box" placeholder="输入英文..."></textarea>
             <span class="mic-icon">🎤</span>
         </div>
 
-        <!-- 功能按钮组：提交、换题、答案 -->
         <div class="btn-group">
             <button class="action-btn btn-submit" onclick="checkAnswer()">✍️提交</button>
             <button class="action-btn btn-next" onclick="nextQuestion()">🌿换题</button>
             <button class="action-btn btn-answer" onclick="showAnswer()">👀答案</button>
         </div>
 
-        <!-- 底部进度条 -->
         <div class="progress-container">
             <div id="progressBar" class="progress-bar"></div>
         </div>
         <div id="progressText" class="progress-text">本轮进度：0 / 0</div>
     </div>
 
-    <!-- 页面最下方两个独立按钮 -->
     <div class="footer-actions">
         <button class="footer-btn">✨ 点击有惊喜</button>
         <button class="footer-btn">👤 flower</button>
     </div>
 
     <script>
-        let currentType = 'word'; // 'word' 或 'phrase'
+        let currentType = 'word'; 
         let currentList = [];     
         let currentIndex = 0;     
 
-        // 切换标签
         function switchTab(type) {
             currentType = type;
+            // 切换高亮样式
             document.getElementById('wordTab').classList.toggle('active', type === 'word');
             document.getElementById('phraseTab').classList.toggle('active', type === 'phrase');
+            
+            // 立即重新加载对应数据
             loadData();
         }
 
-        // 独立读取对应的 JSON 文件
         function loadData() {
+            // 根据当前状态决定读取哪个文件，加入时间戳防止浏览器强缓存
             const fileName = currentType === 'word' ? 'words.json' : 'phrases.json';
             
-            fetch(fileName)
+            fetch(fileName + '?t=' + new Date().getTime())
                 .then(response => {
-                    if (!response.ok) throw new Error("无法加载文件：" + fileName);
+                    if (!response.ok) {
+                        throw new Error(`文件请求失败: ${fileName} (状态码: ${response.status})`);
+                    }
                     return response.json();
                 })
                 .then(data => {
@@ -314,21 +285,20 @@
                     renderQuestion();
                 })
                 .catch(error => {
-                    console.error(error);
+                    console.error("加载出错:", error);
+                    document.getElementById('category').innerText = "错误";
                     document.getElementById('questionChinese').innerText = "加载失败";
-                    document.getElementById('altText').innerText = "请确保 " + fileName + " 已正确放置";
+                    document.getElementById('altText').innerText = error.message;
                 });
         }
 
-        // 渲染当前题目
         function renderQuestion() {
             if (!currentList || currentList.length === 0) return;
             const item = currentList[currentIndex];
 
             document.getElementById('category').innerText = item.category || '精选';
-            document.getElementById('questionChinese').innerText = item.chinese; // 显示中文大字
+            document.getElementById('questionChinese').innerText = item.chinese; 
             
-            // 处理近义表达提示
             if (item.alternatives && item.alternatives.length > 0) {
                 document.getElementById('altText').innerText = `近义表达：${item.alternatives.join(', ')}`;
             } else {
@@ -339,7 +309,6 @@
             updateProgress();
         }
 
-        // 更新进度条
         function updateProgress() {
             const total = currentList.length;
             const current = currentIndex;
@@ -349,14 +318,12 @@
             document.getElementById('progressText').innerText = `本轮进度：${current} / ${total}`;
         }
 
-        // 换题
         function nextQuestion() {
             if (currentList.length === 0) return;
             currentIndex = (currentIndex + 1) % currentList.length; 
             renderQuestion();
         }
 
-        // 提交检查
         function checkAnswer() {
             if (currentList.length === 0) return;
             const userVal = document.getElementById('userInput').value.trim().toLowerCase();
@@ -377,14 +344,13 @@
             }
         }
 
-        // 查看答案（显示在近义表达位置或弹窗）
         function showAnswer() {
             if (currentList.length === 0) return;
             const currentItem = currentList[currentIndex];
             alert(`正确答案是: ${currentItem.english}`);
         }
 
-        // 初始化加载
+        // 初始加载
         loadData();
     </script>
 </body>
